@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Map" />
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Camera" />
+    </group>
+
+    <item android:title="Developer">
+        <menu>
+            <item
+                android:id="@+id/nav_debug_http"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="http" />
+        </menu>
+    </item>
+
+</menu>

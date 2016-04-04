@@ -1,2 +1,1 @@
-# cctv-app-v2
-CCTV App version 2
+# social-coding-cctv_android
