@@ -38,3 +38,6 @@ local.properties
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# map api key
+app/src/main/res/values/google_maps_api.xml
