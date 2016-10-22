@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 /**
  * Created by darkgs on 2016-03-26.
  */
-public class TakePhotoFragment extends Fragment{
+public class ReportFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_take_photo, container, false);
+        getActivity().setTitle(getActivity().getResources().getString(R.string.report_string));
+        return inflater.inflate(R.layout.fragment_report, container, false);
     }
 }
