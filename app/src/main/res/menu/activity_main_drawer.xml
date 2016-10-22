@@ -5,23 +5,23 @@
         <item
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Map" />
+            android:title="@string/map_string" />
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Camera" />
+            android:title="@string/report_string" />
         <item
             android:id="@+id/nav_related_law"
             android:icon="@drawable/ic_menu_camera"
-            android:title="관련법" />
+            android:title="@string/related_law_string" />
     </group>
 
-    <item android:title="Developer">
+    <item android:title="@string/developer_string">
         <menu>
             <item
                 android:id="@+id/nav_debug_http"
                 android:icon="@drawable/ic_menu_manage"
-                android:title="http" />
+                android:title="@string/http_string" />
         </menu>
     </item>
 

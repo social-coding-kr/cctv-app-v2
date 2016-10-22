@@ -27,20 +27,16 @@ public class MainActivity extends AppCompatActivity
 
     private final String Tag = "MainActivity";
     private final String GoogleMapTag = "GoogleMap";
-    private final String TakePhotoTag = "TakePhoto";
+    private final String ReportTag = "Report";
     private final String RelatedLawTag = "RelatedLaw";
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     private GoogleApiClient client;
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
 
     private Fragment googleMapFragment;
-    private Fragment takePhotoFragment;
+    private Fragment reportFragment;
     private Fragment relatedLawFragment;
     private FragmentManager fragmentManager;
-
 
     private void showFragment(Fragment fragment, String fragmentTag) {
         try {
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         try {
             fragmentManager = getSupportFragmentManager();
             googleMapFragment = GoogleMapFragment.class.newInstance();
-            takePhotoFragment = TakePhotoFragment.class.newInstance();
+            reportFragment = ReportFragment.class.newInstance();
             relatedLawFragment = RelatedLawFragment.class.newInstance();
             fragmentManager.beginTransaction()
                     .replace(R.id.main_fl, googleMapFragment, GoogleMapTag)
@@ -118,10 +114,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        findViewById(R.id.search_bar).setVisibility(View.INVISIBLE);
+
         if (id == R.id.nav_map) {
+            findViewById(R.id.search_bar).setVisibility(View.VISIBLE);
             showFragment(googleMapFragment, GoogleMapTag);
         } else if (id == R.id.nav_camera) {
-            showFragment(takePhotoFragment, TakePhotoTag);
+            showFragment(reportFragment, ReportTag);
         } else if (id == R.id.nav_related_law) {
             showFragment(relatedLawFragment, RelatedLawTag);
         } else if (id == R.id.nav_debug_http) {
