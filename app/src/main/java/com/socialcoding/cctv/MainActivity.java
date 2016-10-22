@@ -25,6 +25,10 @@ import com.socialcoding.inteface.HttpHandler;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private final String Tag = "MainActivity";
+    private final String GoogleMapTag = "GoogleMap";
+    private final String TakePhotoTag = "TakePhoto";
+    private final String RelatedLawTag = "RelatedLaw";
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -33,18 +37,33 @@ public class MainActivity extends AppCompatActivity
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
 
     private Fragment googleMapFragment;
+    private Fragment takePhotoFragment;
+    private Fragment relatedLawFragment;
+    private FragmentManager fragmentManager;
+
+
+    private void showFragment(Fragment fragment, String fragmentTag) {
+        try {
+            fragmentManager.beginTransaction().replace(R.id.main_fl, fragment, fragmentTag).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Initialize fragments
         try {
+            fragmentManager = getSupportFragmentManager();
             googleMapFragment = GoogleMapFragment.class.newInstance();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.main_fl, googleMapFragment).commit();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+            takePhotoFragment = TakePhotoFragment.class.newInstance();
+            relatedLawFragment = RelatedLawFragment.class.newInstance();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.main_fl, googleMapFragment, GoogleMapTag)
+                    .addToBackStack("GoogleMapStack").commit();
+        } catch(Exception e) {
             e.printStackTrace();
         }
 
@@ -88,6 +107,7 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            //TODO(Clubsandwich) : 백버튼 터치하면 지도가 사라짐,,,
             super.onBackPressed();
         }
     }
@@ -99,20 +119,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_map) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.main_fl, googleMapFragment).commit();
+            showFragment(googleMapFragment, GoogleMapTag);
         } else if (id == R.id.nav_camera) {
-            try {
-                Fragment fragmentTakePhoto = TakePhotoFragment.class.newInstance();
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.main_fl,fragmentTakePhoto).commit();
-
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            showFragment(takePhotoFragment, TakePhotoTag);
+        } else if (id == R.id.nav_related_law) {
+            showFragment(relatedLawFragment, RelatedLawTag);
         } else if (id == R.id.nav_debug_http) {
 
         }

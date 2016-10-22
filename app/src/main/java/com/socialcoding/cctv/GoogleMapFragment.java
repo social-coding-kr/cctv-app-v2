@@ -36,9 +36,9 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
                 parent.removeView(view);
+        } else {
+            view = inflater.inflate(R.layout.fragment_googlemap, container, false);
         }
-        view = inflater.inflate(R.layout.fragment_googlemap, container, false);
-
         return view;
     }
 
@@ -58,15 +58,12 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        // Set zoom level
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(16));
 
         // Add a marker in Seoul, Korea and move the camera
-        LatLng cityHallSeoul = new LatLng(37.335887, 126.584063);
-        Marker cityHallSeoulMarker
-                = mMap.addMarker(new MarkerOptions().position(cityHallSeoul).title("Marker in Seoul"));
+        LatLng cityHallSeoul = new LatLng(37.5667151,126.9781312);
+        Marker cityHallSeoulMarker = mMap.addMarker(new MarkerOptions().position(cityHallSeoul).draggable(true).title("Marker in Seoul"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cityHallSeoul));
-
-        // current location by hardware
-        mMap.addMarker(new MarkerOptions().position(new LatLng(38, 127))
-                .draggable(true).title("movable Marker"));
     }
 }
