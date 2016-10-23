@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.socialcoding.exception.SocialCodeException;
 import com.socialcoding.http.CCTVHttpHandlerDummy;
 import com.socialcoding.inteface.HttpHandler;
+import com.socialcoding.utilities.RawTxtToString;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity
     private Fragment reportFragment;
     private Fragment relatedLawFragment;
     private FragmentManager fragmentManager;
+
+    public static final RawTxtToString rawTxtToString = new RawTxtToString();
 
     private void showFragment(Fragment fragment, String fragmentTag) {
         try {
@@ -170,5 +173,9 @@ public class MainActivity extends AppCompatActivity
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+    }
+
+    public RawTxtToString getRawTxtToString() {
+        return rawTxtToString;
     }
 }
