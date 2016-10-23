@@ -10,4 +10,7 @@
     <string name="map_string">Map</string>
     <string name="related_law_string">Related Law</string>
     <string name="report_string">Report</string>
+
+    <!--default value-->
+    <string name="default_string">Default String</string>
 </resources>

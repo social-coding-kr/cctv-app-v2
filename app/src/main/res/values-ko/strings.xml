@@ -11,4 +11,7 @@
     <string name="map_string">CCTV 위치 확인</string>
     <string name="related_law_string">CCTV 관련법 보기</string>
     <string name="report_string">CCTV 위치 등록</string>
+
+    <!--default value-->
+    <string name="default_string">기본 문자열</string>
 </resources>
