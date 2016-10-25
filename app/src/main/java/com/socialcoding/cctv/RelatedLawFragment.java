@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.socialcoding.models.Law;
+import com.socialcoding.utilities.Utilities;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -65,10 +66,10 @@ public class RelatedLawFragment extends Fragment implements View.OnClickListener
     }
 
     private void initTexts(Law law) throws Exception {
-        singleLawTitleTextView.setText(((MainActivity) getActivity())
-                .getRawTxtToString().convert(getResources().openRawResource(law.getSingleLawTitleTxtId())));
-        singleLawContentTextView.setText(((MainActivity) getActivity())
-                .getRawTxtToString().convert(getResources().openRawResource(law.getSingleLawContentTxtId())));
+        singleLawTitleTextView.setText(Utilities.rawTxtToString
+                .convert(getResources().openRawResource(law.getSingleLawTitleTxtId())));
+        singleLawContentTextView.setText(Utilities.rawTxtToString
+                .convert(getResources().openRawResource(law.getSingleLawContentTxtId())));
     }
 
     private void initButtonLayouts() {

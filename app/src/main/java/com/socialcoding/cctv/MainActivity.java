@@ -19,18 +19,14 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.socialcoding.exception.SocialCodeException;
+import com.socialcoding.handler.Handler;
 import com.socialcoding.http.CCTVHttpHandlerDummy;
 import com.socialcoding.inteface.HttpHandler;
-import com.socialcoding.utilities.RawTxtToString;
+import com.socialcoding.models.EyeOfSeoulPermissions;
+import com.socialcoding.models.EyeOfSeoulTags;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    private final String Tag = "MainActivity";
-    private final String GoogleMapTag = "GoogleMap";
-    private final String ReportTag = "Report";
-    private final String RelatedLawTag = "RelatedLaw";
-
     private GoogleApiClient client;
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
 
@@ -38,8 +34,6 @@ public class MainActivity extends AppCompatActivity
     private Fragment reportFragment;
     private Fragment relatedLawFragment;
     private FragmentManager fragmentManager;
-
-    public static final RawTxtToString rawTxtToString = new RawTxtToString();
 
     private void showFragment(Fragment fragment, String fragmentTag) {
         try {
@@ -60,7 +54,7 @@ public class MainActivity extends AppCompatActivity
             reportFragment = ReportFragment.class.newInstance();
             relatedLawFragment = RelatedLawFragment.class.newInstance();
             fragmentManager.beginTransaction()
-                    .replace(R.id.main_fl, googleMapFragment, GoogleMapTag)
+                    .replace(R.id.main_fl, googleMapFragment, EyeOfSeoulTags.GoogleMapTag)
                     .addToBackStack("GoogleMapStack").commit();
         } catch(Exception e) {
             e.printStackTrace();
@@ -121,11 +115,14 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_map) {
             findViewById(R.id.search_bar).setVisibility(View.VISIBLE);
-            showFragment(googleMapFragment, GoogleMapTag);
+            showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
         } else if (id == R.id.nav_camera) {
-            showFragment(reportFragment, ReportTag);
+            findViewById(R.id.search_bar).setVisibility(View.VISIBLE);
+            Handler.permissionHandler.handle(this,
+                    EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING, EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
+            showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
         } else if (id == R.id.nav_related_law) {
-            showFragment(relatedLawFragment, RelatedLawTag);
+            showFragment(relatedLawFragment, EyeOfSeoulTags.RelatedLawTag);
         } else if (id == R.id.nav_debug_http) {
 
         }
@@ -173,9 +170,5 @@ public class MainActivity extends AppCompatActivity
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
-    }
-
-    public RawTxtToString getRawTxtToString() {
-        return rawTxtToString;
     }
 }

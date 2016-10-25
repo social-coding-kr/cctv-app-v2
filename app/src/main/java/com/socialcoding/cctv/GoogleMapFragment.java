@@ -3,6 +3,7 @@ package com.socialcoding.cctv;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.socialcoding.models.EyeOfSeoulPermissions;
 
 /**
  * Created by darkgs on 2016-03-26.
  */
 public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
-
-    final private String TAG = "GoogleMapFragment";
 
     private GoogleMap mMap;
     private static View view;
@@ -66,5 +66,10 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         LatLng cityHallSeoul = new LatLng(37.5667151,126.9781312);
         Marker cityHallSeoulMarker = mMap.addMarker(new MarkerOptions().position(cityHallSeoul).draggable(true).title("Marker in Seoul"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cityHallSeoul));
+
+        if(ContextCompat.checkSelfPermission(getActivity(), EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING)
+                == EyeOfSeoulPermissions.GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        }
     }
 }
