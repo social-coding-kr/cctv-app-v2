@@ -2,9 +2,7 @@ package com.socialcoding.cctv;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -30,14 +28,30 @@ public class MainActivity extends AppCompatActivity
     private GoogleApiClient client;
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
 
+    private NavigationView navigationView;
+
     private Fragment googleMapFragment;
+    private Fragment agreementDialogFragment;
     private Fragment reportFragment;
     private Fragment relatedLawFragment;
     private FragmentManager fragmentManager;
 
+    public static int current_page = R.id.nav_map;
+    public static int last_page;
+
     private void showFragment(Fragment fragment, String fragmentTag) {
+        setLayoutByCurrentPage();
         try {
             fragmentManager.beginTransaction().replace(R.id.main_fl, fragment, fragmentTag).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showSubFragment(Fragment fragment, String fragmentTag) {
+        try {
+            fragmentManager.beginTransaction().attach(fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.sub_fl, fragment, fragmentTag).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,11 +60,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Handler.permissionHandler.handle(this,
+                EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING, EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
 
         // Initialize fragments
         try {
             fragmentManager = getSupportFragmentManager();
             googleMapFragment = GoogleMapFragment.class.newInstance();
+            agreementDialogFragment = AgreementDialogFragment.class.newInstance();
             reportFragment = ReportFragment.class.newInstance();
             relatedLawFragment = RelatedLawFragment.class.newInstance();
             fragmentManager.beginTransaction()
@@ -65,22 +82,13 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -105,26 +113,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        last_page = current_page;
+        current_page = item.getItemId();
 
-        findViewById(R.id.search_bar).setVisibility(View.INVISIBLE);
+        switch(current_page) {
+            case R.id.nav_map:
+                showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
+                break;
 
-        if (id == R.id.nav_map) {
-            findViewById(R.id.search_bar).setVisibility(View.VISIBLE);
-            showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
-        } else if (id == R.id.nav_camera) {
-            findViewById(R.id.search_bar).setVisibility(View.VISIBLE);
-            Handler.permissionHandler.handle(this,
-                    EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING, EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
-            showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
-        } else if (id == R.id.nav_related_law) {
-            showFragment(relatedLawFragment, EyeOfSeoulTags.RelatedLawTag);
-        } else if (id == R.id.nav_debug_http) {
+            case R.id.nav_camera:
+                showSubFragment(agreementDialogFragment, EyeOfSeoulTags.LocationAgreementDialogTag);
+                break;
 
+            case R.id.nav_related_law:
+                showFragment(relatedLawFragment, EyeOfSeoulTags.RelatedLawTag);
+                break;
+
+            case R.id.nav_debug_http:
+                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -170,5 +179,37 @@ public class MainActivity extends AppCompatActivity
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+    }
+
+    public void setLayoutByCurrentPage() {
+        View searchBar = findViewById(R.id.search_bar);
+        View bottomBar = findViewById(R.id.bottom_bar_google_map);
+        View bottomBarFirst = findViewById(R.id.now_getting_current_location);
+        View bottomBarSecond = findViewById(R.id.ask_report_current_location);
+
+        switch (current_page) {
+            case R.id.nav_map:
+                searchBar.setVisibility(View.VISIBLE);
+                bottomBar.setVisibility(View.INVISIBLE);
+                break;
+
+            case R.id.nav_camera:
+                searchBar.setVisibility(View.VISIBLE);
+                bottomBar.setVisibility(View.VISIBLE);
+                break;
+
+            default:
+                searchBar.setVisibility(View.INVISIBLE);
+                bottomBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void onAgreementClicked(boolean agreement) {
+        if(agreement) {
+            showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
+        } else {
+            onNavigationItemSelected(navigationView.getMenu().getItem(0));
+        }
+        fragmentManager.beginTransaction().detach(agreementDialogFragment).commit();
     }
 }

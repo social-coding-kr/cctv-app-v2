@@ -6,6 +6,7 @@ package com.socialcoding.models;
 public class EyeOfSeoulTags {
     public static final String MainActivityTag = "MainActivity";
     public static final String GoogleMapTag = "GoogleMap";
+    public static final String LocationAgreementDialogTag = "LocationAgreementDialog";
     public static final String ReportTag = "Report";
     public static final String RelatedLawTag = "RelatedLaw";
 }

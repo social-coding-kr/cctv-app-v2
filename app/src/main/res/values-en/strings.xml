@@ -11,6 +11,12 @@
     <string name="related_law_string">Related Law</string>
     <string name="report_string">Report</string>
 
+    <!--report strings-->
+    <string name="now_getting_current_location">Getting current location...</string>
+    <string name="ask_report_current_location">Getting current location...</string>
+    <string name="report_btn_y">Yes!</string>
+    <string name="report_btn_n">No!</string>
+
     <!--default value-->
     <string name="default_string">Default String</string>
 </resources>
