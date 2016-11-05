@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void setLayoutByCurrentPage() {
+    private void setLayoutByCurrentPage() {
         View searchBar = findViewById(R.id.search_bar);
         View bottomBar = findViewById(R.id.bottom_bar_google_map);
         View bottomBarFirst = findViewById(R.id.now_getting_current_location);
