@@ -39,24 +39,6 @@ public class MainActivity extends AppCompatActivity
     public static int current_page = R.id.nav_map;
     public static int last_page;
 
-    private void showFragment(Fragment fragment, String fragmentTag) {
-        setLayoutByCurrentPage();
-        try {
-            fragmentManager.beginTransaction().replace(R.id.main_fl, fragment, fragmentTag).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void showSubFragment(Fragment fragment, String fragmentTag) {
-        try {
-            fragmentManager.beginTransaction().attach(fragment).commit();
-            fragmentManager.beginTransaction().replace(R.id.sub_fl, fragment, fragmentTag).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,34 +96,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        last_page = current_page;
-        current_page = item.getItemId();
-
-        switch(current_page) {
-            case R.id.nav_map:
-                showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
-                break;
-
-            case R.id.nav_camera:
-                showSubFragment(agreementDialogFragment, EyeOfSeoulTags.LocationAgreementDialogTag);
-                break;
-
-            case R.id.nav_related_law:
-                showFragment(relatedLawFragment, EyeOfSeoulTags.RelatedLawTag);
-                break;
-
-            case R.id.nav_debug_http:
-                break;
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
 
@@ -179,6 +133,52 @@ public class MainActivity extends AppCompatActivity
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        last_page = current_page;
+        current_page = item.getItemId();
+
+        switch(current_page) {
+            case R.id.nav_map:
+                showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
+                break;
+
+            case R.id.nav_camera:
+                showSubFragment(agreementDialogFragment, EyeOfSeoulTags.LocationAgreementDialogTag);
+                break;
+
+            case R.id.nav_related_law:
+                showFragment(relatedLawFragment, EyeOfSeoulTags.RelatedLawTag);
+                break;
+
+            case R.id.nav_debug_http:
+                break;
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void showFragment(Fragment fragment, String fragmentTag) {
+        setLayoutByCurrentPage();
+        try {
+            fragmentManager.beginTransaction().replace(R.id.main_fl, fragment, fragmentTag).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showSubFragment(Fragment fragment, String fragmentTag) {
+        try {
+            fragmentManager.beginTransaction().attach(fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.sub_fl, fragment, fragmentTag).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setLayoutByCurrentPage() {
