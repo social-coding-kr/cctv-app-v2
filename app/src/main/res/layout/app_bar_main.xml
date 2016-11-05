@@ -44,6 +44,7 @@
                     android:text="@string/search_btn_text" />
 
             </LinearLayout>
+
         </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -54,12 +55,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+    <include
+        layout="@layout/bottom_bar_googlemap"
+        android:id="@+id/bottom_bar_google_map"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true" />
 
 </android.support.design.widget.CoordinatorLayout>
