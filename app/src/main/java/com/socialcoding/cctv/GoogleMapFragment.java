@@ -26,7 +26,7 @@ public class GoogleMapFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
     private GoogleMap mMap;
-    private static View view;
+    protected View view;
 
     private static Marker reportMarker;
 
@@ -118,16 +118,9 @@ public class GoogleMapFragment extends Fragment
                 if (currLocation != null) {
                     LatLng currLatLng = new LatLng(currLocation.getLatitude(), currLocation.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
-                    if(reportMarker == null) {
-                        reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng).draggable(true).visible(true)
-                                .title("위도 : " + currLocation.getLatitude() + ", " +
-                                        "경도 : " + currLocation.getLongitude()));
-                    } else {
-                        reportMarker.setVisible(true);
-                        reportMarker.setPosition(currLatLng);
-                        reportMarker.setTitle("위도 : " + currLocation.getLatitude() + ", " +
-                                "경도 : " + currLocation.getLongitude());
-                    }
+                    reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng).draggable(true).visible(true)
+                            .title("위도 : " + currLocation.getLatitude() + ", " +
+                                    "경도 : " + currLocation.getLongitude()));
                 }
             }
         }
@@ -136,7 +129,7 @@ public class GoogleMapFragment extends Fragment
 
     public void removeMarker() {
         if(reportMarker != null) {
-            reportMarker.setVisible(false);
+            reportMarker.remove();
         }
     }
 }
