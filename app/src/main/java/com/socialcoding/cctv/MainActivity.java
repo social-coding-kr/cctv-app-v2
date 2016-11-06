@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -27,7 +28,9 @@ import com.socialcoding.models.EyeOfSeoulTags;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
+        View.OnClickListener
+{
     public static GoogleApiClient client;
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
 
@@ -73,7 +76,9 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
+        // Set views
         setContentView(R.layout.activity_main);
+        initButtons();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -224,6 +229,37 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.search_btn:
+                //TODO:검색기능 붙이기
+                break;
+
+            case R.id.report_continue_btn:
+                last_page = current_page;
+                current_page = R.layout.fragment_report;
+                showFragment(reportFragment, EyeOfSeoulTags.ReportTag);
+                break;
+
+            case R.id.report_abort_btn:
+                onNavigationItemSelected(navigationView.getMenu().getItem(0));
+                break;
+        }
+    }
+
+    private void initButtons() {
+        Button[] btns = new Button[]{
+                (Button) findViewById(R.id.search_btn),
+                (Button) findViewById(R.id.report_continue_btn),
+                (Button) findViewById(R.id.report_abort_btn)
+        };
+
+        for(Button btn : btns) {
+            btn.setOnClickListener(this);
+        }
+    }
+
+    @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
@@ -237,4 +273,6 @@ public class MainActivity extends AppCompatActivity
     public void onConnectionSuspended(int i) {
 
     }
+
+
 }

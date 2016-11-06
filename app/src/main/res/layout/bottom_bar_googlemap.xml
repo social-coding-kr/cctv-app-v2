@@ -36,11 +36,13 @@
             android:layout_height="match_parent">
 
             <Button
+                android:id="@+id/report_continue_btn"
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:text="@string/report_btn_y" />
 
             <Button
+                android:id="@+id/report_abort_btn"
                 android:layout_height="match_parent"
                 android:layout_width="wrap_content"
                 android:text="@string/report_btn_n" />
