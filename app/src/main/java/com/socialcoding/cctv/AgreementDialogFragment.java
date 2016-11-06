@@ -37,12 +37,10 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.dialog_agree_btn:
-                System.out.println("Agree!");
                 agreement = true;
                 break;
 
             case R.id.dialog_disagree_btn:
-                System.out.println("Disagree!");
                 agreement = false;
                 break;
         }

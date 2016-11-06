@@ -1,5 +1,6 @@
 package com.socialcoding.cctv;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,10 +22,13 @@ import com.socialcoding.models.EyeOfSeoulPermissions;
 /**
  * Created by darkgs on 2016-03-26.
  */
-public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
+public class GoogleMapFragment extends Fragment
+        implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
     private GoogleMap mMap;
     private static View view;
+
+    private static Marker reportMarker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,11 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerDragListener(this);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
         // Set zoom level
         mMap.moveCamera(CameraUpdateFactory.zoomTo(16));
 
@@ -73,5 +83,60 @@ public class GoogleMapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    @Override
+    public void onMarkerDragStart(Marker marker) {
 
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+        Double latitude = marker.getPosition().latitude;
+        Double longitude = marker.getPosition().longitude;
+        if(reportMarker != null) {
+            reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
+                    "경도 : " + Double.toString(longitude));
+            marker.showInfoWindow();
+        }
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        Double latitude = marker.getPosition().latitude;
+        Double longitude = marker.getPosition().longitude;
+        if(reportMarker != null) {
+            reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
+                    "경도 : " + Double.toString(longitude));
+            marker.showInfoWindow();
+        }
+    }
+
+    public boolean moveCurrentPosition() {
+        if(ContextCompat.checkSelfPermission(getActivity(), EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING)
+                == EyeOfSeoulPermissions.GRANTED) {
+            if(MainActivity.client != null) {
+                Location currLocation = LocationServices.FusedLocationApi.getLastLocation(MainActivity.client);
+                if (currLocation != null) {
+                    LatLng currLatLng = new LatLng(currLocation.getLatitude(), currLocation.getLongitude());
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
+                    if(reportMarker == null) {
+                        reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng).draggable(true)
+                                .title("위도 : " + currLocation.getLatitude() + ", " +
+                                        "경도 : " + currLocation.getLongitude()));
+                    } else {
+                        reportMarker.setVisible(true);
+                        reportMarker.setPosition(currLatLng);
+                        reportMarker.setTitle("위도 : " + currLocation.getLatitude() + ", " +
+                                "경도 : " + currLocation.getLongitude());
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public void removeMarker() {
+        if(reportMarker != null) {
+            reportMarker.setVisible(false);
+        }
+    }
 }
