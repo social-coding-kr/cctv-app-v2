@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:layout_gravity="bottom">
+    android:layout_height="match_parent" android:layout_gravity="bottom"
+    android:layout_marginTop="?attr/actionBarSize">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize" />
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

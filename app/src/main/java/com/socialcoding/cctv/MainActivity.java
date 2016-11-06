@@ -15,7 +15,9 @@ import android.view.View;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.socialcoding.exception.SocialCodeException;
 import com.socialcoding.handler.Handler;
 import com.socialcoding.http.CCTVHttpHandlerDummy;
@@ -24,8 +26,9 @@ import com.socialcoding.models.EyeOfSeoulPermissions;
 import com.socialcoding.models.EyeOfSeoulTags;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    private GoogleApiClient client;
+        implements NavigationView.OnNavigationItemSelectedListener,
+        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+    public static GoogleApiClient client;
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
 
     private NavigationView navigationView;
@@ -42,6 +45,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Connect google api client
+        if (client == null) {
+            client = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(AppIndex.API)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
+
+        // Ask permissions
         Handler.permissionHandler.handle(this,
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING, EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
 
@@ -72,9 +86,6 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         // HTTP connect
         try {
@@ -98,9 +109,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        // connect to api service
         client.connect();
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
@@ -118,9 +127,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        // disconnect to api service
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "Main Page", // TODO: Define a title for the content shown.
@@ -181,7 +188,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void setLayoutByCurrentPage() {
+    private void setLayoutByCurrentPage() {
         View searchBar = findViewById(R.id.search_bar);
         View bottomBar = findViewById(R.id.bottom_bar_google_map);
         View bottomBarFirst = findViewById(R.id.now_getting_current_location);
@@ -191,6 +198,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_map:
                 searchBar.setVisibility(View.VISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
+                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag)).removeMarker();
                 break;
 
             case R.id.nav_camera:
@@ -201,15 +209,32 @@ public class MainActivity extends AppCompatActivity
             default:
                 searchBar.setVisibility(View.INVISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
+                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag)).removeMarker();
         }
     }
 
     public void onAgreementClicked(boolean agreement) {
         if(agreement) {
             showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
+            ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag)).moveCurrentPosition();
         } else {
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
         fragmentManager.beginTransaction().detach(agreementDialogFragment).commit();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 }
