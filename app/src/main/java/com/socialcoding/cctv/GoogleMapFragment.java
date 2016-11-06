@@ -119,7 +119,7 @@ public class GoogleMapFragment extends Fragment
                     LatLng currLatLng = new LatLng(currLocation.getLatitude(), currLocation.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
                     if(reportMarker == null) {
-                        reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng).draggable(true)
+                        reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng).draggable(true).visible(true)
                                 .title("위도 : " + currLocation.getLatitude() + ", " +
                                         "경도 : " + currLocation.getLongitude()));
                     } else {
