@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     private NavigationView navigationView;
 
-    private Fragment googleMapFragment;
+    public Fragment googleMapFragment;
     private Fragment agreementDialogFragment;
     private Fragment reportFragment;
     private Fragment relatedLawFragment;
@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity
         // Ask permissions
         Handler.permissionHandler.handle(this,
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING, EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
+        Handler.permissionHandler.handle(this, EyeOfSeoulPermissions.CAMERA_PERMISSION_STRING);
 
         // Initialize fragments
         try {
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    private void showFragment(Fragment fragment, String fragmentTag) {
+    public void showFragment(Fragment fragment, String fragmentTag) {
         setLayoutByCurrentPage();
         try {
             fragmentManager.beginTransaction().replace(R.id.main_fl, fragment, fragmentTag).commit();

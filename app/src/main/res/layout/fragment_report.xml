@@ -3,10 +3,45 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingTop="?attr/actionBarSize">
 
+    <ImageView
+        android:id="@+id/cctv_image"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center"
+        android:layout_margin="50dp"
+        android:background="#eee" />
+
+    <ImageView
+        android:id="@+id/info_image"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center"
+        android:layout_margin="50dp"
+        android:background="#eee" />
+
     <TextView
+        android:id="@+id/address_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/default_string" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/report_complete_btn"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:text="@string/report_btn_y" />
+
+        <Button
+            android:id="@+id/report_cancle_btn"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:text="@string/report_btn_n" />
+
+    </LinearLayout>
 
 </LinearLayout>

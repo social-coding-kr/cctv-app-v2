@@ -2,6 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.socialcoding.cctv">
 
+    <!--google map permissions-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!--camera permissions-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/eye_of_seoul_launcher"
@@ -29,7 +35,5 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
     </application>
-    <!--google map permissions-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
 </manifest>
