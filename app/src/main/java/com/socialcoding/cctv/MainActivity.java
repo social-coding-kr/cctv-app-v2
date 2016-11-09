@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity
 
     private int current_page = R.id.nav_map;
     private int last_page;
+
+    private Toast quitToast;
 
     public static String address;
 
@@ -110,9 +113,17 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (findViewById(R.id.sub_fl).getVisibility() == View.VISIBLE) {
+            findViewById(R.id.sub_fl).setVisibility(View.GONE);
         } else {
-            //TODO(Clubsandwich) : 백버튼 터치하면 지도가 사라짐,,,
-            super.onBackPressed();
+            if (quitToast == null || quitToast.getView().getWindowVisibility() != View.VISIBLE) {
+                quitToast = Toast.makeText(this, "뒤로 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+                quitToast.show();
+            } else {
+                // ToDo : find better way to exit
+                super.onBackPressed();
+                super.onBackPressed();
+            }
         }
     }
 
