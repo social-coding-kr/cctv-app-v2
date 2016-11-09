@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -44,6 +46,10 @@ public class MainActivity extends AppCompatActivity
 
     private int current_page = R.id.nav_map;
     private int last_page;
+
+    private Toast quitToast;
+
+    public static String address;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,9 +113,17 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (findViewById(R.id.sub_fl).getVisibility() == View.VISIBLE) {
+            findViewById(R.id.sub_fl).setVisibility(View.GONE);
         } else {
-            //TODO(Clubsandwich) : 백버튼 터치하면 지도가 사라짐,,,
-            super.onBackPressed();
+            if (quitToast == null || quitToast.getView().getWindowVisibility() != View.VISIBLE) {
+                quitToast = Toast.makeText(this, "뒤로 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+                quitToast.show();
+            } else {
+                // ToDo : find better way to exit
+                super.onBackPressed();
+                super.onBackPressed();
+            }
         }
     }
 
@@ -188,12 +202,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSubFragment(Fragment fragment, String fragmentTag) {
+        findViewById(R.id.sub_fl).setVisibility(View.VISIBLE);
         try {
             fragmentManager.beginTransaction().attach(fragment).commit();
             fragmentManager.beginTransaction().replace(R.id.sub_fl, fragment, fragmentTag).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void hideSubFragment(Fragment fragment) {
+        findViewById(R.id.sub_fl).setVisibility(View.GONE);
+        fragmentManager.beginTransaction().detach(fragment).commit();
     }
 
     private void setLayoutByCurrentPage() {
@@ -231,7 +251,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
-        fragmentManager.beginTransaction().detach(agreementDialogFragment).commit();
+        hideSubFragment(agreementDialogFragment);
     }
 
     @Override
@@ -250,6 +270,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.report_abort_btn:
                 onNavigationItemSelected(navigationView.getMenu().getItem(0));
                 break;
+
+            case R.id.sub_fl:
+                hideSubFragment(agreementDialogFragment);
+                break;
         }
     }
 
@@ -259,9 +283,15 @@ public class MainActivity extends AppCompatActivity
                 (Button) findViewById(R.id.report_continue_btn),
                 (Button) findViewById(R.id.report_abort_btn)
         };
+        FrameLayout[] frameLayouts = new FrameLayout[] {
+                (FrameLayout) findViewById(R.id.sub_fl)
+        };
 
         for(Button btn : btns) {
             btn.setOnClickListener(this);
+        }
+        for(FrameLayout frameLayout : frameLayouts) {
+            frameLayout.setOnClickListener(this);
         }
     }
 
@@ -279,5 +309,5 @@ public class MainActivity extends AppCompatActivity
     public void onConnectionSuspended(int i) {
 
     }
-    
+
 }

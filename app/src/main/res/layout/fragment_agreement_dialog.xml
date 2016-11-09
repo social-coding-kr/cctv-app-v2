@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="100dp"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="@color/colorWhite">
 
     <TextView
+        android:id="@+id/agreement_dialog_header_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="hello_dialog" />
+        android:text="@string/agreement_header" />
+
+    <TextView
+        android:id="@+id/agreement_dialog_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/agreement_string" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -17,16 +25,18 @@
         android:layout_height="50dp">
 
         <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/dialog_agree_btn"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
-            android:text="@string/report_btn_y" />
+            android:text="@string/agreement_btn_y" />
 
         <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:id="@+id/dialog_disagree_btn"
             android:layout_height="match_parent"
             android:layout_width="wrap_content"
-            android:text="@string/report_btn_n" />
+            android:text="@string/agreement_btn_n" />
 
     </LinearLayout>
 

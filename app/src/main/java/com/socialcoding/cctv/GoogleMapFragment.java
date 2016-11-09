@@ -1,5 +1,7 @@
 package com.socialcoding.cctv;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +21,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * Created by darkgs on 2016-03-26.
  */
@@ -27,6 +33,7 @@ public class GoogleMapFragment extends Fragment
 
     private GoogleMap mMap;
     protected View view;
+    private static Location currLocation;
 
     private static Marker reportMarker;
 
@@ -94,6 +101,8 @@ public class GoogleMapFragment extends Fragment
         Double latitude = marker.getPosition().latitude;
         Double longitude = marker.getPosition().longitude;
         if(reportMarker != null) {
+            currLocation.setLatitude(latitude);
+            currLocation.setLongitude(longitude);
             reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
                     "경도 : " + Double.toString(longitude));
             marker.showInfoWindow();
@@ -107,6 +116,7 @@ public class GoogleMapFragment extends Fragment
         if(reportMarker != null) {
             reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
                     "경도 : " + Double.toString(longitude));
+            reportMarker.setSnippet(getAddress());
             marker.showInfoWindow();
         }
     }
@@ -115,7 +125,7 @@ public class GoogleMapFragment extends Fragment
         if(ContextCompat.checkSelfPermission(getActivity(),
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
             if(MainActivity.client != null) {
-                Location currLocation = LocationServices.FusedLocationApi
+                currLocation = LocationServices.FusedLocationApi
                         .getLastLocation(MainActivity.client);
                 if (currLocation != null) {
                     LatLng currLatLng = new LatLng(currLocation.getLatitude(),
@@ -127,7 +137,8 @@ public class GoogleMapFragment extends Fragment
                     reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng)
                             .draggable(true).visible(true)
                             .title("위도 : " + currLocation.getLatitude() + ", " +
-                                    "경도 : " + currLocation.getLongitude()));
+                                    "경도 : " + currLocation.getLongitude())
+                            .snippet(getAddress()));
                 }
             }
         }
@@ -138,5 +149,23 @@ public class GoogleMapFragment extends Fragment
         if(reportMarker != null) {
             reportMarker.remove();
         }
+    }
+
+    public String getAddress() {
+        double lat = currLocation.getLatitude();
+        double lng = currLocation.getLongitude();
+        String addr = null;
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.KOREA);
+        List<Address> address;
+        try {
+            address = geocoder.getFromLocation(lat, lng, 1);
+            if (address != null && address.size() > 0) {
+                addr = address.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MainActivity.address = addr;
+        return addr;
     }
 }

@@ -70,7 +70,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
     private void setAddress() {
         TextView addressText = (TextView) getActivity().findViewById(R.id.address_text);
-        addressText.setText("ToDo:Google에서 위경도로 주소 얻어오기, 위경도 값 반환해주는 함수 만들기");
+        addressText.setText(MainActivity.address);
     }
 
     private void showDialog(String usage) {
