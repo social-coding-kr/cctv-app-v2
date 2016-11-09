@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -190,12 +191,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSubFragment(Fragment fragment, String fragmentTag) {
+        findViewById(R.id.sub_fl).setVisibility(View.VISIBLE);
         try {
             fragmentManager.beginTransaction().attach(fragment).commit();
             fragmentManager.beginTransaction().replace(R.id.sub_fl, fragment, fragmentTag).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void hideSubFragment(Fragment fragment) {
+        findViewById(R.id.sub_fl).setVisibility(View.GONE);
+        fragmentManager.beginTransaction().detach(fragment).commit();
     }
 
     private void setLayoutByCurrentPage() {
@@ -233,7 +240,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
-        fragmentManager.beginTransaction().detach(agreementDialogFragment).commit();
+        hideSubFragment(agreementDialogFragment);
     }
 
     @Override
@@ -252,6 +259,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.report_abort_btn:
                 onNavigationItemSelected(navigationView.getMenu().getItem(0));
                 break;
+
+            case R.id.sub_fl:
+                hideSubFragment(agreementDialogFragment);
+                break;
         }
     }
 
@@ -261,9 +272,15 @@ public class MainActivity extends AppCompatActivity
                 (Button) findViewById(R.id.report_continue_btn),
                 (Button) findViewById(R.id.report_abort_btn)
         };
+        FrameLayout[] frameLayouts = new FrameLayout[] {
+                (FrameLayout) findViewById(R.id.sub_fl)
+        };
 
         for(Button btn : btns) {
             btn.setOnClickListener(this);
+        }
+        for(FrameLayout frameLayout : frameLayouts) {
+            frameLayout.setOnClickListener(this);
         }
     }
 
