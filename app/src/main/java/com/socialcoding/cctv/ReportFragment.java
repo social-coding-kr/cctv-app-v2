@@ -17,8 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.socialcoding.models.EyeOfSeoulTags;
-
 import java.io.File;
 
 import static android.app.Activity.RESULT_OK;
@@ -190,16 +188,9 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     private void showGoogleMap() {
         flush();
 
-        // ToDo : 현재 페이지와 이전 페이지를 지정해주어 레이아웃 다시 살아나도록
-        // ToDo : sub fragment가 뜨고 나서 배경에 있는 버튼 클릭되지 않도록!
         if (getActivity() instanceof MainActivity) {
             MainActivity mainActivity = (MainActivity) getActivity();
-            try {
-                Fragment googleMapFragment = GoogleMapFragment.class.newInstance();
-                mainActivity.showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            mainActivity.onNavigationItemSelected(mainActivity.navigationView.getMenu().getItem(0));
         }
     }
 

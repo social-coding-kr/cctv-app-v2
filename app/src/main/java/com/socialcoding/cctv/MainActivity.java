@@ -34,16 +34,16 @@ public class MainActivity extends AppCompatActivity
     public static GoogleApiClient client;
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
 
-    private NavigationView navigationView;
+    public NavigationView navigationView;
 
-    public Fragment googleMapFragment;
+    private Fragment googleMapFragment;
     private Fragment agreementDialogFragment;
     private Fragment reportFragment;
     private Fragment relatedLawFragment;
     private FragmentManager fragmentManager;
 
-    public static int current_page = R.id.nav_map;
-    public static int last_page;
+    private int current_page = R.id.nav_map;
+    private int last_page;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity
 
         // Ask permissions
         Handler.permissionHandler.handle(this,
-                EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING, EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
+                EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING,
+                EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
         Handler.permissionHandler.handle(this, EyeOfSeoulPermissions.CAMERA_PERMISSION_STRING);
 
         // Initialize fragments
@@ -160,6 +161,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_camera:
+                // ToDo : sub fragment가 뜨고 나서 배경에 있는 버튼 클릭되지 않도록!
                 showSubFragment(agreementDialogFragment, EyeOfSeoulTags.LocationAgreementDialogTag);
                 break;
 
@@ -204,7 +206,8 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_map:
                 searchBar.setVisibility(View.VISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
-                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag)).removeMarker();
+                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag))
+                        .removeMarker();
                 break;
 
             case R.id.nav_camera:
@@ -215,14 +218,16 @@ public class MainActivity extends AppCompatActivity
             default:
                 searchBar.setVisibility(View.INVISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
-                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag)).removeMarker();
+                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag))
+                        .removeMarker();
         }
     }
 
     public void onAgreementClicked(boolean agreement) {
         if(agreement) {
             showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
-            ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag)).moveCurrentPosition();
+            ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag))
+                    .moveCurrentPosition();
         } else {
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
@@ -274,6 +279,5 @@ public class MainActivity extends AppCompatActivity
     public void onConnectionSuspended(int i) {
 
     }
-
-
+    
 }
