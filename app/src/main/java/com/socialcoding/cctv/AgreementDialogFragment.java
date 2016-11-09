@@ -14,8 +14,6 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
 
     // Location agreement
     private boolean agreement;
-    // Button components
-    private Button[] agreementButtons;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,6 +48,8 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
     }
 
     private void setAgreeButtons(){
+        Button[] agreementButtons;
+
         agreementButtons = new Button[]{
                 (Button) getActivity().findViewById(R.id.dialog_agree_btn),
                 (Button) getActivity().findViewById(R.id.dialog_disagree_btn)

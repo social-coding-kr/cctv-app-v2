@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity
     private int current_page = R.id.nav_map;
     private int last_page;
 
+    public static String address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -279,5 +281,5 @@ public class MainActivity extends AppCompatActivity
     public void onConnectionSuspended(int i) {
 
     }
-    
+
 }

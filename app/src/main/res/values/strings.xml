@@ -3,4 +3,35 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+    <!--default translation-->
+    <string name="app_name">서울의 눈-안드</string>
+
+    <!--google map fragment strings-->
+    <string name="search_default_text">장소, 주소, 전화번호</string>
+    <string name="search_btn_text">검색</string>
+
+    <!--navigation drawer strings-->
+    <string name="developer_string">개발자</string>
+    <string name="http_string">http</string>
+    <string name="map_string">CCTV 위치 확인</string>
+    <string name="related_law_string">CCTV 관련법 보기</string>
+    <string name="report_string">CCTV 위치 등록</string>
+
+    <!--report strings-->
+    <string name="now_getting_current_location">현재 위치를 탐색하는 중...</string>
+    <string name="ask_report_current_location">현재 위치에 CCTV를 등록하시겠습니까?</string>
+    <string name="agreement_header">위치 정보 사용</string>
+    <string name="agreement_string">
+        등록할 CCTV 위치 파악을 위해 사용자의 현 위치정보를 필요로합니다.\n
+        위치 정보 사용에 동의하시겠습니까?
+    </string>
+    <string name="agreement_btn_y">동의</string>
+    <string name="agreement_btn_n">취소</string>
+    <string name="report_btn_y">등록</string>
+    <string name="report_btn_n">취소</string>
+
+    <!--default value-->
+    <string name="default_string">기본 문자열</string>
 </resources>
