@@ -74,11 +74,12 @@ public class GoogleMapFragment extends Fragment
 
         // Add a marker in Seoul, Korea and move the camera
         LatLng cityHallSeoul = new LatLng(37.5667151,126.9781312);
-        Marker cityHallSeoulMarker = mMap.addMarker(new MarkerOptions().position(cityHallSeoul).draggable(true).title("Marker in Seoul"));
+        mMap.addMarker(new MarkerOptions().position(cityHallSeoul)
+                .draggable(true).title("Marker in Seoul"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cityHallSeoul));
 
-        if(ContextCompat.checkSelfPermission(getActivity(), EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING)
-                == EyeOfSeoulPermissions.GRANTED) {
+        if(ContextCompat.checkSelfPermission(getActivity(),
+                EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
             mMap.setMyLocationEnabled(true);
         }
     }
@@ -111,14 +112,20 @@ public class GoogleMapFragment extends Fragment
     }
 
     public boolean moveCurrentPosition() {
-        if(ContextCompat.checkSelfPermission(getActivity(), EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING)
-                == EyeOfSeoulPermissions.GRANTED) {
+        if(ContextCompat.checkSelfPermission(getActivity(),
+                EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
             if(MainActivity.client != null) {
-                Location currLocation = LocationServices.FusedLocationApi.getLastLocation(MainActivity.client);
+                Location currLocation = LocationServices.FusedLocationApi
+                        .getLastLocation(MainActivity.client);
                 if (currLocation != null) {
-                    LatLng currLatLng = new LatLng(currLocation.getLatitude(), currLocation.getLongitude());
+                    LatLng currLatLng = new LatLng(currLocation.getLatitude(),
+                            currLocation.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
-                    reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng).draggable(true).visible(true)
+                    if (reportMarker != null) {
+                        reportMarker.remove();
+                    }
+                    reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng)
+                            .draggable(true).visible(true)
                             .title("위도 : " + currLocation.getLatitude() + ", " +
                                     "경도 : " + currLocation.getLongitude()));
                 }

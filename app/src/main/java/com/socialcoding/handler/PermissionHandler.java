@@ -30,6 +30,22 @@ public class PermissionHandler extends Activity {
         return EyeOfSeoulPermissions.DENIED;
     }
 
+    public int handle(Activity activity, String permission) {
+        this.activity = activity;
+        this.permission = permission;
+        this.permissionsRequest = 0;
+        if (isGranted()) {
+            return EyeOfSeoulPermissions.GRANTED;
+        } else {
+            if(needExplanation()) {
+                explain();
+            } else {
+                askPermission();
+            }
+        }
+        return EyeOfSeoulPermissions.DENIED;
+    }
+
     public boolean isGranted() {
         return (ContextCompat.checkSelfPermission(activity, permission) == EyeOfSeoulPermissions.GRANTED);
     }
