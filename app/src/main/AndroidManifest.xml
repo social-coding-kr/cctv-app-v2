@@ -25,6 +25,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/Theme.Transparent" />
+
         <!--Google play version-->
         <meta-data
             android:name="com.google.android.gms.version"

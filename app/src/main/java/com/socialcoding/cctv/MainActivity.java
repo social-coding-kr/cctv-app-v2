@@ -1,5 +1,6 @@
 package com.socialcoding.cctv;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Connect google api client
         if (client == null) {
             client = new GoogleApiClient.Builder(this)
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity
 
         // Set views
         setContentView(R.layout.activity_main);
+        startActivity(new Intent(this, SplashActivity.class));
         initButtons();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -120,9 +123,7 @@ public class MainActivity extends AppCompatActivity
                 quitToast = Toast.makeText(this, "뒤로 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
                 quitToast.show();
             } else {
-                // ToDo : find better way to exit
-                super.onBackPressed();
-                super.onBackPressed();
+                finish();
             }
         }
     }
