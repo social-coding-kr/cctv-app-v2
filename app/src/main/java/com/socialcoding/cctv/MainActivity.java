@@ -1,6 +1,7 @@
 package com.socialcoding.cctv;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -8,13 +9,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -26,8 +27,8 @@ import com.socialcoding.exception.SocialCodeException;
 import com.socialcoding.handler.Handler;
 import com.socialcoding.http.CCTVHttpHandlerDummy;
 import com.socialcoding.inteface.HttpHandler;
+import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
-import com.socialcoding.models.EyeOfSeoulTags;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -52,11 +53,11 @@ public class MainActivity extends AppCompatActivity
 
     public static String address;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void getSplashScreen() {
+        startActivity(new Intent(this, SplashActivity.class));
+    }
 
-        // Connect google api client
+    private void connectGoogleApiClient() {
         if (client == null) {
             client = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -65,14 +66,14 @@ public class MainActivity extends AppCompatActivity
                     .addApi(LocationServices.API)
                     .build();
         }
+    }
 
-        // Ask permissions
+    private void initFragments() {
+        // Before init google map, we have ask permission.
         Handler.permissionHandler.handle(this,
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING,
                 EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
-        Handler.permissionHandler.handle(this, EyeOfSeoulPermissions.CAMERA_PERMISSION_STRING);
-
-        // Initialize fragments
+        // Init fragments.
         try {
             fragmentManager = getSupportFragmentManager();
             googleMapFragment = GoogleMapFragment.class.newInstance();
@@ -80,35 +81,70 @@ public class MainActivity extends AppCompatActivity
             reportFragment = ReportFragment.class.newInstance();
             relatedLawFragment = RelatedLawFragment.class.newInstance();
             fragmentManager.beginTransaction()
-                    .replace(R.id.main_fl, googleMapFragment, EyeOfSeoulTags.GoogleMapTag)
+                    .replace(R.id.main_fl, googleMapFragment, EyeOfSeoulParams.GoogleMapTag)
                     .addToBackStack("GoogleMapStack").commit();
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
 
-        // Set views
-        setContentView(R.layout.activity_main);
-        startActivity(new Intent(this, SplashActivity.class));
-        initButtons();
-
+    private void initNaviDrawer() {
+        /*
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        */
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_main);
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
-        // HTTP connect
+    private void connectHttp() {
         try {
             httpHandler.connect("test_url", 1004);
         } catch (SocialCodeException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initComponents() {
+        Button[] btns = new Button[]{
+                (Button) findViewById(R.id.search_btn),
+                (Button) findViewById(R.id.report_continue_btn),
+                (Button) findViewById(R.id.report_abort_btn)
+        };
+        FrameLayout[] frameLayouts = new FrameLayout[] {
+                (FrameLayout) findViewById(R.id.sub_fl)
+        };
+        ImageView[] imageViews = new ImageView[] {
+                (ImageView) findViewById(R.id.menu_btn)
+        };
+
+        for(Button btn : btns) {
+            btn.setOnClickListener(this);
+        }
+        for(FrameLayout frameLayout : frameLayouts) {
+            frameLayout.setOnClickListener(this);
+        }
+        for(ImageView imageView : imageViews) {
+            imageView.setOnClickListener(this);
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        getSplashScreen();
+
+        connectHttp();
+        connectGoogleApiClient();
+        initFragments();
+        initNaviDrawer();
+        initComponents();
     }
 
     @Override
@@ -172,16 +208,15 @@ public class MainActivity extends AppCompatActivity
 
         switch(current_page) {
             case R.id.nav_map:
-                showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
+                showFragment(googleMapFragment, EyeOfSeoulParams.GoogleMapTag);
                 break;
 
             case R.id.nav_camera:
-                // ToDo : sub fragment가 뜨고 나서 배경에 있는 버튼 클릭되지 않도록!
-                showSubFragment(agreementDialogFragment, EyeOfSeoulTags.LocationAgreementDialogTag);
+                showSubFragment(agreementDialogFragment, EyeOfSeoulParams.LocationAgreementDialogTag);
                 break;
 
             case R.id.nav_related_law:
-                showFragment(relatedLawFragment, EyeOfSeoulTags.RelatedLawTag);
+                showFragment(relatedLawFragment, EyeOfSeoulParams.RelatedLawTag);
                 break;
 
             case R.id.nav_debug_http:
@@ -227,7 +262,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_map:
                 searchBar.setVisibility(View.VISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
-                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag))
+                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
                         .removeMarker();
                 break;
 
@@ -239,15 +274,15 @@ public class MainActivity extends AppCompatActivity
             default:
                 searchBar.setVisibility(View.INVISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
-                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag))
+                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
                         .removeMarker();
         }
     }
 
     public void onAgreementClicked(boolean agreement) {
         if(agreement) {
-            showFragment(googleMapFragment, EyeOfSeoulTags.GoogleMapTag);
-            ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulTags.GoogleMapTag))
+            showFragment(googleMapFragment, EyeOfSeoulParams.GoogleMapTag);
+            ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
                     .moveCurrentPosition();
         } else {
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
@@ -255,9 +290,22 @@ public class MainActivity extends AppCompatActivity
         hideSubFragment(agreementDialogFragment);
     }
 
+    private int getStatusHeight(){
+        Rect rect = new Rect();
+        Window window= getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rect);
+        return rect.top;
+
+    }
+
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
+            case R.id.menu_btn:
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                drawer.openDrawer(navigationView);
+                break;
+
             case R.id.search_btn:
                 //TODO:검색기능 붙이기
                 break;
@@ -265,7 +313,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.report_continue_btn:
                 last_page = current_page;
                 current_page = R.layout.fragment_report;
-                showFragment(reportFragment, EyeOfSeoulTags.ReportTag);
+                showFragment(reportFragment, EyeOfSeoulParams.ReportTag);
                 break;
 
             case R.id.report_abort_btn:
@@ -275,24 +323,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.sub_fl:
                 hideSubFragment(agreementDialogFragment);
                 break;
-        }
-    }
-
-    private void initButtons() {
-        Button[] btns = new Button[]{
-                (Button) findViewById(R.id.search_btn),
-                (Button) findViewById(R.id.report_continue_btn),
-                (Button) findViewById(R.id.report_abort_btn)
-        };
-        FrameLayout[] frameLayouts = new FrameLayout[] {
-                (FrameLayout) findViewById(R.id.sub_fl)
-        };
-
-        for(Button btn : btns) {
-            btn.setOnClickListener(this);
-        }
-        for(FrameLayout frameLayout : frameLayouts) {
-            frameLayout.setOnClickListener(this);
         }
     }
 

@@ -8,7 +8,7 @@
             android:title="@string/map_string" />
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_share"
             android:title="@string/report_string" />
         <item
             android:id="@+id/nav_related_law"
