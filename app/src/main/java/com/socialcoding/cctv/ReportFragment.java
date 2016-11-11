@@ -17,6 +17,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.socialcoding.handler.Handler;
+import com.socialcoding.models.EyeOfSeoulPermissions;
+
 import java.io.File;
 
 import static android.app.Activity.RESULT_OK;
@@ -49,6 +52,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Handler.permissionHandler.handle(getActivity(), EyeOfSeoulPermissions.CAMERA_PERMISSION_STRING);
         setButtons();
         setAddress();
     }
