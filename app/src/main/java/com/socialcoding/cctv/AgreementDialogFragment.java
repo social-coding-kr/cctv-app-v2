@@ -61,7 +61,8 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
         };
         agreementTextViews = new TextView[] {
                 (TextView) getActivity().findViewById(R.id.agreement_dialog_header_text_view),
-                (TextView) getActivity().findViewById(R.id.agreement_dialog_text_view)
+                (TextView) getActivity().findViewById(R.id.agreement_reason_text_view),
+                (TextView) getActivity().findViewById(R.id.agreement_ask_text_view)
         };
 
         for(Button b : agreementButtons) {

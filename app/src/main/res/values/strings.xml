@@ -23,8 +23,10 @@
     <string name="now_getting_current_location">현재 위치를 탐색하는 중...</string>
     <string name="ask_report_current_location">현재 위치에 CCTV를 등록하시겠습니까?</string>
     <string name="agreement_header">위치 정보 사용</string>
-    <string name="agreement_string">
-        등록할 CCTV 위치 파악을 위해 사용자의 현 위치정보를 필요로합니다.\n
+    <string name="agreement_reason_string">
+        등록할 CCTV 위치 파악을 위해 사용자의 현 위치정보를 필요로합니다.
+    </string>
+    <string name="agreement_ask_string">
         위치 정보 사용에 동의하시겠습니까?
     </string>
     <string name="agreement_btn_y">동의</string>

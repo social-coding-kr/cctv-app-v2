@@ -209,7 +209,9 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_camera:
-                showSubFragment(agreementDialogFragment, EyeOfSeoulParams.LocationAgreementDialogTag);
+                if (findViewById(R.id.bottom_bar_google_map).getVisibility() == View.INVISIBLE) {
+                    showSubFragment(agreementDialogFragment, EyeOfSeoulParams.LocationAgreementDialogTag);
+                }
                 break;
 
             case R.id.nav_related_law:
