@@ -1,7 +1,6 @@
 package com.socialcoding.cctv;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -39,6 +37,7 @@ public class MainActivity extends AppCompatActivity
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
 
     public NavigationView navigationView;
+    private DrawerLayout drawer;
 
     private Fragment googleMapFragment;
     private Fragment agreementDialogFragment;
@@ -89,17 +88,9 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initNaviDrawer() {
-        /*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        */
-
         navigationView = (NavigationView) findViewById(R.id.nav_main);
         navigationView.setNavigationItemSelectedListener(this);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
     }
 
     private void connectHttp() {
@@ -140,10 +131,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         getSplashScreen();
 
+        initNaviDrawer();
         connectHttp();
         connectGoogleApiClient();
         initFragments();
-        initNaviDrawer();
         initComponents();
     }
 
@@ -290,19 +281,10 @@ public class MainActivity extends AppCompatActivity
         hideSubFragment(agreementDialogFragment);
     }
 
-    private int getStatusHeight(){
-        Rect rect = new Rect();
-        Window window= getWindow();
-        window.getDecorView().getWindowVisibleDisplayFrame(rect);
-        return rect.top;
-
-    }
-
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.menu_btn:
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
                 drawer.openDrawer(navigationView);
                 break;
 
