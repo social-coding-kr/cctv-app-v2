@@ -52,6 +52,8 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        TextView titleTextView = (TextView) getActivity().findViewById(R.id.title_text_view);
+        titleTextView.setText(getActivity().getResources().getString(R.string.report_string));
         Handler.permissionHandler.handle(getActivity(), EyeOfSeoulPermissions.CAMERA_PERMISSION_STRING);
         setButtons();
         setAddress();

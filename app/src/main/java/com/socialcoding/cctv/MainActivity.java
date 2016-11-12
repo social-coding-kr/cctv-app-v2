@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -251,6 +252,7 @@ public class MainActivity extends AppCompatActivity
     private void setLayoutByCurrentPage() {
         ImageView menuBtn = (ImageView) findViewById(R.id.menu_btn);
         ImageView backBtn = (ImageView) findViewById(R.id.back_btn);
+        TextView titleTextView = (TextView) findViewById(R.id.title_text_view);
         View searchBar = findViewById(R.id.search_bar);
         View bottomBar = findViewById(R.id.bottom_bar_google_map);
         View bottomBarFirst = findViewById(R.id.now_getting_current_location);
@@ -260,6 +262,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_map:
                 menuBtn.setVisibility(View.VISIBLE);
                 backBtn.setVisibility(View.INVISIBLE);
+                titleTextView.setVisibility(View.INVISIBLE);
                 searchBar.setVisibility(View.VISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
                 ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
@@ -269,6 +272,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_camera:
                 menuBtn.setVisibility(View.VISIBLE);
                 backBtn.setVisibility(View.INVISIBLE);
+                titleTextView.setVisibility(View.INVISIBLE);
                 searchBar.setVisibility(View.VISIBLE);
                 bottomBar.setVisibility(View.VISIBLE);
                 break;
@@ -276,6 +280,7 @@ public class MainActivity extends AppCompatActivity
             default:
                 menuBtn.setVisibility(View.INVISIBLE);
                 backBtn.setVisibility(View.VISIBLE);
+                titleTextView.setVisibility(View.VISIBLE);
                 searchBar.setVisibility(View.INVISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
                 ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
