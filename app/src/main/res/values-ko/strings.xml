@@ -27,6 +27,8 @@
     <string name="report_btn_y">등 록</string>
     <string name="report_btn_n">취 소</string>
     <string name="address_string">주소</string>
+    <string name="cctv_image_string">CCTV 사진</string>
+    <string name="cctv_info_string">안내판 사진</string>
 
     <!--default value-->
     <string name="default_string">기본 문자열</string>

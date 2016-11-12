@@ -26,6 +26,8 @@
     <string name="report_btn_y">Yes!</string>
     <string name="report_btn_n">No!</string>
     <string name="address_string">Address</string>
+    <string name="cctv_image_string">CCTV Image</string>
+    <string name="cctv_info_string">CCTV Information Image</string>
 
     <!--default value-->
     <string name="default_string">Default String</string>
