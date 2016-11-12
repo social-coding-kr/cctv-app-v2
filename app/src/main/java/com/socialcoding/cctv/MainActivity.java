@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_main);
         navigationView.setNavigationItemSelectedListener(this);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED); // block swipe
     }
 
     private void connectHttp() {
@@ -111,7 +112,8 @@ public class MainActivity extends AppCompatActivity
                 (FrameLayout) findViewById(R.id.sub_fl)
         };
         ImageView[] imageViews = new ImageView[] {
-                (ImageView) findViewById(R.id.menu_btn)
+                (ImageView) findViewById(R.id.menu_btn),
+                (ImageView) findViewById(R.id.back_btn)
         };
 
         for(Button btn : btns) {
@@ -143,8 +145,11 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (findViewById(R.id.sub_fl).getVisibility() == View.VISIBLE) {
-            findViewById(R.id.sub_fl).setVisibility(View.GONE);
+        } else if(current_page != R.id.nav_map) {
+            if (findViewById(R.id.sub_fl).getVisibility() == View.VISIBLE) {
+                hideSubFragment(agreementDialogFragment);
+            }
+            onNavigationItemSelected(navigationView.getMenu().getItem(0));
         } else {
             if (quitToast == null || quitToast.getView().getWindowVisibility() != View.VISIBLE) {
                 quitToast = Toast.makeText(this, "뒤로 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
@@ -244,6 +249,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setLayoutByCurrentPage() {
+        ImageView menuBtn = (ImageView) findViewById(R.id.menu_btn);
+        ImageView backBtn = (ImageView) findViewById(R.id.back_btn);
         View searchBar = findViewById(R.id.search_bar);
         View bottomBar = findViewById(R.id.bottom_bar_google_map);
         View bottomBarFirst = findViewById(R.id.now_getting_current_location);
@@ -251,6 +258,8 @@ public class MainActivity extends AppCompatActivity
 
         switch (current_page) {
             case R.id.nav_map:
+                menuBtn.setVisibility(View.VISIBLE);
+                backBtn.setVisibility(View.INVISIBLE);
                 searchBar.setVisibility(View.VISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
                 ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
@@ -258,11 +267,15 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_camera:
+                menuBtn.setVisibility(View.VISIBLE);
+                backBtn.setVisibility(View.INVISIBLE);
                 searchBar.setVisibility(View.VISIBLE);
                 bottomBar.setVisibility(View.VISIBLE);
                 break;
 
             default:
+                menuBtn.setVisibility(View.INVISIBLE);
+                backBtn.setVisibility(View.VISIBLE);
                 searchBar.setVisibility(View.INVISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
                 ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
@@ -286,6 +299,10 @@ public class MainActivity extends AppCompatActivity
         switch(v.getId()) {
             case R.id.menu_btn:
                 drawer.openDrawer(navigationView);
+                break;
+
+            case R.id.back_btn:
+                onNavigationItemSelected(navigationView.getMenu().getItem(0));
                 break;
 
             case R.id.search_btn:
