@@ -33,7 +33,7 @@ public class GoogleMapFragment extends Fragment
 
     private GoogleMap mMap;
     protected View view;
-    private static Location currLocation;
+    private Location currLocation;
 
     private static Marker reportMarker;
 
@@ -132,6 +132,10 @@ public class GoogleMapFragment extends Fragment
                     LatLng currLatLng = new LatLng(currLocation.getLatitude(),
                             currLocation.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
+                    getActivity().findViewById(R.id.bottom_bar_google_map_loading_text)
+                            .setVisibility(View.INVISIBLE);
+                    getActivity().findViewById(R.id.bottom_bar_google_map_asking)
+                            .setVisibility(View.VISIBLE);
                     if (reportMarker != null) {
                         reportMarker.remove();
                     }
@@ -143,6 +147,7 @@ public class GoogleMapFragment extends Fragment
                 }
             }
         }
+        currLocation = null;
         return true;
     }
 

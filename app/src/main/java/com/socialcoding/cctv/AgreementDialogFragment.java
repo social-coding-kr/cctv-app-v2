@@ -35,6 +35,10 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
 
         switch(v.getId()) {
             case R.id.dialog_agree_btn:
+                getActivity().findViewById(R.id.bottom_bar_google_map_loading_text)
+                        .setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.bottom_bar_google_map_asking)
+                        .setVisibility(View.INVISIBLE);
                 agreement = true;
                 break;
 
@@ -61,7 +65,8 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
         };
         agreementTextViews = new TextView[] {
                 (TextView) getActivity().findViewById(R.id.agreement_dialog_header_text_view),
-                (TextView) getActivity().findViewById(R.id.agreement_dialog_text_view)
+                (TextView) getActivity().findViewById(R.id.agreement_reason_text_view),
+                (TextView) getActivity().findViewById(R.id.agreement_ask_text_view)
         };
 
         for(Button b : agreementButtons) {

@@ -46,7 +46,8 @@
             android:paddingRight="10dp"
             android:paddingStart="66dp"
             android:paddingEnd="10dp"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="20sp" />
 
         <LinearLayout
             android:id="@+id/search_bar"
