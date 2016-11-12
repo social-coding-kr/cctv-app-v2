@@ -257,8 +257,6 @@ public class MainActivity extends AppCompatActivity
         TextView titleTextView = (TextView) findViewById(R.id.title_text_view);
         View searchBar = findViewById(R.id.search_bar);
         View bottomBar = findViewById(R.id.bottom_bar_google_map);
-        View bottomBarFirst = findViewById(R.id.now_getting_current_location);
-        View bottomBarSecond = findViewById(R.id.ask_report_current_location);
 
         switch (current_page) {
             case R.id.nav_map:

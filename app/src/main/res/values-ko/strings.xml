@@ -22,10 +22,11 @@
     <string name="agreement_ask_string">
         위치 정보 사용에 동의하시겠습니까?
     </string>
-    <string name="agreement_btn_y">동의</string>
-    <string name="agreement_btn_n">취소</string>
-    <string name="report_btn_y">등록</string>
-    <string name="report_btn_n">취소</string>
+    <string name="agreement_btn_y">동 의</string>
+    <string name="agreement_btn_n">취 소</string>
+    <string name="report_btn_y">등 록</string>
+    <string name="report_btn_n">취 소</string>
+    <string name="address_string">주소</string>
 
     <!--default value-->
     <string name="default_string">기본 문자열</string>

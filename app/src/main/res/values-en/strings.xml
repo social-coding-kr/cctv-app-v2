@@ -25,6 +25,7 @@
     <string name="agreement_btn_n">Disagree</string>
     <string name="report_btn_y">Yes!</string>
     <string name="report_btn_n">No!</string>
+    <string name="address_string">Address</string>
 
     <!--default value-->
     <string name="default_string">Default String</string>
