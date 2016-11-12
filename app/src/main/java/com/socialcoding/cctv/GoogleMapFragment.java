@@ -105,6 +105,7 @@ public class GoogleMapFragment extends Fragment
             currLocation.setLongitude(longitude);
             reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
                     "경도 : " + Double.toString(longitude));
+            // reportMarker.setSnippet(getAddress()); // Too slow...
             marker.showInfoWindow();
         }
     }

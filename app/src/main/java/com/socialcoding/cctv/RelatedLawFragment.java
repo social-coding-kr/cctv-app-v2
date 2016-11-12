@@ -28,13 +28,14 @@ public class RelatedLawFragment extends Fragment implements View.OnClickListener
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle(getActivity().getResources().getString(R.string.related_law_string));
         return inflater.inflate(R.layout.fragment_related_law, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        TextView titleTextView = (TextView) getActivity().findViewById(R.id.title_text_view);
+        titleTextView.setText(getActivity().getResources().getString(R.string.related_law_string));
         try {
             initAfterViewCreated();
         } catch (Exception e) {

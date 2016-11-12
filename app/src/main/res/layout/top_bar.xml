@@ -8,64 +8,82 @@
 
     <!--layout for toggle button-->
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
         android:gravity="start">
 
         <ImageView
             android:id="@+id/menu_btn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:padding="16dp"
             android:layout_centerInParent="true"
             android:src="@drawable/menu_icon"
             android:contentDescription="@string/default_string" />
 
         <ImageView
             android:id="@+id/back_btn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:padding="16dp"
             android:layout_centerInParent="true"
             android:src="@drawable/nav_back_arrow"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:contentDescription="@string/default_string" />
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/search_bar"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center_vertical"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="56dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/search_bar_background"
-        android:orientation="horizontal">
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="start">
 
-        <EditText
-            android:id="@+id/search_text"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:paddingLeft="10dp"
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingLeft="66dp"
             android:paddingRight="10dp"
-            android:inputType="text"
+            android:paddingStart="66dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical" />
+
+        <LinearLayout
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:layout_weight="1"
-            android:background="@null"
-            android:hint="@string/search_default_text" />
-
-        <Button
-            android:id="@+id/search_btn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="56dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/search_button" />
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/search_bar_background"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/search_text"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:inputType="text"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/search_default_text" />
+
+            <Button
+                android:id="@+id/search_btn"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/search_button" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

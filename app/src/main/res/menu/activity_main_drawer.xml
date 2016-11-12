@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="none">
         <item
             android:id="@+id/nav_map"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/menu_map_icon"
             android:title="@string/map_string" />
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/menu_report_icon"
             android:title="@string/report_string" />
         <item
             android:id="@+id/nav_related_law"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/menu_related_law_icon"
             android:title="@string/related_law_string" />
     </group>
 
