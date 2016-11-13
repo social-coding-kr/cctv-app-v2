@@ -10,7 +10,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +35,7 @@ import com.socialcoding.http.CCTVHttpHandlerDummy;
 import com.socialcoding.inteface.HttpHandler;
 import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
+import com.socialcoding.utilities.CustomTypefaceSpan;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -93,11 +99,41 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void applyFontToMenuItem(MenuItem mi) {
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(
+                new CustomTypefaceSpan("", naumBarunGothic),
+                0,
+                mNewTitle.length(),
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE
+        );
+        mNewTitle.setSpan(new RelativeSizeSpan(1.15f),
+                0,
+                mNewTitle.length(),
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
+    }
+
     private void initNaviDrawer() {
         navigationView = (NavigationView) findViewById(R.id.nav_main);
         navigationView.setNavigationItemSelectedListener(this);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED); // block swipe
+        // Set font for navigation drawer menu
+        Menu m = navigationView.getMenu();
+        for (int i=0;i<m.size();i++) {
+            MenuItem mi = m.getItem(i);
+            //for applying a font to subMenu ...
+            SubMenu subMenu = mi.getSubMenu();
+            if (subMenu!=null && subMenu.size() >0 ) {
+                for (int j=0; j <subMenu.size();j++) {
+                    MenuItem subMenuItem = subMenu.getItem(j);
+                    applyFontToMenuItem(subMenuItem);
+                }
+            }
+            //the method we have create in activity
+            applyFontToMenuItem(mi);
+        }
     }
 
     private void connectHttp() {
@@ -155,12 +191,12 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getSplashScreen();
+        initComponents();
 
         initNaviDrawer();
         connectHttp();
         connectGoogleApiClient();
         initFragments();
-        initComponents();
     }
 
     @Override

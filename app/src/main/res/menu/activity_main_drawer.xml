@@ -4,15 +4,15 @@
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/nav_map"
-            android:icon="@drawable/menu_map_icon"
+            android:icon="@drawable/map"
             android:title="@string/map_string" />
         <item
             android:id="@+id/nav_camera"
-            android:icon="@drawable/menu_report_icon"
+            android:icon="@drawable/placeholder"
             android:title="@string/report_string" />
         <item
             android:id="@+id/nav_related_law"
-            android:icon="@drawable/menu_related_law_icon"
+            android:icon="@drawable/justice_scale"
             android:title="@string/related_law_string" />
     </group>
 
@@ -20,7 +20,7 @@
         <menu>
             <item
                 android:id="@+id/nav_debug_http"
-                android:icon="@drawable/ic_menu_manage"
+                android:icon="@drawable/adjust"
                 android:title="@string/http_string" />
         </menu>
     </item>
