@@ -64,9 +64,10 @@
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/search_text"
+                android:id="@+id/search_bar_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
+                android:paddingTop="1dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:inputType="text"

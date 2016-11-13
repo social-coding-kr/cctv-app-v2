@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -55,27 +56,44 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
         TextView titleTextView = (TextView) getActivity().findViewById(R.id.title_text_view);
         titleTextView.setText(getActivity().getResources().getString(R.string.report_string));
         Handler.permissionHandler.handle(getActivity(), EyeOfSeoulPermissions.CAMERA_PERMISSION_STRING);
-        setButtons();
+        initComponents();
         setAddress();
     }
 
-    private void setButtons() {
-        Button reportCompleteButton;
-        Button reportCancleButton;
+    private void initComponents() {
+        if (!(getActivity() instanceof MainActivity)) {
+            throw new RuntimeException("Invalid activity.");
+        }
+        MainActivity mainActivity = (MainActivity) getActivity();
+        Typeface naumBarunGothic = MainActivity.naumBarunGothic;
 
-        cctvImageView = (ImageView) getActivity().findViewById(R.id.cctv_image);
-        infoImageView = (ImageView) getActivity().findViewById(R.id.info_image);
-        reportCompleteButton = (Button) getActivity().findViewById(R.id.report_complete_btn);
-        reportCancleButton = (Button) getActivity().findViewById(R.id.report_cancle_btn);
+        cctvImageView = (ImageView) mainActivity.findViewById(R.id.cctv_image);
+        infoImageView = (ImageView) mainActivity.findViewById(R.id.info_image);
+        TextView[] textViews = new TextView[] {
+                (TextView) mainActivity.findViewById(R.id.report_cctv_image_text_view),
+                (TextView) mainActivity.findViewById(R.id.report_info_image_text_view),
+                (TextView) mainActivity.findViewById(R.id.bottom_bar_report_address_title_text_view),
+                (TextView) mainActivity.findViewById(R.id.bottom_bar_report_address_text_view)
+        };
+        Button[] buttons = new Button[]{
+                (Button) mainActivity.findViewById(R.id.report_complete_btn),
+                (Button) mainActivity.findViewById(R.id.report_cancle_btn)
+        };
 
         cctvImageView.setOnClickListener(this);
         infoImageView.setOnClickListener(this);
-        reportCompleteButton.setOnClickListener(this);
-        reportCancleButton.setOnClickListener(this);
+        for(TextView tv : textViews) {
+            tv.setTypeface(naumBarunGothic);
+        }
+        for(Button b : buttons) {
+            b.setOnClickListener(this);
+            b.setTypeface(naumBarunGothic);
+        }
     }
 
     private void setAddress() {
-        TextView addressText = (TextView) getActivity().findViewById(R.id.address_text);
+        TextView addressText = (TextView) getActivity()
+                .findViewById(R.id.bottom_bar_report_address_text_view);
         addressText.setText(MainActivity.address);
     }
 

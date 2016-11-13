@@ -8,6 +8,7 @@
         android:layout_above="@+id/bottom_bar_report">
 
         <TextView
+            android:id="@+id/report_cctv_image_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
@@ -17,7 +18,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="20sp"
+            android:textSize="17.5sp"
             android:textColor="@android:color/black"
             android:text="@string/cctv_image_string" />
 
@@ -47,6 +48,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/report_info_image_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
@@ -56,7 +58,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="20sp"
+            android:textSize="17.5sp"
             android:textColor="@android:color/black"
             android:text="@string/cctv_info_string" />
 

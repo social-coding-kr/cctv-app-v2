@@ -4,7 +4,7 @@
     android:layout_height="wrap_content" android:layout_gravity="bottom">
 
     <TextView
-        android:id="@+id/bottom_bar_google_map_loading_text"
+        android:id="@+id/bottom_bar_google_map_loading_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -17,7 +17,7 @@
         android:text="@string/now_getting_current_location" />
 
     <LinearLayout
-        android:id="@+id/bottom_bar_google_map_asking"
+        android:id="@+id/bottom_bar_google_map_ask_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:layout_alignParentStart="true">
 
         <TextView
-            android:id="@+id/bottom_bar_google_map_asking_text"
+            android:id="@+id/bottom_bar_google_map_ask_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -55,9 +55,9 @@
 
             <Button
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:id="@+id/report_continue_btn"
+                android:id="@+id/bottom_bar_google_map_continue_btn"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="30dp"
                 android:layout_weight="0.5"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
@@ -65,15 +65,15 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginEnd="5dp"
-                android:background="@color/colorEyeOfSeoul"
-                android:textSize="20sp"
+                android:background="@drawable/rounded_background_eye_of_seoul_color"
+                android:textSize="17.5sp"
                 android:text="@string/agreement_btn_y" />
 
             <Button
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:id="@+id/report_abort_btn"
+                android:id="@+id/bottom_bar_google_map_cancle_btn"
                 android:layout_width="0dp"
-                android:layout_height="35dp"
+                android:layout_height="30dp"
                 android:layout_weight="0.5"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
@@ -81,8 +81,8 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/button_black_bordered"
-                android:textSize="20sp"
+                android:background="@drawable/rounded_background_with_black_border"
+                android:textSize="17.5sp"
                 android:text="@string/agreement_btn_n" />
 
         </LinearLayout>

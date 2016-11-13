@@ -1,6 +1,7 @@
 package com.socialcoding.cctv;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -45,6 +47,9 @@ public class MainActivity extends AppCompatActivity
     private Fragment reportFragment;
     private Fragment relatedLawFragment;
     private FragmentManager fragmentManager;
+
+    // fonts
+    public static Typeface naumBarunGothic;
 
     private int current_page = R.id.nav_map;
     private int last_page;
@@ -103,11 +108,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void initComponents() {
+    private void initButtons() {
         Button[] btns = new Button[]{
                 (Button) findViewById(R.id.search_btn),
-                (Button) findViewById(R.id.report_continue_btn),
-                (Button) findViewById(R.id.report_abort_btn)
+                (Button) findViewById(R.id.bottom_bar_google_map_continue_btn),
+                (Button) findViewById(R.id.bottom_bar_google_map_cancle_btn)
         };
         FrameLayout[] frameLayouts = new FrameLayout[] {
                 (FrameLayout) findViewById(R.id.sub_fl)
@@ -126,6 +131,23 @@ public class MainActivity extends AppCompatActivity
         for(ImageView imageView : imageViews) {
             imageView.setOnClickListener(this);
         }
+    }
+
+    private void initFonts() {
+        naumBarunGothic = Typeface.createFromAsset(getAssets(), "NanumBarunGothic_Regular.ttf");
+        // Top bar
+        ((EditText) findViewById(R.id.search_bar_edit_text)).setTypeface(naumBarunGothic);
+        ((TextView) findViewById(R.id.title_text_view)).setTypeface(naumBarunGothic);
+        // Bottom bar, google map
+        ((TextView) findViewById(R.id.bottom_bar_google_map_loading_text_view)).setTypeface(naumBarunGothic);
+        ((TextView) findViewById(R.id.bottom_bar_google_map_ask_text_view)).setTypeface(naumBarunGothic);
+        ((Button) findViewById(R.id.bottom_bar_google_map_continue_btn)).setTypeface(naumBarunGothic);
+        ((Button) findViewById(R.id.bottom_bar_google_map_cancle_btn)).setTypeface(naumBarunGothic);
+    }
+
+    private void initComponents() {
+        initButtons();
+        initFonts();
     }
 
     @Override
@@ -314,13 +336,13 @@ public class MainActivity extends AppCompatActivity
                 //TODO:검색기능 붙이기
                 break;
 
-            case R.id.report_continue_btn:
+            case R.id.bottom_bar_google_map_continue_btn:
                 last_page = current_page;
                 current_page = R.layout.fragment_report;
                 showFragment(reportFragment, EyeOfSeoulParams.ReportTag);
                 break;
 
-            case R.id.report_abort_btn:
+            case R.id.bottom_bar_google_map_cancle_btn:
                 onNavigationItemSelected(navigationView.getMenu().getItem(0));
                 break;
 

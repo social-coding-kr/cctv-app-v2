@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
+    android:layout_width="240dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_gravity="center"
     android:gravity="center"
-    android:background="@color/colorWhite">
+    android:background="@drawable/rounded_background">
 
     <TextView
-        android:id="@+id/agreement_dialog_header_text_view"
+        android:id="@+id/agreement_dialog_title_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="9dp"
         android:textAlignment="center"
-        android:textSize="22sp"
+        android:textSize="19sp"
         android:textColor="@android:color/black"
         android:text="@string/agreement_header" />
 
@@ -29,7 +29,7 @@
         android:contentDescription="@string/default_string" />
 
     <TextView
-        android:id="@+id/agreement_reason_text_view"
+        android:id="@+id/agreement_dialog_reason_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -37,11 +37,11 @@
         android:paddingStart="10dp"
         android:paddingRight="10dp"
         android:paddingEnd="10dp"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:text="@string/agreement_reason_string" />
 
     <TextView
-        android:id="@+id/agreement_ask_text_view"
+        android:id="@+id/agreement_dialog_ask_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
@@ -49,43 +49,46 @@
         android:paddingStart="10dp"
         android:paddingRight="10dp"
         android:paddingEnd="10dp"
-        android:textSize="15sp"
+        android:textSize="13sp"
         android:text="@string/agreement_ask_string" />
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:weightSum="1">
 
         <Button
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:id="@+id/dialog_agree_btn"
-            android:layout_height="35dp"
-            android:layout_width="135dp"
+            android:id="@+id/agreement_dialog_agree_btn"
+            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginRight="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="5dp"
-            android:background="@color/colorEyeOfSeoul"
-            android:textSize="20sp"
+            android:background="@drawable/rounded_background_eye_of_seoul_color"
+            android:textSize="17.5sp"
             android:text="@string/agreement_btn_y" />
 
         <Button
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:id="@+id/dialog_disagree_btn"
-            android:layout_height="35dp"
-            android:layout_width="135dp"
+            android:id="@+id/agreement_dialog_disagree_btn"
+            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="10dp"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/button_black_bordered"
-            android:textSize="20sp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_background_with_black_border"
+            android:textSize="17.5sp"
             android:text="@string/agreement_btn_n" />
 
     </LinearLayout>
