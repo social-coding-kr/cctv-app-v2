@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nav_contents_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:background="@color/colorEyeOfSeoul"
-    android:gravity="center_horizontal"
+    android:gravity="center"
     android:orientation="vertical"
     android:layout_marginTop="0dp"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -14,8 +14,8 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="180dp"
-        android:layout_height="166.9dp"
+        android:layout_width="135dp"
+        android:layout_height="125.175dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:src="@drawable/eye_of_seoul_logo"
         android:contentDescription="@string/default_string"/>
