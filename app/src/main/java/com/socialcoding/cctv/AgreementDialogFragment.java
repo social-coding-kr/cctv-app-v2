@@ -1,5 +1,6 @@
 package com.socialcoding.cctv;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,7 +22,7 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setAgreeButtons();
+        initComponents();
     }
 
     @Override
@@ -34,15 +35,15 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
         boolean agreement;
 
         switch(v.getId()) {
-            case R.id.dialog_agree_btn:
-                getActivity().findViewById(R.id.bottom_bar_google_map_loading_text)
+            case R.id.agreement_dialog_agree_btn:
+                getActivity().findViewById(R.id.bottom_bar_google_map_loading_text_view)
                         .setVisibility(View.VISIBLE);
-                getActivity().findViewById(R.id.bottom_bar_google_map_asking)
+                getActivity().findViewById(R.id.bottom_bar_google_map_ask_layout)
                         .setVisibility(View.INVISIBLE);
                 agreement = true;
                 break;
 
-            case R.id.dialog_disagree_btn:
+            case R.id.agreement_dialog_disagree_btn:
                 agreement = false;
                 break;
 
@@ -55,25 +56,33 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    private void setAgreeButtons(){
+    private void initComponents() {
+        if (!(getActivity() instanceof MainActivity)) {
+            throw new RuntimeException("Invalid activity.");
+        }
         Button[] agreementButtons;
         TextView[] agreementTextViews;
 
+        MainActivity mainActivity = (MainActivity) getActivity();
+        Typeface naumBarunGothic = MainActivity.naumBarunGothic;
+
         agreementButtons = new Button[]{
-                (Button) getActivity().findViewById(R.id.dialog_agree_btn),
-                (Button) getActivity().findViewById(R.id.dialog_disagree_btn)
+                (Button) mainActivity.findViewById(R.id.agreement_dialog_agree_btn),
+                (Button) mainActivity.findViewById(R.id.agreement_dialog_disagree_btn)
         };
         agreementTextViews = new TextView[] {
-                (TextView) getActivity().findViewById(R.id.agreement_dialog_header_text_view),
-                (TextView) getActivity().findViewById(R.id.agreement_reason_text_view),
-                (TextView) getActivity().findViewById(R.id.agreement_ask_text_view)
+                (TextView) mainActivity.findViewById(R.id.agreement_dialog_title_text_view),
+                (TextView) mainActivity.findViewById(R.id.agreement_dialog_reason_text_view),
+                (TextView) mainActivity.findViewById(R.id.agreement_dialog_ask_text_view)
         };
 
         for(Button b : agreementButtons) {
             b.setOnClickListener(this);
+            b.setTypeface(naumBarunGothic);
         }
         for(TextView tv : agreementTextViews) {
             tv.setOnClickListener(this);
+            tv.setTypeface(naumBarunGothic);
         }
     }
 

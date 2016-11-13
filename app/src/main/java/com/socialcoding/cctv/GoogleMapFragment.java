@@ -132,9 +132,9 @@ public class GoogleMapFragment extends Fragment
                     LatLng currLatLng = new LatLng(currLocation.getLatitude(),
                             currLocation.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
-                    getActivity().findViewById(R.id.bottom_bar_google_map_loading_text)
+                    getActivity().findViewById(R.id.bottom_bar_google_map_loading_text_view)
                             .setVisibility(View.INVISIBLE);
-                    getActivity().findViewById(R.id.bottom_bar_google_map_asking)
+                    getActivity().findViewById(R.id.bottom_bar_google_map_ask_layout)
                             .setVisibility(View.VISIBLE);
                     if (reportMarker != null) {
                         reportMarker.remove();
