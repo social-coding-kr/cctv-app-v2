@@ -46,7 +46,6 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle(getActivity().getResources().getString(R.string.report_string));
         return inflater.inflate(R.layout.fragment_report, container, false);
     }
 
