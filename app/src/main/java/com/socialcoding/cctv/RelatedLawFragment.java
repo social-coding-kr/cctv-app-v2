@@ -61,6 +61,7 @@ public class RelatedLawFragment extends Fragment implements View.OnClickListener
     }
 
     private void findLayoutsByLaw(Law law) {
+        // Ryuha commit
         singleLawLayout = getView().findViewById(law.getSingleLawLayoutId()); // after onCreateView. It is safe.
         singleLawTitleTextView = (TextView) singleLawLayout.findViewById(R.id.law_title_text);
         singleLawContentTextView = (TextView) singleLawLayout.findViewById(R.id.law_content_text);
