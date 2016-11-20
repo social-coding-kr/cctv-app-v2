@@ -7,9 +7,9 @@
     android:background="@color/colorEyeOfSeoul">
 
     <ImageView
+        android:id="@+id/splash_image_view"
         android:layout_width="225dp"
         android:layout_height="208.7dp"
-        android:contentDescription="@string/default_string"
-        android:background="@drawable/eye_of_seoul_logo" />
+        android:contentDescription="@string/default_string" />
 
 </LinearLayout>
