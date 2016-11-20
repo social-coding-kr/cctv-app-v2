@@ -1,6 +1,5 @@
 package com.socialcoding.cctv;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,10 +62,6 @@ public class MainActivity extends AppCompatActivity
     private Toast quitToast;
 
     public static String address;
-
-    private void getSplashScreen() {
-        startActivity(new Intent(this, SplashActivity.class));
-    }
 
     private void connectGoogleApiClient() {
         if (client == null) {
@@ -186,14 +181,27 @@ public class MainActivity extends AppCompatActivity
         initFonts();
     }
 
+    private void initialize()
+    {
+        InitializationRunnable init = new InitializationRunnable();
+        new Thread(init).start();
+    }
+
+    class InitializationRunnable implements Runnable
+    {
+        public void run()
+        {
+            initComponents();
+            initNaviDrawer();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSplashScreen();
-        initComponents();
 
-        initNaviDrawer();
+        initialize();
         connectHttp();
         connectGoogleApiClient();
         initFragments();
@@ -362,6 +370,8 @@ public class MainActivity extends AppCompatActivity
         switch(v.getId()) {
             case R.id.menu_btn:
                 drawer.openDrawer(navigationView);
+                findViewById(R.id.nav_header_image_view)
+                        .setBackgroundResource(R.drawable.eye_of_seoul_logo);
                 break;
 
             case R.id.back_btn:

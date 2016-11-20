@@ -13,11 +13,10 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/nav_header_image_view"
         android:layout_width="135dp"
         android:layout_height="125.175dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/eye_of_seoul_logo"
         android:contentDescription="@string/default_string"/>
 
 </LinearLayout>
