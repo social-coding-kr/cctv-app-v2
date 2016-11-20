@@ -5,7 +5,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +50,13 @@ public class GoogleMapFragment extends Fragment
         } else {
             view = inflater.inflate(R.layout.fragment_googlemap, container, false);
         }
+
+        if(mMap == null) {
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                    .findFragmentById(R.id._fragment_google_map);
+            mapFragment.getMapAsync(this);
+        }
+
         return view;
     }
 
@@ -58,6 +64,7 @@ public class GoogleMapFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        /* Only works in real phone
         if(mMap == null) {
             SupportMapFragment fragment = SupportMapFragment.newInstance();
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -65,6 +72,7 @@ public class GoogleMapFragment extends Fragment
             fragmentTransaction.commit();
             fragment.getMapAsync(this);
         }
+        */
     }
 
     @Override
