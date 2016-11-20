@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity
                 mNewTitle.length(),
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE
         );
-        mNewTitle.setSpan(new RelativeSizeSpan(1.15f),
+        mNewTitle.setSpan(new RelativeSizeSpan(1.1f),
                 0,
                 mNewTitle.length(),
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE);

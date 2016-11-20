@@ -44,7 +44,6 @@ public class GoogleMapFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setTitle("");
         if (view != null) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null)
@@ -101,6 +100,7 @@ public class GoogleMapFragment extends Fragment
         Double latitude = marker.getPosition().latitude;
         Double longitude = marker.getPosition().longitude;
         if(reportMarker != null) {
+            currLocation = new Location("dummy");
             currLocation.setLatitude(latitude);
             currLocation.setLongitude(longitude);
             reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
@@ -147,7 +147,6 @@ public class GoogleMapFragment extends Fragment
                 }
             }
         }
-        currLocation = null;
         return true;
     }
 

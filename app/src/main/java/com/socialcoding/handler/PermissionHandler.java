@@ -3,6 +3,7 @@ package com.socialcoding.handler;
 import android.app.Activity;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.socialcoding.models.EyeOfSeoulPermissions;
 
@@ -55,7 +56,8 @@ public class PermissionHandler extends Activity {
     }
 
     public void explain() {
-
+        // Toast or dialog.
+        Toast.makeText(this, "권한을 설정해야 합니다", Toast.LENGTH_SHORT).show();
     }
 
     public void askPermission() {
