@@ -1,6 +1,5 @@
 package com.socialcoding.cctv;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,10 +62,6 @@ public class MainActivity extends AppCompatActivity
     private Toast quitToast;
 
     public static String address;
-
-    private void getSplashScreen() {
-        startActivity(new Intent(this, SplashActivity.class));
-    }
 
     private void connectGoogleApiClient() {
         if (client == null) {
@@ -205,7 +200,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSplashScreen();
 
         initialize();
         connectHttp();
