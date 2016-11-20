@@ -29,6 +29,9 @@
     <string name="cctv_image_string">CCTV Image</string>
     <string name="cctv_info_string">CCTV Information Image</string>
 
+    <!--detail value-->
+    <string name="cctv_detail_back_text">확인</string>
+
     <!--default value-->
     <string name="default_string">Default String</string>
 </resources>
