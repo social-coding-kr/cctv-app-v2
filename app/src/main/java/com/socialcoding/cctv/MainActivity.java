@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -295,8 +296,30 @@ public class MainActivity extends AppCompatActivity
 
     public void showFragment(Fragment fragment, String fragmentTag) {
         setLayoutByCurrentPage();
+        int in_animation, out_animation;
+
+        switch (last_page) {
+            case R.id.nav_related_law:
+                in_animation = R.anim.transaction_in_from_top_to_bottom;
+                out_animation = R.anim.transaction_out_from_top_to_bottom;
+                break;
+
+            default:
+                if(current_page != R.id.nav_related_law) {
+                    in_animation = R.anim.transaction_in_from_right_to_left;
+                    out_animation = R.anim.transaction_out_from_right_to_left;
+                } else {
+                    in_animation = R.anim.transaction_in_from_bottom_to_top;
+                    out_animation = R.anim.transaction_out_from_bottom_to_top;
+                }
+                break;
+        }
+
         try {
-            fragmentManager.beginTransaction().replace(R.id.main_fl, fragment, fragmentTag).commit();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
+            ft.setCustomAnimations(in_animation, out_animation);
+            ft.replace(R.id.main_fl, fragment, fragmentTag);
+            ft.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
