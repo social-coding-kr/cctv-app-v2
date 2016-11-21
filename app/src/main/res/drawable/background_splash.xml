@@ -7,7 +7,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/eye_of_seoul_logo"
+            android:src="@drawable/eye_of_seoul_splash"
             android:filter="true"
             android:antialias="true"
             android:dither="true" />
