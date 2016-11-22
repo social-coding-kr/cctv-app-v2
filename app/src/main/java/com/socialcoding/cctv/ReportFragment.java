@@ -1,10 +1,7 @@
 package com.socialcoding.cctv;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,29 +16,42 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.socialcoding.handler.Handler;
+import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 
 import java.io.File;
 
 import static android.app.Activity.RESULT_OK;
+import static com.socialcoding.cctv.MainActivity.naumBarunGothic;
 
 /**
  * Created by darkgs on 2016-03-26.
  */
 public class ReportFragment extends Fragment implements View.OnClickListener {
 
+    private MainActivity mainActivity;
+
     private static final int PICK_FROM_CAMERA = 0;
     private static final int PICK_FROM_ALBUM = 1;
     private static final int CROP_FROM_CAMERA = 2;
 
     private Uri imageCaptureUri;
+    private String imageUsage;
+    private File cctvFile;
+    private File infoFile;
 
     private ImageView cctvImageView;
     private ImageView infoImageView;
+    private ImageView infoImageNullView;
+    private ImageView infoImageNullIcon;
 
-    private static String imageUsage;
-    private static File cctvFile;
-    private static File infoFile;
+    private TextView cctvImageTextView;
+    private TextView cctvInfoTextView;
+
+    private Button[] buttons;
+    private ImageView[] imageViews;
+    private TextView[] textViews;
+
 
     @Nullable
     @Override
@@ -49,88 +59,74 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
         return inflater.inflate(R.layout.fragment_report, container, false);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        TextView titleTextView = (TextView) getActivity().findViewById(R.id.title_text_view);
-        titleTextView.setText(getActivity().getResources().getString(R.string.report_string));
-        Handler.permissionHandler.handle(getActivity(), EyeOfSeoulPermissions.CAMERA_PERMISSION_STRING);
-        initComponents();
-        setAddress();
-    }
-
-    private void initComponents() {
-        if (!(getActivity() instanceof MainActivity)) {
-            throw new RuntimeException("Invalid activity.");
-        }
-        MainActivity mainActivity = (MainActivity) getActivity();
-        Typeface naumBarunGothic = MainActivity.naumBarunGothic;
-
-        cctvImageView = (ImageView) mainActivity.findViewById(R.id.cctv_image);
-        infoImageView = (ImageView) mainActivity.findViewById(R.id.info_image);
-        ImageView infoImageNullView = (ImageView) mainActivity.findViewById(R.id.info_image_null);
-        TextView[] textViews = new TextView[] {
-                (TextView) mainActivity.findViewById(R.id.report_cctv_image_text_view),
-                (TextView) mainActivity.findViewById(R.id.report_info_image_text_view),
-                (TextView) mainActivity.findViewById(R.id.bottom_bar_report_address_title_text_view),
-                (TextView) mainActivity.findViewById(R.id.bottom_bar_report_address_text_view)
-        };
-        Button[] buttons = new Button[]{
+    public void initViews() {
+        Button[] btns = new Button[]{
                 (Button) mainActivity.findViewById(R.id.report_complete_btn),
                 (Button) mainActivity.findViewById(R.id.report_cancle_btn)
         };
+        ImageView[] ivs = {
+                cctvImageView = (ImageView) mainActivity.findViewById(R.id.cctv_image),
+                infoImageView = (ImageView) mainActivity.findViewById(R.id.info_image),
+                infoImageNullView = (ImageView) mainActivity.findViewById(R.id.info_image_null),
+                infoImageNullIcon = (ImageView) mainActivity.findViewById(R.id.info_image_null_icon)
+        };
+        TextView[] tvs = new TextView[] {
+                (TextView) mainActivity.findViewById(R.id.report_cctv_image_text_view),
+                cctvImageTextView = (TextView) mainActivity.findViewById(R.id.cctv_image_text_view),
+                (TextView) mainActivity.findViewById(R.id.report_info_image_text_view),
+                cctvInfoTextView = (TextView) mainActivity.findViewById(R.id.cctv_info_text_view),
+                (TextView) mainActivity.findViewById(R.id.info_image_null_text_view),
+                (TextView) mainActivity.findViewById(R.id.bottom_bar_report_address_title_text_view),
+                (TextView) mainActivity.findViewById(R.id.bottom_bar_report_address_text_view)
+        };
 
-        cctvImageView.setOnClickListener(this);
-        infoImageView.setOnClickListener(this);
-        infoImageNullView.setOnClickListener(this);
+        buttons = btns;
+        textViews = tvs;
+        imageViews = ivs;
+    }
+
+    public void initButtons() {
+        for(ImageView imageView : imageViews) {
+            imageView.setOnClickListener(this);
+        }
+        for(Button b : buttons) {
+            b.setOnClickListener(this);
+        }
+    }
+
+    public void initFonts() {
+        TextView titleTextView = (TextView) mainActivity.findViewById(R.id.title_text_view);
+        titleTextView.setText(mainActivity.getResources().getString(R.string.report_string));
+        TextView addressText = (TextView) getActivity()
+                .findViewById(R.id.bottom_bar_report_address_text_view);
+        addressText.setText(MainActivity.address);
+
         for(TextView tv : textViews) {
             tv.setTypeface(naumBarunGothic);
         }
         for(Button b : buttons) {
-            b.setOnClickListener(this);
             b.setTypeface(naumBarunGothic);
         }
     }
 
-    private void setAddress() {
-        TextView addressText = (TextView) getActivity()
-                .findViewById(R.id.bottom_bar_report_address_text_view);
-        addressText.setText(MainActivity.address);
+    private void initComponents() {
+        initViews();
+        initButtons();
+        initFonts();
     }
 
-    private void showDialog(String usage) {
-        imageUsage = usage;
-        DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                doTakePhotoAction();
-            }
-        };
-        DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                doTakeAlbumAction();
-            }
-        };
-        DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
-                dialog.dismiss();
-            }
-        };
 
-        new AlertDialog.Builder(getActivity())
-                .setTitle("업로드할 이미지 선택")
-                .setPositiveButton("사진촬영", cameraListener)
-                .setNeutralButton("앨범선택", albumListener)
-                .setNegativeButton("취소", cancelListener)
-                .show();
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (!(getActivity() instanceof MainActivity)) {
+            throw new RuntimeException("Invalid activity.");
+        }
+        mainActivity = (MainActivity) getActivity();
+
+        Handler.permissionHandler.handle(mainActivity,
+                EyeOfSeoulPermissions.CAMERA_PERMISSION_STRING);
+        initComponents();
     }
 
     private void doTakePhotoAction() {
@@ -167,7 +163,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
                 cctvImageView.setImageBitmap(photo);
             }
             cctvFile = new File(imageCaptureUri.getPath());
-            getActivity().findViewById(R.id.cctv_image_text_view).setVisibility(View.INVISIBLE);
+            cctvImageTextView.setVisibility(View.INVISIBLE);
 
             return cctvFile;
         } else if ("info".equals(imageUsage)) {
@@ -176,9 +172,9 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
                 infoImageView.setImageBitmap(photo);
             }
             infoFile = new File(imageCaptureUri.getPath());
-            getActivity().findViewById(R.id.cctv_info_text_view).setVisibility(View.INVISIBLE);
-            if(getActivity().findViewById(R.id.info_image_null_icon).getVisibility() == View.VISIBLE) {
-                getActivity().findViewById(R.id.info_image_null_icon).setVisibility(View.INVISIBLE);
+            cctvInfoTextView.setVisibility(View.INVISIBLE);
+            if(infoImageNullIcon.getVisibility() == View.VISIBLE) {
+                infoImageNullIcon.setVisibility(View.INVISIBLE);
             }
 
             return infoFile;
@@ -212,33 +208,33 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
     private void showGoogleMap() {
         flush();
-
-        if (getActivity() instanceof MainActivity) {
-            MainActivity mainActivity = (MainActivity) getActivity();
-            mainActivity.onNavigationItemSelected(mainActivity.navigationView.getMenu().getItem(0));
-        }
+        mainActivity.onNavigationItemSelected(mainActivity.navigationView.getMenu().getItem(0));
     }
 
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.cctv_image:
-                showDialog("cctv");
+                imageUsage = "cctv";
+                mainActivity.showSubFragment(mainActivity.photoPickerDialogFragment
+                        , EyeOfSeoulParams.ReportTag);
                 break;
 
             case R.id.info_image:
-                showDialog("info");
+                imageUsage = "info";
+                mainActivity.showSubFragment(mainActivity.photoPickerDialogFragment
+                        , EyeOfSeoulParams.ReportTag);
                 break;
 
             case R.id.info_image_null:
-                if(getActivity().findViewById(R.id.info_image_null_icon).getVisibility() == View.VISIBLE) {
-                    getActivity().findViewById(R.id.info_image_null_icon).setVisibility(View.INVISIBLE);
+                if(infoImageNullIcon.getVisibility() == View.VISIBLE) {
+                    infoImageNullIcon.setVisibility(View.INVISIBLE);
                 } else {
-                    getActivity().findViewById(R.id.info_image_null_icon).setVisibility(View.VISIBLE);
+                    infoImageNullIcon.setVisibility(View.VISIBLE);
                 }
 
                 if(infoFile != null) {
-                    getActivity().findViewById(R.id.cctv_info_text_view).setVisibility(View.VISIBLE);
+                    cctvInfoTextView.setVisibility(View.VISIBLE);
                     infoImageView.setImageBitmap(null);
                     infoFile = null;
                 }
@@ -252,6 +248,15 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
             case R.id.report_cancle_btn:
                 showGoogleMap();
                 break;
+        }
+    }
+
+    public void onMethodSelected(String selector) {
+        mainActivity.hideSubFragment(mainActivity.photoPickerDialogFragment);
+        if("album".equals(selector)) {
+            doTakeAlbumAction();
+        } else if ("camera".equals(selector)) {
+            doTakePhotoAction();
         }
     }
 }

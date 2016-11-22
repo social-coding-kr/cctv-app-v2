@@ -50,7 +50,8 @@ public class MainActivity extends AppCompatActivity
 
     private Fragment googleMapFragment;
     private Fragment agreementDialogFragment;
-    private Fragment reportFragment;
+    public Fragment reportFragment;
+    public Fragment photoPickerDialogFragment;
     private Fragment relatedLawFragment;
     private FragmentManager fragmentManager;
 
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity
             googleMapFragment = GoogleMapFragment.class.newInstance();
             agreementDialogFragment = AgreementDialogFragment.class.newInstance();
             reportFragment = ReportFragment.class.newInstance();
+            photoPickerDialogFragment = PhotoPickerDialogFragment.class.newInstance();
             relatedLawFragment = RelatedLawFragment.class.newInstance();
             fragmentManager.beginTransaction()
                     .replace(R.id.main_fl, googleMapFragment, EyeOfSeoulParams.GoogleMapTag)
@@ -325,7 +327,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showSubFragment(Fragment fragment, String fragmentTag) {
+    public void showSubFragment(Fragment fragment, String fragmentTag) {
         findViewById(R.id.sub_fl).setVisibility(View.VISIBLE);
         try {
             fragmentManager.beginTransaction().attach(fragment).commit();
@@ -335,7 +337,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void hideSubFragment(Fragment fragment) {
+    public void hideSubFragment(Fragment fragment) {
         findViewById(R.id.sub_fl).setVisibility(View.GONE);
         fragmentManager.beginTransaction().detach(fragment).commit();
     }

@@ -39,6 +39,9 @@
     <string name="cctv_photo_picker_string">CCTV 사진을 촬영해주세요</string>
     <string name="info_photo_picker_string">CCTV 근처 안내판을 촬영해주세요</string>
     <string name="info_null_string">CCTV 근처에 안내판이 없습니다</string>
+    <string name="photo_picker_title">업로드할 이미지 선택</string>
+    <string name="photo_picker_album">앨범선택</string>
+    <string name="photo_picker_camera">사진촬영</string>
 
     <!--detail value-->
     <string name="cctv_detail_back_text">확인</string>

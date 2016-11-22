@@ -158,6 +158,7 @@
                     android:contentDescription="@string/default_string" />
 
                 <TextView
+                    android:id="@+id/info_image_null_text_view"
                     android:layout_width="90dp"
                     android:layout_height="wrap_content"
                     android:text="@string/info_null_string"
