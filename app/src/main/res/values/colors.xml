@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorBlurr">#88000000</color>
+    <color name="colorBackground">#eee</color>
     <color name="colorEyeOfSeoul">#00CFCE</color>
     <color name="colorAgree">#018c8b</color>
     <color name="colorDisagree">#CE0000</color>
