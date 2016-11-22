@@ -68,6 +68,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
         cctvImageView = (ImageView) mainActivity.findViewById(R.id.cctv_image);
         infoImageView = (ImageView) mainActivity.findViewById(R.id.info_image);
+        ImageView infoImageNullView = (ImageView) mainActivity.findViewById(R.id.info_image_null);
         TextView[] textViews = new TextView[] {
                 (TextView) mainActivity.findViewById(R.id.report_cctv_image_text_view),
                 (TextView) mainActivity.findViewById(R.id.report_info_image_text_view),
@@ -81,6 +82,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
         cctvImageView.setOnClickListener(this);
         infoImageView.setOnClickListener(this);
+        infoImageNullView.setOnClickListener(this);
         for(TextView tv : textViews) {
             tv.setTypeface(naumBarunGothic);
         }
@@ -152,11 +154,6 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(imageCaptureUri, "image/*");
 
-        intent.putExtra("outputX", 90);
-        intent.putExtra("outputY", 90);
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        intent.putExtra("scale", true);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, CROP_FROM_CAMERA);
     }
@@ -170,6 +167,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
                 cctvImageView.setImageBitmap(photo);
             }
             cctvFile = new File(imageCaptureUri.getPath());
+            getActivity().findViewById(R.id.cctv_image_text_view).setVisibility(View.INVISIBLE);
 
             return cctvFile;
         } else if ("info".equals(imageUsage)) {
@@ -178,6 +176,10 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
                 infoImageView.setImageBitmap(photo);
             }
             infoFile = new File(imageCaptureUri.getPath());
+            getActivity().findViewById(R.id.cctv_info_text_view).setVisibility(View.INVISIBLE);
+            if(getActivity().findViewById(R.id.info_image_null_icon).getVisibility() == View.VISIBLE) {
+                getActivity().findViewById(R.id.info_image_null_icon).setVisibility(View.INVISIBLE);
+            }
 
             return infoFile;
         }
@@ -226,6 +228,20 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
             case R.id.info_image:
                 showDialog("info");
+                break;
+
+            case R.id.info_image_null:
+                if(getActivity().findViewById(R.id.info_image_null_icon).getVisibility() == View.VISIBLE) {
+                    getActivity().findViewById(R.id.info_image_null_icon).setVisibility(View.INVISIBLE);
+                } else {
+                    getActivity().findViewById(R.id.info_image_null_icon).setVisibility(View.VISIBLE);
+                }
+
+                if(infoFile != null) {
+                    getActivity().findViewById(R.id.cctv_info_text_view).setVisibility(View.VISIBLE);
+                    infoImageView.setImageBitmap(null);
+                    infoFile = null;
+                }
                 break;
 
             case R.id.report_complete_btn:

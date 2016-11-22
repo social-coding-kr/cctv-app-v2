@@ -28,6 +28,9 @@
     <string name="address_string">Address</string>
     <string name="cctv_image_string">CCTV Image</string>
     <string name="cctv_info_string">CCTV Information Image</string>
+    <string name="cctv_photo_picker_string">CCTV 사진을 촬영해주세요</string>
+    <string name="info_photo_picker_string">CCTV 근처 안내판을 촬영해주세요</string>
+    <string name="info_null_string">CCTV 근처에 안내판이 없습니다</string>
 
     <!--detail value-->
     <string name="cctv_detail_back_text">확인</string>
