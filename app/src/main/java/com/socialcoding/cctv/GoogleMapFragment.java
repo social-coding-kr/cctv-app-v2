@@ -20,9 +20,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by darkgs on 2016-03-26.
@@ -30,6 +36,7 @@ import java.util.Locale;
 public class GoogleMapFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
+    private MainActivity mainActivity;
     private GoogleMap mMap;
     protected View view;
     private Location currLocation;
@@ -63,6 +70,11 @@ public class GoogleMapFragment extends Fragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (!(getActivity() instanceof MainActivity)) {
+            throw new RuntimeException("Invalid activity.");
+        }
+        mainActivity = (MainActivity) getActivity();
 
         /* Only works in real phone
         if(mMap == null) {
@@ -130,6 +142,10 @@ public class GoogleMapFragment extends Fragment
         }
     }
 
+    public void moveCamera(LatLng latLng) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
     public boolean moveCurrentPosition() {
         if(ContextCompat.checkSelfPermission(getActivity(),
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
@@ -180,5 +196,47 @@ public class GoogleMapFragment extends Fragment
         }
         MainActivity.address = addr;
         return addr;
+    }
+
+    public void onSearchButtonClick(String searchText) {
+        new Thread(new SearchHttpHandler(searchText)).start();
+    }
+
+    public class SearchHttpHandler implements Runnable {
+        String searchText;
+
+        SearchHttpHandler(String searchText) {
+            this.searchText = searchText;
+        }
+
+        public void run() {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("https://maps.googleapis.com/maps/api/place/textsearch/" +
+                            "json" +
+                            "?query=" + searchText +
+                            "&key=" + getResources().getString(R.string.search_key))
+                    .build();
+
+            try {
+                Response response = client.newCall(request).execute();
+                String result = response.body().string();
+                System.out.println(result);
+                JSONObject jsonObject = new JSONObject(result);
+                Double lat = (Double) jsonObject.getJSONArray("results").getJSONObject(0)
+                        .getJSONObject("geometry").getJSONObject("location").get("lat");
+                Double lng = (Double) jsonObject.getJSONArray("results").getJSONObject(0)
+                        .getJSONObject("geometry").getJSONObject("location").get("lng");
+                final LatLng latLng = new LatLng(lat, lng);
+
+                mainActivity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        ((GoogleMapFragment) mainActivity.googleMapFragment).moveCamera(latLng);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
