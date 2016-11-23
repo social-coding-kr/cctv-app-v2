@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -37,6 +38,8 @@ import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import com.socialcoding.utilities.CustomTypefaceSpan;
 
+import java.io.IOException;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     public NavigationView navigationView;
     private DrawerLayout drawer;
 
-    private Fragment googleMapFragment;
+    public Fragment googleMapFragment;
     private Fragment agreementDialogFragment;
     public Fragment reportFragment;
     public Fragment photoPickerDialogFragment;
@@ -184,16 +187,13 @@ public class MainActivity extends AppCompatActivity
         initFonts();
     }
 
-    private void initialize()
-    {
+    private void initialize() {
         InitializationRunnable init = new InitializationRunnable();
         new Thread(init).start();
     }
 
-    class InitializationRunnable implements Runnable
-    {
-        public void run()
-        {
+    class InitializationRunnable implements Runnable {
+        public void run() {
             initComponents();
             initNaviDrawer();
         }
@@ -390,6 +390,16 @@ public class MainActivity extends AppCompatActivity
         hideSubFragment(agreementDialogFragment);
     }
 
+    private void onSearchButtonClick() throws IOException {
+        EditText et = (EditText) findViewById(R.id.search_bar_edit_text);
+        Editable editable = et.getText();
+        String searchText = "소셜코딩 본사";
+        if (editable != null) {
+            searchText = editable.toString();
+        }
+        ((GoogleMapFragment) googleMapFragment).onSearchButtonClick(searchText);
+    }
+
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
@@ -404,7 +414,11 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.search_btn:
-                //TODO:검색기능 붙이기
+                try {
+                    onSearchButtonClick();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case R.id.bottom_bar_google_map_continue_btn:
