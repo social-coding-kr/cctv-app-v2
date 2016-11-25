@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -30,6 +31,9 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.socialcoding.exception.SocialCodeException;
 import com.socialcoding.handler.Handler;
 import com.socialcoding.http.CCTVHttpHandlerDummy;
@@ -50,6 +54,11 @@ public class MainActivity extends AppCompatActivity
 
     public NavigationView navigationView;
     private DrawerLayout drawer;
+
+    private AutoCompleteTextView searchAutoCompleteTextView;
+    private PlaceAutocompleteAdapter placeAutocompleteAdapter;
+    private static final LatLngBounds BOUNDS_KOREA = new LatLngBounds(
+            new LatLng(37.4784514, 126.8818163), new LatLng(37.5562989, 126.9220863));
 
     public Fragment googleMapFragment;
     private Fragment agreementDialogFragment;
@@ -75,6 +84,7 @@ public class MainActivity extends AppCompatActivity
                     .addOnConnectionFailedListener(this)
                     .addApi(AppIndex.API)
                     .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
                     .build();
         }
     }
@@ -173,7 +183,7 @@ public class MainActivity extends AppCompatActivity
     private void initFonts() {
         naumBarunGothic = Typeface.createFromAsset(getAssets(), "NanumBarunGothic_Regular.ttf");
         // Top bar
-        ((EditText) findViewById(R.id.search_bar_edit_text)).setTypeface(naumBarunGothic);
+        ((EditText) findViewById(R.id.search_bar_AutoCompleteTextView)).setTypeface(naumBarunGothic);
         ((TextView) findViewById(R.id.title_text_view)).setTypeface(naumBarunGothic);
         // Bottom bar, google map
         ((TextView) findViewById(R.id.bottom_bar_google_map_loading_text_view)).setTypeface(naumBarunGothic);
@@ -208,6 +218,10 @@ public class MainActivity extends AppCompatActivity
         connectHttp();
         connectGoogleApiClient();
         initFragments();
+
+        // 자동완성 기능을 위한 코드
+        searchAutoCompleteTextView =
+                (AutoCompleteTextView) findViewById(R.id.search_bar_AutoCompleteTextView);
     }
 
     @Override
@@ -391,7 +405,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onSearchButtonClick() throws IOException {
-        EditText et = (EditText) findViewById(R.id.search_bar_edit_text);
+        EditText et = (EditText) findViewById(R.id.search_bar_AutoCompleteTextView);
         Editable editable = et.getText();
         String searchText = "소셜코딩 본사";
         if (editable != null) {
@@ -444,7 +458,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
-
+        placeAutocompleteAdapter = new PlaceAutocompleteAdapter(this, client, BOUNDS_KOREA, null);
+        searchAutoCompleteTextView.setAdapter(placeAutocompleteAdapter);
     }
 
     @Override
