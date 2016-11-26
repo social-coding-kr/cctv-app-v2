@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
 
     private AutoCompleteTextView searchAutoCompleteTextView;
-    private PlaceAutocompleteAdapter placeAutocompleteAdapter;
+    private PlaceAutoCompleteAdapter placeAutocompleteAdapter;
     private static final LatLngBounds BOUNDS_KOREA = new LatLngBounds(
             new LatLng(37.4784514, 126.8818163), new LatLng(37.5562989, 126.9220863));
 
@@ -458,7 +458,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnected(Bundle bundle) {
-        placeAutocompleteAdapter = new PlaceAutocompleteAdapter(this, client, BOUNDS_KOREA, null);
+        placeAutocompleteAdapter = new PlaceAutoCompleteAdapter(this, client, BOUNDS_KOREA, null);
         searchAutoCompleteTextView.setAdapter(placeAutocompleteAdapter);
     }
 
