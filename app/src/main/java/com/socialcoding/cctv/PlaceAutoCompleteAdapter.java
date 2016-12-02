@@ -82,7 +82,7 @@ public class PlaceAutoCompleteAdapter
      */
     public PlaceAutoCompleteAdapter(Context context, GoogleApiClient googleApiClient,
                                     LatLngBounds bounds, AutocompleteFilter filter) {
-        super(context, android.R.layout.simple_expandable_list_item_2, android.R.id.text1);
+        super(context, R.layout.search_list, R.id.search_list_main_text);
         mGoogleApiClient = googleApiClient;
         mBounds = bounds;
         mPlaceFilter = filter;
@@ -121,8 +121,10 @@ public class PlaceAutoCompleteAdapter
 
         AutocompletePrediction item = getItem(position);
 
-        TextView textView1 = (TextView) row.findViewById(android.R.id.text1);
-        TextView textView2 = (TextView) row.findViewById(android.R.id.text2);
+        TextView textView1 = (TextView) row.findViewById(R.id.search_list_main_text);
+        TextView textView2 = (TextView) row.findViewById(R.id.search_list_sub_text);
+        textView1.setTypeface(MainActivity.naumBarunGothic);
+        textView2.setTypeface(MainActivity.naumBarunGothic);
         textView1.setText(item.getPrimaryText(STYLE_BOLD));
         textView2.setText(item.getSecondaryText(STYLE_BOLD));
 
