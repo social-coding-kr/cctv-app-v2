@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -18,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,8 +42,6 @@ import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import com.socialcoding.utilities.CustomTypefaceSpan;
 
-import java.io.IOException;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
@@ -57,10 +55,11 @@ public class MainActivity extends AppCompatActivity
 
     private AutoCompleteTextView searchAutoCompleteTextView;
     private PlaceAutoCompleteAdapter placeAutocompleteAdapter;
+    public static String currentSearchingAddr;
     private static final LatLngBounds BOUNDS_KOREA = new LatLngBounds(
             new LatLng(37.4784514, 126.8818163), new LatLng(37.5562989, 126.9220863));
 
-    public Fragment googleMapFragment;
+    public static Fragment googleMapFragment;
     private Fragment agreementDialogFragment;
     public Fragment reportFragment;
     public Fragment photoPickerDialogFragment;
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity
 
     public static String address;
 
-    private void connectGoogleApiClient() {
+    private void buildGoogleApiClient() {
         if (client == null) {
             client = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -197,31 +196,34 @@ public class MainActivity extends AppCompatActivity
         initFonts();
     }
 
-    private void initialize() {
-        InitializationRunnable init = new InitializationRunnable();
-        new Thread(init).start();
-    }
-
-    class InitializationRunnable implements Runnable {
-        public void run() {
-            initComponents();
-            initNaviDrawer();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initialize();
+        initComponents();
+        initNaviDrawer();
         connectHttp();
-        connectGoogleApiClient();
+        buildGoogleApiClient();
         initFragments();
 
-        // 자동완성 기능을 위한 코드
-        searchAutoCompleteTextView =
-                (AutoCompleteTextView) findViewById(R.id.search_bar_AutoCompleteTextView);
+        // Connect 상황을 모르는데 왜 여기서 하는지 이해는 잘 안되지만,,
+        if(placeAutocompleteAdapter == null) {
+            searchAutoCompleteTextView =
+                    (AutoCompleteTextView) findViewById(R.id.search_bar_AutoCompleteTextView);
+            placeAutocompleteAdapter = new PlaceAutoCompleteAdapter(this, client, BOUNDS_KOREA, null);
+            searchAutoCompleteTextView.setAdapter(placeAutocompleteAdapter);
+            searchAutoCompleteTextView.setThreshold(1);
+            searchAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    System.out.println("Searching started");
+                    ((GoogleMapFragment) googleMapFragment).onSearchButtonClick(
+                            currentSearchingAddr
+                    );
+                }
+            });
+        }
     }
 
     @Override
@@ -404,16 +406,6 @@ public class MainActivity extends AppCompatActivity
         hideSubFragment(agreementDialogFragment);
     }
 
-    private void onSearchButtonClick() throws IOException {
-        EditText et = (EditText) findViewById(R.id.search_bar_AutoCompleteTextView);
-        Editable editable = et.getText();
-        String searchText = "소셜코딩 본사";
-        if (editable != null) {
-            searchText = editable.toString();
-        }
-        ((GoogleMapFragment) googleMapFragment).onSearchButtonClick(searchText);
-    }
-
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
@@ -429,7 +421,9 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.search_btn:
                 try {
-                    onSearchButtonClick();
+                    ((GoogleMapFragment) googleMapFragment).onSearchButtonClick(
+                            ((EditText) findViewById(R.id.search_bar_AutoCompleteTextView))
+                            .getText().toString());
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
@@ -453,18 +447,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        placeAutocompleteAdapter = new PlaceAutoCompleteAdapter(this, client, BOUNDS_KOREA, null);
-        searchAutoCompleteTextView.setAdapter(placeAutocompleteAdapter);
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
 }
