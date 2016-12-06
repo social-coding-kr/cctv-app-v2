@@ -5,6 +5,10 @@ import com.socialcoding.inteface.IRESTAsyncServiceHandler;
 import com.socialcoding.inteface.IServerResource;
 import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -12,7 +16,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Created by darkg on 2016-03-26.
@@ -80,5 +86,61 @@ public class CCTVHttpHandlerV1 implements IServerResource {
             }
         });
     }
+
+    @Override
+    public void registerCCTV(Double latitudeData, Double longitudeData, File cctvImageData, File noticeImageData) throws IOException {
+      RequestBody latitude = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(latitudeData.doubleValue()));
+      RequestBody longitude = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(longitudeData.doubleValue()));
+
+      HashMap<String, RequestBody> map = new HashMap<>();
+      map.put("latitude", latitude);
+      map.put("longitude", longitude);
+
+      MultipartBody.Part cctvImage = prepareFilePart("cctvImage", cctvImageData);
+      MultipartBody.Part noticeImage = null;
+      if (noticeImageData != null) {
+        noticeImage = prepareFilePart("noticeImage", noticeImageData);
+      }
+
+      Call<ResponseBody> call = server.registerCCTV(map, cctvImage, noticeImage);
+      call.execute().body();
+    }
+
+    @Override
+    public void registerCCTVAsync(Double latitudeData, Double longitudeData, File cctvImageData, File noticeImageData,
+                                  final IRESTAsyncServiceHandler.ICCTVRegisterResponse callback) throws IOException {
+      RequestBody latitude = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(latitudeData.doubleValue()));
+      RequestBody longitude = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(longitudeData.doubleValue()));
+
+      HashMap<String, RequestBody> map = new HashMap<>();
+      map.put("latitude", latitude);
+      map.put("longitude", longitude);
+
+      MultipartBody.Part cctvImage = prepareFilePart("cctvImage", cctvImageData);
+      MultipartBody.Part noticeImage = null;
+      if (noticeImageData != null) {
+        noticeImage = prepareFilePart("noticeImage", noticeImageData);
+      }
+
+      Call<ResponseBody> call = server.registerCCTV(map, cctvImage, noticeImage);
+      call.enqueue(new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+          callback.onSuccess();
+        }
+
+        @Override
+        public void onFailure(Call<ResponseBody> call, Throwable t) {
+          callback.onError();
+        }
+      });
+    }
+
+  private MultipartBody.Part prepareFilePart(String partName, File imageFile) {
+    RequestBody requestFile =
+        RequestBody.create(MediaType.parse("multipart/form-data"), imageFile);
+    return MultipartBody.Part.createFormData(partName, imageFile.getName(), requestFile);
+  }
+
 }
 
