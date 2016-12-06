@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by cloverhearts on 2016-12-06.
  */
-public interface IRESTServiceHandler {
+public interface IRESTAsyncServiceHandler {
   public interface ICCTVLocationResponse {
     public void onSuccess(List<CCTVLocationData> cctvLocationDatas);
     public void onError();

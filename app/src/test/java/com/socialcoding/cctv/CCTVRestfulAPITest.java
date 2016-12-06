@@ -1,15 +1,13 @@
 package com.socialcoding.cctv;
 
 import com.socialcoding.http.CCTVHttpHandlerV1;
-import com.socialcoding.inteface.IRESTServiceHandler;
+import com.socialcoding.inteface.IRESTAsyncServiceHandler;
 import com.socialcoding.inteface.IServerResource;
 import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.CCTVLocationDetailData;
 import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
-import okhttp3.Request;
 import org.junit.Test;
-import retrofit2.Call;
 
 import java.util.List;
 import java.util.Locale;
@@ -49,7 +47,7 @@ public class CCTVRestfulAPITest {
         double west = 126.949195;
 
         IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
-        serverResource.getCCTVLocationsAsync(east, north, south, west, new IRESTServiceHandler.ICCTVLocationResponse() {
+        serverResource.getCCTVLocationsAsync(east, north, south, west, new IRESTAsyncServiceHandler.ICCTVLocationResponse() {
             @Override
             public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
                 for (CCTVLocationData cctv : cctvLocationDatas) {
@@ -83,7 +81,7 @@ public class CCTVRestfulAPITest {
     public void testGetCCTVInformationAsync() throws Exception {
         final long cctvId = 9516;
         IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
-        serverResource.getCCTVDetailAsync(cctvId, new IRESTServiceHandler.ICCTVDetailResponse() {
+        serverResource.getCCTVDetailAsync(cctvId, new IRESTAsyncServiceHandler.ICCTVDetailResponse() {
             @Override
             public void onSuccess(CCTVLocationDetailData cctv) {
                 System.out.println(String.format(Locale.US, "cctv detail cctv id = %d - %s %s", cctv.getCctvId(), cctv.getAddress(), cctv.getSource()));

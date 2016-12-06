@@ -1,13 +1,8 @@
 package com.socialcoding.http;
 
-import com.socialcoding.exception.SocialCodeException;
-import com.socialcoding.inteface.HttpHandler;
-import com.socialcoding.inteface.HttpListener;
-import com.socialcoding.inteface.HttpParams;
 import com.socialcoding.inteface.IRESTServerHandler;
-import com.socialcoding.inteface.IRESTServiceHandler;
+import com.socialcoding.inteface.IRESTAsyncServiceHandler;
 import com.socialcoding.inteface.IServerResource;
-import com.socialcoding.models.CCTVDetail;
 import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
 import retrofit2.Callback;
@@ -16,12 +11,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.http.Path;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by darkg on 2016-03-26.
@@ -50,7 +41,7 @@ public class CCTVHttpHandlerV1 implements IServerResource {
     }
 
     @Override
-    public void getCCTVLocationsAsync(Double east, Double north, Double south, Double west, final IRESTServiceHandler.ICCTVLocationResponse callback) throws IOException {
+    public void getCCTVLocationsAsync(Double east, Double north, Double south, Double west, final IRESTAsyncServiceHandler.ICCTVLocationResponse callback) throws IOException {
         String sEast = String.valueOf(east);
         String sNorth = String.valueOf(north);
         String sSouth = String.valueOf(south);
@@ -76,7 +67,7 @@ public class CCTVHttpHandlerV1 implements IServerResource {
     }
 
     @Override
-    public void getCCTVDetailAsync(long cctvId, final IRESTServiceHandler.ICCTVDetailResponse callback) throws IOException {
+    public void getCCTVDetailAsync(long cctvId, final IRESTAsyncServiceHandler.ICCTVDetailResponse callback) throws IOException {
         server.getCCTVDetail(cctvId).enqueue(new Callback<CCTVLocationDetailResource>() {
             @Override
             public void onResponse(Call<CCTVLocationDetailResource> call, Response<CCTVLocationDetailResource> response) {
