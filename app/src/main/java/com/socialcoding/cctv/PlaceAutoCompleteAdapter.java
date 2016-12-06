@@ -18,6 +18,7 @@ package com.socialcoding.cctv;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
 import android.view.View;
@@ -41,6 +42,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static com.socialcoding.cctv.MainActivity.currentSearchingAddr;
+
 /**
  * Adapter that handles Autocomplete requests from the Places Geo Data API.
  * {@link AutocompletePrediction} results from the API are frozen and stored directly in this
@@ -50,7 +53,7 @@ import java.util.concurrent.TimeUnit;
  * The API client must be maintained in the encapsulating Activity, including all lifecycle and
  * connection states. The API client must be connected with the {@link Places#GEO_DATA_API} API.
  */
-public class PlaceAutoCompleteAdapter
+class PlaceAutoCompleteAdapter
         extends ArrayAdapter<AutocompletePrediction> implements Filterable {
 
     private static final String TAG = "PlaceAutocompleteAdapter";
@@ -82,7 +85,7 @@ public class PlaceAutoCompleteAdapter
      */
     public PlaceAutoCompleteAdapter(Context context, GoogleApiClient googleApiClient,
                                     LatLngBounds bounds, AutocompleteFilter filter) {
-        super(context, android.R.layout.simple_expandable_list_item_2, android.R.id.text1);
+        super(context, R.layout.search_list, R.id.search_list_main_text);
         mGoogleApiClient = googleApiClient;
         mBounds = bounds;
         mPlaceFilter = filter;
@@ -111,8 +114,9 @@ public class PlaceAutoCompleteAdapter
         return mResultList.get(position);
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View row = super.getView(position, convertView, parent);
 
         // Sets the primary and secondary text for a row.
@@ -121,8 +125,10 @@ public class PlaceAutoCompleteAdapter
 
         AutocompletePrediction item = getItem(position);
 
-        TextView textView1 = (TextView) row.findViewById(android.R.id.text1);
-        TextView textView2 = (TextView) row.findViewById(android.R.id.text2);
+        TextView textView1 = (TextView) row.findViewById(R.id.search_list_main_text);
+        TextView textView2 = (TextView) row.findViewById(R.id.search_list_sub_text);
+        textView1.setTypeface(MainActivity.naumBarunGothic);
+        textView2.setTypeface(MainActivity.naumBarunGothic);
         textView1.setText(item.getPrimaryText(STYLE_BOLD));
         textView2.setText(item.getSecondaryText(STYLE_BOLD));
 
@@ -132,6 +138,7 @@ public class PlaceAutoCompleteAdapter
     /**
      * Returns the filter for the current set of autocomplete results.
      */
+    @NonNull
     @Override
     public Filter getFilter() {
         return new Filter() {
@@ -177,7 +184,9 @@ public class PlaceAutoCompleteAdapter
                 // Override this method to display a readable result in the AutocompleteTextView
                 // when clicked.
                 if (resultValue instanceof AutocompletePrediction) {
-                    return ((AutocompletePrediction) resultValue).getFullText(null);
+                    currentSearchingAddr = ((AutocompletePrediction) resultValue)
+                            .getFullText(null).toString();
+                    return ((AutocompletePrediction) resultValue).getPrimaryText(null);
                 } else {
                     return super.convertResultToString(resultValue);
                 }

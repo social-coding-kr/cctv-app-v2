@@ -1,0 +1,67 @@
+@charset "UTF-8";
+@import url(http://fonts.googleapis.com/css?family=Noto+Sans);
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,500,700);
+/* reset */
+body {
+  font-family: 'Roboto', 'Noto Sans', Malgun Gothic, "맑은 고딕", Dotum, "돋움", sans-serif;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #666666;
+  background-color: #fff;
+  margin: 0;
+  padding: 0; }
+  body img {
+    border: none; }
+  body br {
+    letter-spacing: 0; }
+  body h1, body h2, body h3, body h4, body h5, body h6 {
+    font-size: 1em; }
+  body h1, body h2, body h3, body h4, body h5, body h6, body div, body p, body dl, body dt, body dd, body ul, body ol, body li, body form, body fieldset, body blockquote, body address, body table, body thead, body tbody, body tfoot, body tr, body td, body caption {
+    margin: 0;
+    padding: 0; }
+/* reset end */
+
+
+.main {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.main .law_content {margin:5px;}
+.main .law_content .law_title {
+    border-bottom: solid 1px #EEEEEE;
+    padding: 15px 10px;
+    position: relative;
+    font-weight: 600;
+}
+.main .law_content .law_title img {
+    position: absolute;
+    top: 30%;
+    left: 90%;
+}
+.main .law_content .law_detail {
+    display: none;
+    padding: 15px;
+    line-height: 22px;
+    color: white;
+    background-color: #424242;
+    border: solid 1px #424242;
+    opacity: 0.9;
+    position: absolute;
+    top: 0px;
+    left:0px;
+    z-index:99;
+}
+.main .law_content .law_detail .indent{
+    margin-left: 15px;
+    font-size: 10px;
+}
+.main .law_content .law_detail .okBtn {
+    color: white;
+    font-size: 14px;
+    font-weight: 100;
+    text-align: center;
+    margin-top: 5px;
+}
