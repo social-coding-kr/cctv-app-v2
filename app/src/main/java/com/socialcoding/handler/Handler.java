@@ -7,5 +7,5 @@ import com.socialcoding.http.CCTVHttpHandlerDummy;
  */
 public class Handler {
     public static final PermissionHandler permissionHandler = new PermissionHandler();
-    public static final CCTVHttpHandlerDummy cctvHttpHandler = new CCTVHttpHandlerDummy();
+    public static final CCTVHttpHandlerDummy cctvHttpHandler = new CCTVHttpHandlerDummy("http://cctvs.nineqs.com/");
 }

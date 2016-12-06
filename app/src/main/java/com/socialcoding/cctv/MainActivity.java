@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         View.OnClickListener
 {
     public static GoogleApiClient client;
-    private HttpHandler httpHandler = new CCTVHttpHandlerDummy();
+    private HttpHandler httpHandler = new CCTVHttpHandlerDummy("http://cctv.nineqs.com");
 
     public NavigationView navigationView;
     private DrawerLayout drawer;
