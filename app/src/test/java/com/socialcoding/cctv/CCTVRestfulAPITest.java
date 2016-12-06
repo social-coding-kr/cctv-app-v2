@@ -4,6 +4,8 @@ import com.socialcoding.http.CCTVHttpHandlerV1;
 import com.socialcoding.inteface.IRESTServiceHandler;
 import com.socialcoding.inteface.IServerResource;
 import com.socialcoding.models.CCTVLocationData;
+import com.socialcoding.models.CCTVLocationDetailData;
+import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
 import okhttp3.Request;
 import org.junit.Test;
@@ -67,5 +69,34 @@ public class CCTVRestfulAPITest {
         Thread.sleep(10000);
     }
 
+    @Test
+    public void testGetCCTVInformation() throws Exception {
+        final long cctvId = 9516;
+        IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
+        CCTVLocationDetailResource response = serverResource.getCCTVDetail(cctvId);
+        assertTrue(response.getStatus().equals("SUCCESS"));
+        CCTVLocationDetailData cctv = response.getCctv();
+        System.out.println(String.format(Locale.US, "cctv detail cctv id = %d - %s %s", cctv.getCctvId(), cctv.getAddress(), cctv.getSource()));
+    }
+
+    @Test
+    public void testGetCCTVInformationAsync() throws Exception {
+        final long cctvId = 9516;
+        IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
+        serverResource.getCCTVDetailAsync(cctvId, new IRESTServiceHandler.ICCTVDetailResponse() {
+            @Override
+            public void onSuccess(CCTVLocationDetailData cctv) {
+                System.out.println(String.format(Locale.US, "cctv detail cctv id = %d - %s %s", cctv.getCctvId(), cctv.getAddress(), cctv.getSource()));
+            }
+
+            @Override
+            public void onError() {
+                System.out.println("ERROR] Async getCCTVDetail Test");
+                assertTrue(false);
+            }
+        });
+
+        Thread.sleep(10000);
+    }
 
 }

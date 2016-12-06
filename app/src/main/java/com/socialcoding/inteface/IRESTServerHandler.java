@@ -1,5 +1,6 @@
 package com.socialcoding.inteface;
 
+import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -19,6 +20,6 @@ public interface IRESTServerHandler {
                                               @Query("west") String west);
 
   @GET("cctv/{cctvId}")
-  Call<CCTVLocationResource> getCCTVLocations(@Path("cctvId") long cctvId);
+  Call<CCTVLocationDetailResource> getCCTVDetail(@Path("cctvId") long cctvId);
 
 }

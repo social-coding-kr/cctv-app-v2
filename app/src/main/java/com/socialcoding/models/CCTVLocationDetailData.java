@@ -7,7 +7,7 @@ public class CCTVLocationDetailData {
   final transient String PUBLIC_CCTV_TYPE = "PUBLIC";
   final transient String PRIVATE_CCTV_TYPE = "PRIVATE";
 
-  private String cctvId;
+  private long cctvId;
   private String purpose;
   private String source;
   private String address;
@@ -19,7 +19,7 @@ public class CCTVLocationDetailData {
   private String form;
   private String installedAt;
 
-  public CCTVLocationDetailData(String cctvId,
+  public CCTVLocationDetailData(long cctvId,
                                 String purpose,
                                 boolean isPublic,
                                 String address,
@@ -61,11 +61,11 @@ public class CCTVLocationDetailData {
     return PRIVATE_CCTV_TYPE;
   }
 
-  public String getCctvId() {
+  public long getCctvId() {
     return cctvId;
   }
 
-  public void setCctvId(String cctvId) {
+  public void setCctvId(long cctvId) {
     this.cctvId = cctvId;
   }
 

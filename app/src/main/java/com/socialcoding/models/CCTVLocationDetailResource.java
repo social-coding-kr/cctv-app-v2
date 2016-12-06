@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class CCTVLocationDetailResource {
     private String status;
-    private List<CCTVLocationDetailData> cctv;
+    private CCTVLocationDetailData cctv;
 
   public String getStatus() {
     return status;
@@ -17,11 +17,11 @@ public class CCTVLocationDetailResource {
     this.status = status;
   }
 
-  public List<CCTVLocationDetailData> getCctv() {
+  public CCTVLocationDetailData getCctv() {
     return cctv;
   }
 
-  public void setCctv(List<CCTVLocationDetailData> cctv) {
+  public void setCctv(CCTVLocationDetailData cctv) {
     this.cctv = cctv;
   }
 }

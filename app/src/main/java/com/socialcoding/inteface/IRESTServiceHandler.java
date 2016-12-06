@@ -1,6 +1,7 @@
 package com.socialcoding.inteface;
 
 import com.socialcoding.models.CCTVLocationData;
+import com.socialcoding.models.CCTVLocationDetailData;
 import com.socialcoding.models.CCTVLocationResource;
 
 import java.util.List;
@@ -11,6 +12,10 @@ import java.util.List;
 public interface IRESTServiceHandler {
   public interface ICCTVLocationResponse {
     public void onSuccess(List<CCTVLocationData> cctvLocationDatas);
+    public void onError();
+  }
+  public interface ICCTVDetailResponse {
+    public void onSuccess(CCTVLocationDetailData cctvDetailInformation);
     public void onError();
   }
 }

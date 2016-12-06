@@ -8,6 +8,7 @@ import com.socialcoding.inteface.IRESTServerHandler;
 import com.socialcoding.inteface.IRESTServiceHandler;
 import com.socialcoding.inteface.IServerResource;
 import com.socialcoding.models.CCTVDetail;
+import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,6 +65,26 @@ public class CCTVHttpHandlerV1 implements IServerResource {
 
             @Override
             public void onFailure(Call<CCTVLocationResource> call, Throwable t) {
+                callback.onError();
+            }
+        });
+    }
+
+    @Override
+    public CCTVLocationDetailResource getCCTVDetail(long cctvId) throws IOException {
+        return server.getCCTVDetail(cctvId).execute().body();
+    }
+
+    @Override
+    public void getCCTVDetailAsync(long cctvId, final IRESTServiceHandler.ICCTVDetailResponse callback) throws IOException {
+        server.getCCTVDetail(cctvId).enqueue(new Callback<CCTVLocationDetailResource>() {
+            @Override
+            public void onResponse(Call<CCTVLocationDetailResource> call, Response<CCTVLocationDetailResource> response) {
+                callback.onSuccess(response.body().getCctv());
+            }
+
+            @Override
+            public void onFailure(Call<CCTVLocationDetailResource> call, Throwable t) {
                 callback.onError();
             }
         });

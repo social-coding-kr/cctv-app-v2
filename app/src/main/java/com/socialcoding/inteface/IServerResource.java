@@ -1,5 +1,6 @@
 package com.socialcoding.inteface;
 
+import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
 import retrofit2.Call;
 import retrofit2.http.Path;
@@ -38,4 +39,8 @@ public interface IServerResource {
                              Double south,
                              Double west,
                              IRESTServiceHandler.ICCTVLocationResponse callback) throws IOException;
+
+  CCTVLocationDetailResource getCCTVDetail(long cctvId) throws IOException;
+
+  void getCCTVDetailAsync(long cctvId, IRESTServiceHandler.ICCTVDetailResponse callback) throws IOException;
 }
