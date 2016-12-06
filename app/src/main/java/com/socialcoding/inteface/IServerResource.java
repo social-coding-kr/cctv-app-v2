@@ -3,6 +3,7 @@ package com.socialcoding.inteface;
 import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -40,4 +41,8 @@ public interface IServerResource {
   CCTVLocationDetailResource getCCTVDetail(long cctvId) throws IOException;
 
   void getCCTVDetailAsync(long cctvId, IRESTAsyncServiceHandler.ICCTVDetailResponse callback) throws IOException;
+
+  void registerCCTV(Double latitudeData, Double longitudeData, File cctvImageData, File noticeImageData) throws IOException;
+
+  void registerCCTVAsync(Double latitudeData, Double longitudeData, File cctvImageData, File noticeImageData, IRESTAsyncServiceHandler.ICCTVRegisterResponse callback) throws IOException;
 }

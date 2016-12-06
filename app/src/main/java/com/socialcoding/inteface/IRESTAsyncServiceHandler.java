@@ -18,4 +18,8 @@ public interface IRESTAsyncServiceHandler {
     public void onSuccess(CCTVLocationDetailData cctvDetailInformation);
     public void onError();
   }
+  public interface ICCTVRegisterResponse {
+    public void onSuccess();
+    public void onError();
+  }
 }

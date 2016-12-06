@@ -9,6 +9,7 @@ import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.List;
 import java.util.Locale;
 
@@ -95,6 +96,40 @@ public class CCTVRestfulAPITest {
         });
 
         Thread.sleep(10000);
+    }
+
+    //@Test
+    public void testRegisterCCTV() throws Exception {
+        File cctvImage = new File("");
+        File noticeImage = new File("");
+        Double latitude = 127.003622;
+        Double longitude = 127.003622;
+
+        IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
+        serverResource.registerCCTV(latitude, longitude, cctvImage, noticeImage);
+    }
+
+    //@Test
+    public void testRegisterCCTVAsync() throws Exception {
+        File cctvImage = new File("");
+        File noticeImage = new File("");
+        Double latitude = 127.003622;
+        Double longitude = 127.003622;
+
+        IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
+        serverResource.registerCCTVAsync(latitude, longitude, cctvImage, noticeImage, new IRESTAsyncServiceHandler.ICCTVRegisterResponse() {
+            @Override
+            public void onSuccess() {
+                assertTrue(true);
+            }
+
+            @Override
+            public void onError() {
+                assertTrue(false);
+            }
+        });
+
+        Thread.sleep(100000);
     }
 
 }
