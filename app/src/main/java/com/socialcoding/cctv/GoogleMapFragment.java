@@ -215,7 +215,7 @@ public class GoogleMapFragment extends Fragment
                     .url("https://maps.googleapis.com/maps/api/place/textsearch/" +
                             "json" +
                             "?query=" + searchText +
-                            "&key=" + getResources().getString(R.string.google_maps_key))
+                            "&key=" + "AIzaSyDdvgtPbH9CLWhN8VehbLMIa1Y0DRDZ4Dc")
                     .build();
 
             try {
