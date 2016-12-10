@@ -16,8 +16,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
+import com.socialcoding.http.CCTVHttpHandlerV1;
+import com.socialcoding.inteface.IServerResource;
+import com.socialcoding.models.CCTVLocationData;
+import com.socialcoding.models.CCTVLocationResource;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 
 import org.json.JSONObject;
@@ -35,6 +41,7 @@ import okhttp3.Response;
  */
 public class GoogleMapFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
+    final String baseUrl = "http://cctvs.nineqs.com";
 
     private MainActivity mainActivity;
     private GoogleMap mMap;
@@ -107,6 +114,33 @@ public class GoogleMapFragment extends Fragment
         if(ContextCompat.checkSelfPermission(getActivity(),
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
             mMap.setMyLocationEnabled(true);
+        }
+
+        // Add initial makers.
+        VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
+        LatLngBounds latLngBounds = visibleRegion.latLngBounds;
+        LatLng northeast = latLngBounds.northeast;
+        LatLng southwest = latLngBounds.southwest;
+        Double east = northeast.longitude, north = northeast.latitude;
+        Double south = southwest.latitude, west = southwest.longitude;
+
+        try {
+            IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
+            CCTVLocationResource locationInfo = serverResource.getCCTVLocations(east, north, south, west);
+            List<CCTVLocationData> cctvs = locationInfo.getCctvs();
+            addCctvMarkers(cctvs);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addCctvMarkers(List<CCTVLocationData> cctvs) {
+        for (CCTVLocationData cctv : cctvs) {
+            Marker m = mMap.addMarker(new MarkerOptions().position(
+                    new LatLng(cctv.getLatitude(), cctv.getLongitude())));
+            if ("PRIVATE".equals(cctv.getSource())) {
+                // Color should be blue here.
+            }
         }
     }
 
