@@ -372,8 +372,8 @@ public class MainActivity extends AppCompatActivity
                 titleTextView.setVisibility(View.INVISIBLE);
                 searchBar.setVisibility(View.VISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
-                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
-                        .removeMarker();
+                ((GoogleMapFragment) fragmentManager
+                        .findFragmentByTag(EyeOfSeoulParams.GoogleMapTag)).removeMarker();
                 break;
 
             case R.id.nav_camera:
@@ -390,8 +390,8 @@ public class MainActivity extends AppCompatActivity
                 titleTextView.setVisibility(View.VISIBLE);
                 searchBar.setVisibility(View.INVISIBLE);
                 bottomBar.setVisibility(View.INVISIBLE);
-                ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
-                        .removeMarker();
+                ((GoogleMapFragment) fragmentManager
+                        .findFragmentByTag(EyeOfSeoulParams.GoogleMapTag)).removeMarker();
         }
     }
 
@@ -447,10 +447,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+        System.out.println("google api onConnectionFailed");
     }
 
     @Override
     public void onConnected(Bundle bundle) {
+        System.out.println("google api onConnected");
     }
 
     @Override
