@@ -1,4 +1,9 @@
 <resources>
+    <string name="team_name">Team Social Coding 2016.</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="app_name">Eye Of Seoul</string>
     <!--google map fragment strings-->
     <string name="search_btn_text">Search</string>

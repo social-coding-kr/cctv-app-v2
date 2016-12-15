@@ -15,9 +15,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
+import com.socialcoding.http.CCTVHttpHandlerV1;
+import com.socialcoding.inteface.IRESTAsyncServiceHandler;
+import com.socialcoding.inteface.IServerResource;
+import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 
 import org.json.JSONObject;
@@ -34,7 +41,9 @@ import okhttp3.Response;
  * Created by darkgs on 2016-03-26.
  */
 public class GoogleMapFragment extends Fragment
-        implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
+        implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener,
+        GoogleMap.OnMapLoadedCallback, GoogleMap.OnCameraChangeListener {
+    final String baseUrl = "http://cctvs.nineqs.com";
 
     private MainActivity mainActivity;
     private GoogleMap mMap;
@@ -107,6 +116,54 @@ public class GoogleMapFragment extends Fragment
         if(ContextCompat.checkSelfPermission(getActivity(),
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
             mMap.setMyLocationEnabled(true);
+        }
+
+        mMap.setOnMapLoadedCallback(this);
+        mMap.setOnCameraChangeListener(this);
+    }
+
+    @Override
+    public void onCameraChange(CameraPosition cameraPosition) {
+        getCctvs();
+    }
+
+    @Override
+    public void onMapLoaded() {
+        getCctvs();
+    }
+
+    private void getCctvs() {
+        // Add initial makers.
+        VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
+        LatLngBounds latLngBounds = visibleRegion.latLngBounds;
+        LatLng northeast = latLngBounds.northeast;
+        LatLng southwest = latLngBounds.southwest;
+        double east = northeast.longitude, north = northeast.latitude;
+        double south = southwest.latitude, west = southwest.longitude;
+
+
+        try {
+            IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
+            serverResource.getCCTVLocationsAsync(east, north, south, west,
+                    new IRESTAsyncServiceHandler.ICCTVLocationResponse() {
+                @Override
+                public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
+                    for (CCTVLocationData cctv : cctvLocationDatas) {
+                        Marker m = mMap.addMarker(new MarkerOptions().position(
+                                new LatLng(cctv.getLatitude(), cctv.getLongitude())));
+                        if ("PRIVATE".equals(cctv.getSource())) {
+                            // Color should be blue here.
+                        }
+                    }
+                }
+
+                @Override
+                public void onError() {
+                    System.out.println("ERROR] Async getCCTVLocation Test");
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -215,7 +272,7 @@ public class GoogleMapFragment extends Fragment
                     .url("https://maps.googleapis.com/maps/api/place/textsearch/" +
                             "json" +
                             "?query=" + searchText +
-                            "&key=" + "AIzaSyDdvgtPbH9CLWhN8VehbLMIa1Y0DRDZ4Dc")
+                            "&key=" + "AIzaSyDEsn6-XRyJ238S54srfHZWFQtP6Slqt40")
                     .build();
 
             try {
