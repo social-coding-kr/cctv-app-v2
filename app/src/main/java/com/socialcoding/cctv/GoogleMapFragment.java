@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,6 +51,7 @@ public class GoogleMapFragment extends Fragment
     private GoogleMap mMap;
     protected View view;
     private Location currLocation;
+    private Set<Marker> markers;
 
     private static Marker reportMarker;
 
@@ -109,8 +112,9 @@ public class GoogleMapFragment extends Fragment
 
         // Add a marker in Seoul, Korea and move the camera
         LatLng cityHallSeoul = new LatLng(37.5667151,126.9781312);
+        /*
         mMap.addMarker(new MarkerOptions().position(cityHallSeoul)
-                .draggable(true).title("Marker in Seoul"));
+                .draggable(true).title("Marker in Seoul")); */
         mMap.moveCamera(CameraUpdateFactory.newLatLng(cityHallSeoul));
 
         if(ContextCompat.checkSelfPermission(getActivity(),
@@ -120,19 +124,26 @@ public class GoogleMapFragment extends Fragment
 
         mMap.setOnMapLoadedCallback(this);
         mMap.setOnCameraChangeListener(this);
+
+        markers = new ArraySet<>();
     }
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        getCctvs();
+        if (markers != null) {
+            for (Marker m : markers) {
+                m.remove();
+            }
+        }
+        getCctvs(cameraPosition.zoom, cameraPosition);
     }
 
     @Override
     public void onMapLoaded() {
-        getCctvs();
+        getCctvs(-1, null);
     }
 
-    private void getCctvs() {
+    private void getCctvs(float zoom, CameraPosition cameraPosition) {
         // Add initial makers.
         VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
         LatLngBounds latLngBounds = visibleRegion.latLngBounds;
@@ -141,27 +152,35 @@ public class GoogleMapFragment extends Fragment
         double east = northeast.longitude, north = northeast.latitude;
         double south = southwest.latitude, west = southwest.longitude;
 
-
         try {
-            IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
-            serverResource.getCCTVLocationsAsync(east, north, south, west,
-                    new IRESTAsyncServiceHandler.ICCTVLocationResponse() {
-                @Override
-                public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
-                    for (CCTVLocationData cctv : cctvLocationDatas) {
-                        Marker m = mMap.addMarker(new MarkerOptions().position(
-                                new LatLng(cctv.getLatitude(), cctv.getLongitude())));
-                        if ("PRIVATE".equals(cctv.getSource())) {
-                            // Color should be blue here.
-                        }
-                    }
-                }
+            if (zoom > 14) {
+                IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
+                serverResource.getCCTVLocationsAsync(east, north, south, west,
+                        new IRESTAsyncServiceHandler.ICCTVLocationResponse() {
+                            @Override
+                            public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
+                                for (CCTVLocationData cctv : cctvLocationDatas) {
+                                    Marker m = mMap.addMarker(new MarkerOptions().position(
+                                            new LatLng(cctv.getLatitude(), cctv.getLongitude())));
+                                    if (!markers.contains(m)) {
+                                        markers.add(m);
+                                    }
+                                    if ("PRIVATE".equals(cctv.getSource())) {
+                                        // Color should be blue here.
+                                    }
+                                }
+                            }
 
-                @Override
-                public void onError() {
-                    System.out.println("ERROR] Async getCCTVLocation Test");
-                }
-            });
+                            @Override
+                            public void onError() {
+                                System.out.println("ERROR] Async getCCTVLocation Test");
+                            }
+                        });
+            } else {
+                Marker numOfMarkers = mMap.addMarker(new MarkerOptions().position(
+                        new LatLng((south + north) / 2, (east + west) / 2)));
+                markers.add(numOfMarkers);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
