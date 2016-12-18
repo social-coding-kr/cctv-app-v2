@@ -346,7 +346,6 @@ public class MainActivity extends AppCompatActivity
     public void showSubFragment(Fragment fragment, String fragmentTag) {
         findViewById(R.id.sub_fl).setVisibility(View.VISIBLE);
         try {
-            fragmentManager.beginTransaction().attach(fragment).commit();
             fragmentManager.beginTransaction().replace(R.id.sub_fl, fragment, fragmentTag).commit();
         } catch (Exception e) {
             e.printStackTrace();
