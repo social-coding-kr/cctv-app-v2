@@ -10,6 +10,7 @@ import android.support.v4.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,7 +45,8 @@ import okhttp3.Response;
  */
 public class GoogleMapFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLoadedCallback, GoogleMap.OnCameraChangeListener {
+        GoogleMap.OnMapLoadedCallback, GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnCameraChangeListener {
     final String baseUrl = "http://cctvs.nineqs.com";
 
     private MainActivity mainActivity;
@@ -124,15 +126,51 @@ public class GoogleMapFragment extends Fragment
 
         mMap.setOnMapLoadedCallback(this);
         mMap.setOnCameraChangeListener(this);
+        mMap.setOnMarkerClickListener(this);
 
         markers = new ArraySet<>();
+
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            // Use default InfoWindow frame
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            // Defines the contents of the InfoWindow
+            @Override
+            public View getInfoContents(Marker arg0) {
+
+                // Getting view from the layout file info_window_layout
+                View v = getActivity().getLayoutInflater().inflate(R.layout.info_window_layout, null);
+
+                // Getting the position from the marker
+                LatLng latLng = arg0.getPosition();
+
+                // Getting reference to the TextView to set latitude
+                TextView tvLat = (TextView) v.findViewById(R.id.tv_lat);
+
+                // Getting reference to the TextView to set longitude
+                TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
+
+                // Setting the latitude
+                tvLat.setText("Latitude:" + latLng.latitude);
+
+                // Setting the longitude
+                tvLng.setText("Longitude:" + latLng.longitude);
+
+                // Returning the view containing InfoWindow contents
+                return v;
+            }
+        });
     }
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
         if (markers != null) {
             for (Marker m : markers) {
-                m.remove();
+                //m.remove();
             }
         }
         getCctvs(cameraPosition.zoom, cameraPosition);
@@ -185,6 +223,7 @@ public class GoogleMapFragment extends Fragment
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void onMarkerDragStart(Marker marker) {
@@ -276,6 +315,12 @@ public class GoogleMapFragment extends Fragment
 
     public void onSearchButtonClick(String searchText) {
         new Thread(new SearchHttpHandler(searchText)).start();
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
+        return false;
     }
 
     public class SearchHttpHandler implements Runnable {
