@@ -199,13 +199,16 @@ public class GoogleMapFragment extends Fragment
                             @Override
                             public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
                                 for (CCTVLocationData cctv : cctvLocationDatas) {
-                                    Marker m = mMap.addMarker(new MarkerOptions().position(
-                                            new LatLng(cctv.getLatitude(), cctv.getLongitude())));
-                                    m.setDraggable(true);
-                                    markers.add(m, cctv.getCctvId());
-                                    if ("PRIVATE".equals(cctv.getSource())) {
-                                        // Color should be blue here.
+                                    if(!markers.contains(cctv.getCctvId())){
+                                        Marker m = mMap.addMarker(new MarkerOptions().position(
+                                                new LatLng(cctv.getLatitude(), cctv.getLongitude())));
+                                        m.setDraggable(true);
+                                        markers.add(m, cctv.getCctvId());
+                                        if ("PRIVATE".equals(cctv.getSource())) {
+                                            // Color should be blue here.
+                                        }
                                     }
+
                                 }
                             }
 
