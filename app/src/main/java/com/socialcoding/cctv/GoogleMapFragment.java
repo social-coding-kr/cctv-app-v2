@@ -28,6 +28,7 @@ import com.socialcoding.inteface.IRESTAsyncServiceHandler;
 import com.socialcoding.inteface.IServerResource;
 import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.EyeOfSeoulPermissions;
+import com.socialcoding.models.Markers;
 
 import org.json.JSONObject;
 
@@ -53,7 +54,7 @@ public class GoogleMapFragment extends Fragment
     private GoogleMap mMap;
     protected View view;
     private Location currLocation;
-    private Set<Marker> markers;
+    private Markers markers;
 
     private static Marker reportMarker;
 
@@ -128,7 +129,7 @@ public class GoogleMapFragment extends Fragment
         mMap.setOnCameraChangeListener(this);
         mMap.setOnMarkerClickListener(this);
 
-        markers = new ArraySet<>();
+        markers = new Markers();
 
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
 
@@ -198,14 +199,16 @@ public class GoogleMapFragment extends Fragment
                             @Override
                             public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
                                 for (CCTVLocationData cctv : cctvLocationDatas) {
-                                    Marker m = mMap.addMarker(new MarkerOptions().position(
-                                            new LatLng(cctv.getLatitude(), cctv.getLongitude())));
-                                    if (!markers.contains(m)) {
-                                        markers.add(m);
+                                    if(!markers.contains(cctv.getCctvId())){
+                                        Marker m = mMap.addMarker(new MarkerOptions().position(
+                                                new LatLng(cctv.getLatitude(), cctv.getLongitude())));
+                                        m.setDraggable(true);
+                                        markers.add(m, cctv.getCctvId());
+                                        if ("PRIVATE".equals(cctv.getSource())) {
+                                            // Color should be blue here.
+                                        }
                                     }
-                                    if ("PRIVATE".equals(cctv.getSource())) {
-                                        // Color should be blue here.
-                                    }
+
                                 }
                             }
 
@@ -214,11 +217,11 @@ public class GoogleMapFragment extends Fragment
                                 System.out.println("ERROR] Async getCCTVLocation Test");
                             }
                         });
-            } else {
+            }/* else {
                 Marker numOfMarkers = mMap.addMarker(new MarkerOptions().position(
                         new LatLng((south + north) / 2, (east + west) / 2)));
-                markers.add(numOfMarkers);
-            }
+                markers.add(numOfMarkers, -1);
+            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
