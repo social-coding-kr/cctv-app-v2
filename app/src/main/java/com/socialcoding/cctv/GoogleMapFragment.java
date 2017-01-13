@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArraySet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,7 @@ import okhttp3.Response;
 public class GoogleMapFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener,
         GoogleMap.OnMapLoadedCallback, GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnCameraChangeListener {
+        GoogleMap.OnCameraIdleListener {
     final String baseUrl = "http://cctvs.nineqs.com";
 
     private MainActivity mainActivity;
@@ -126,7 +127,7 @@ public class GoogleMapFragment extends Fragment
         }
 
         mMap.setOnMapLoadedCallback(this);
-        mMap.setOnCameraChangeListener(this);
+        mMap.setOnCameraIdleListener(this);
         mMap.setOnMarkerClickListener(this);
 
         markers = new Markers();
@@ -167,13 +168,16 @@ public class GoogleMapFragment extends Fragment
         });
     }
 
+
+
     @Override
-    public void onCameraChange(CameraPosition cameraPosition) {
+    public void onCameraIdle() {
         if (markers != null) {
             for (Marker m : markers) {
                 //m.remove();
             }
         }
+        CameraPosition cameraPosition = mMap.getCameraPosition();
         getCctvs(cameraPosition.zoom, cameraPosition);
     }
 
@@ -205,7 +209,7 @@ public class GoogleMapFragment extends Fragment
                                         m.setDraggable(true);
                                         markers.add(m, cctv.getCctvId());
                                         if ("PRIVATE".equals(cctv.getSource())) {
-                                            // Color should be blue here.
+                                            //TODO: make marker blue
                                         }
                                     }
 
@@ -325,6 +329,7 @@ public class GoogleMapFragment extends Fragment
         marker.showInfoWindow();
         return false;
     }
+
 
     public class SearchHttpHandler implements Runnable {
         String searchText;
