@@ -24,10 +24,6 @@ public class Markers implements Iterable<Marker>{
 
     public boolean add(Marker marker, int cctvId) {
         //Log.d("adding marker", "added" + pos);
-        if(idSet.contains(cctvId)){
-            Log.d("marker add", "it has same property : " + cctvId);
-            return false;
-        }
         markerMap.put(cctvId, marker);
         idSet.add(cctvId);
         //Log.d("marker add", "Added : " + cctvId);
