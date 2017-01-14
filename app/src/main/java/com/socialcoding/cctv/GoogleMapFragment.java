@@ -1,5 +1,7 @@
 package com.socialcoding.cctv;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -17,6 +19,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -54,11 +58,15 @@ public class GoogleMapFragment extends Fragment
     protected View view;
     private Location currLocation;
     private Markers markers;
+    private Bitmap blueMarkerIcon;
 
     private static Marker reportMarker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        int iconSize = 90;
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.blue_marker);
+        blueMarkerIcon = Bitmap.createScaledBitmap(bitmap, iconSize, iconSize, false);
         super.onCreate(savedInstanceState);
     }
 
@@ -206,10 +214,12 @@ public class GoogleMapFragment extends Fragment
                                             m = mMap.addMarker(new MarkerOptions().position(
                                                     new LatLng(cctv.getLatitude(), cctv.getLongitude())));
                                             m.setDraggable(true);
+
+                                            m.setIcon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon));
                                         }
                                         markers.add(m, cctv.getCctvId());
                                         if ("PRIVATE".equals(cctv.getSource())) {
-                                            //TODO: make marker blue
+                                            //m.se;
                                         }
                                     }
 
