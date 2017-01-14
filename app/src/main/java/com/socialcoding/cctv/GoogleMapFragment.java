@@ -214,7 +214,6 @@ public class GoogleMapFragment extends Fragment
                                             m = mMap.addMarker(new MarkerOptions().position(
                                                     new LatLng(cctv.getLatitude(), cctv.getLongitude())));
                                             m.setDraggable(true);
-
                                             m.setIcon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon));
                                         }
                                         markers.add(m, cctv.getCctvId());
