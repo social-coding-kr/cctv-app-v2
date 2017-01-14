@@ -6,12 +6,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.ArraySet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,7 +35,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -183,7 +181,6 @@ public class GoogleMapFragment extends Fragment
 
     @Override
     public void onMapLoaded() {
-        getCctvs(-1, null);
     }
 
     private void getCctvs(float zoom, CameraPosition cameraPosition) {
@@ -204,9 +201,12 @@ public class GoogleMapFragment extends Fragment
                             public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
                                 for (CCTVLocationData cctv : cctvLocationDatas) {
                                     if(!markers.contains(cctv.getCctvId())){
-                                        Marker m = mMap.addMarker(new MarkerOptions().position(
-                                                new LatLng(cctv.getLatitude(), cctv.getLongitude())));
-                                        m.setDraggable(true);
+                                        Marker m = markers.getMarkerByLatLng(new LatLng(cctv.getLatitude(), cctv.getLongitude()));
+                                        if (m == null) {
+                                            m = mMap.addMarker(new MarkerOptions().position(
+                                                    new LatLng(cctv.getLatitude(), cctv.getLongitude())));
+                                            m.setDraggable(true);
+                                        }
                                         markers.add(m, cctv.getCctvId());
                                         if ("PRIVATE".equals(cctv.getSource())) {
                                             //TODO: make marker blue
@@ -234,7 +234,7 @@ public class GoogleMapFragment extends Fragment
 
     @Override
     public void onMarkerDragStart(Marker marker) {
-
+        Toast.makeText(mainActivity.getApplicationContext(), markers.getCctvIdsByMarker(marker).toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
