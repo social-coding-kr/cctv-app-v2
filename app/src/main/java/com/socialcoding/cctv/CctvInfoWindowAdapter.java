@@ -1,11 +1,15 @@
 package com.socialcoding.cctv;
 
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+
+import java.util.List;
 
 /**
  * Created by yoon on 2017. 1. 15..
@@ -26,25 +30,36 @@ class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     @Override
     public View getInfoContents(Marker marker) {
-        // Getting view from the layout file info_window_layout
-        View v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_layout, null);
+        View v;
+        List<Integer> cctvIds = GoogleMapFragment.markers.getCctvIdsByMarker(marker);
+        int numOfCctvs = cctvIds.size();
 
-        // Getting the position from the marker
-        LatLng latLng = marker.getPosition();
+        if (numOfCctvs == 0 || numOfCctvs == 1) {
+            // Getting view from the layout file info_window_layout
+            v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_detail_layout, null);
+            // Getting the position from the marker.
+            LatLng latLng = marker.getPosition();
+            // Getting references to the TextViews.
+            TextView tvLat = (TextView) v.findViewById(R.id.tv_lat);
+            TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
+            // Set position.
+            tvLat.setText("Latitude:" + latLng.latitude);
+            tvLng.setText("Longitude:" + latLng.longitude);
+        } else if (numOfCctvs > 1) {
+            v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_cctvs_layout, null);
+            LinearLayout buttonsLayout = (LinearLayout) v.findViewById(R.id.empty_linear_layout);
 
-        // Getting reference to the TextView to set latitude
-        TextView tvLat = (TextView) v.findViewById(R.id.tv_lat);
+            for (int i = 0; i < numOfCctvs; i++) {
+                Button btn = new Button(mainActivity);
+                btn.setId(cctvIds.get(i));
+                btn.setText("CCTV " + btn.getId());
+                buttonsLayout.addView(btn);
+            }
 
-        // Getting reference to the TextView to set longitude
-        TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
+        } else {
+            throw new RuntimeException("해당 마커에 할당된 cctv의 수가" + Integer.toString(numOfCctvs) + "개 입니다");
+        }
 
-        // Setting the latitude
-        tvLat.setText("Latitude:" + latLng.latitude);
-
-        // Setting the longitude
-        tvLng.setText("Longitude:" + latLng.longitude);
-
-        // Returning the view containing InfoWindow contents
         return v;
     }
 }

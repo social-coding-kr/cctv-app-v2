@@ -55,7 +55,7 @@ public class GoogleMapFragment extends Fragment
     private GoogleMap mMap;
     protected View view;
     private Location currLocation;
-    private Markers markers;
+    public static Markers markers;
     private Bitmap blueMarkerIcon;
 
     private static Marker reportMarker;
@@ -299,7 +299,7 @@ public class GoogleMapFragment extends Fragment
     @Override
     public boolean onMarkerClick(Marker marker) {
         marker.showInfoWindow();
-        return false;
+        return true;
     }
 
 
