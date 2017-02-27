@@ -8,6 +8,10 @@
     <!--default translation-->
     <string name="app_name">서울의 눈-안드</string>
 
+    <!--facebook login-->
+    <string name="facebook_app_id">695279140633114</string>
+    <string name="fb_login_protocol_scheme">fb695279140633114</string>
+
     <!--google map fragment strings-->
     <string name="search_default_text">장소, 주소, 전화번호</string>
     <string name="search_btn_text">검색</string>

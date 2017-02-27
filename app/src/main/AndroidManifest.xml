@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.socialcoding.cctv">
 
+    <!--facebook login permissions-->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!--google map permissions-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!--camera permissions-->
@@ -17,12 +19,6 @@
         android:name="android.support.multidex.MultiDexApplication">
 
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <activity
             android:name=".SplashActivity"
             android:theme="@style/Theme.Splash">
             <intent-filter>
@@ -30,6 +26,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".FacebookLoginActivity"
+                  android:theme="@style/Theme.Splash"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+        <activity
+                android:name=".MainActivity"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.NoActionBar" />
+
+        <!--Facebook login-->
+        <meta-data
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id"/>
 
         <!--Google play version-->
         <meta-data
