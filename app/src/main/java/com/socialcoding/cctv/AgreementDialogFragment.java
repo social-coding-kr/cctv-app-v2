@@ -64,7 +64,6 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
         TextView[] agreementTextViews;
 
         MainActivity mainActivity = (MainActivity) getActivity();
-        Typeface naumBarunGothic = MainActivity.naumBarunGothic;
 
         agreementButtons = new Button[]{
                 (Button) mainActivity.findViewById(R.id.agreement_dialog_agree_btn),
@@ -75,15 +74,6 @@ public class AgreementDialogFragment extends Fragment implements View.OnClickLis
                 (TextView) mainActivity.findViewById(R.id.agreement_dialog_reason_text_view),
                 (TextView) mainActivity.findViewById(R.id.agreement_dialog_ask_text_view)
         };
-
-        for(Button b : agreementButtons) {
-            b.setOnClickListener(this);
-            b.setTypeface(naumBarunGothic);
-        }
-        for(TextView tv : agreementTextViews) {
-            tv.setOnClickListener(this);
-            tv.setTypeface(naumBarunGothic);
-        }
     }
 
 }
