@@ -1,5 +1,6 @@
 package com.socialcoding.cctv;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,6 +42,7 @@ import com.socialcoding.inteface.HttpHandler;
 import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import com.socialcoding.utilities.CustomTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -65,9 +67,6 @@ public class MainActivity extends AppCompatActivity
     public Fragment photoPickerDialogFragment;
     private Fragment relatedLawFragment;
     private FragmentManager fragmentManager;
-
-    // fonts
-    public static Typeface naumBarunGothic;
 
     private int current_page = R.id.nav_map;
     private int last_page;
@@ -109,41 +108,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void applyFontToMenuItem(MenuItem mi) {
-        SpannableString mNewTitle = new SpannableString(mi.getTitle());
-        mNewTitle.setSpan(
-                new CustomTypefaceSpan("", naumBarunGothic),
-                0,
-                mNewTitle.length(),
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE
-        );
-        mNewTitle.setSpan(new RelativeSizeSpan(1.1f),
-                0,
-                mNewTitle.length(),
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        mi.setTitle(mNewTitle);
-    }
-
     private void initNaviDrawer() {
         navigationView = (NavigationView) findViewById(R.id.nav_main);
         navigationView.setNavigationItemSelectedListener(this);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED); // block swipe
-        // Set font for navigation drawer menu
-        Menu m = navigationView.getMenu();
-        for (int i=0;i<m.size();i++) {
-            MenuItem mi = m.getItem(i);
-            //for applying a font to subMenu ...
-            SubMenu subMenu = mi.getSubMenu();
-            if (subMenu!=null && subMenu.size() >0 ) {
-                for (int j=0; j <subMenu.size();j++) {
-                    MenuItem subMenuItem = subMenu.getItem(j);
-                    applyFontToMenuItem(subMenuItem);
-                }
-            }
-            //the method we have create in activity
-            applyFontToMenuItem(mi);
-        }
     }
 
     private void connectHttp() {
@@ -179,29 +148,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void initFonts() {
-        naumBarunGothic = Typeface.createFromAsset(getAssets(), "NanumBarunGothic_Regular.ttf");
-        // Top bar
-        ((EditText) findViewById(R.id.search_bar_AutoCompleteTextView)).setTypeface(naumBarunGothic);
-        ((TextView) findViewById(R.id.title_text_view)).setTypeface(naumBarunGothic);
-        // Bottom bar, google map
-        ((TextView) findViewById(R.id.bottom_bar_google_map_loading_text_view)).setTypeface(naumBarunGothic);
-        ((TextView) findViewById(R.id.bottom_bar_google_map_ask_text_view)).setTypeface(naumBarunGothic);
-        ((Button) findViewById(R.id.bottom_bar_google_map_continue_btn)).setTypeface(naumBarunGothic);
-        ((Button) findViewById(R.id.bottom_bar_google_map_cancle_btn)).setTypeface(naumBarunGothic);
-    }
-
-    private void initComponents() {
-        initButtons();
-        initFonts();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initComponents();
+        initButtons();
         initNaviDrawer();
         connectHttp();
         buildGoogleApiClient();
@@ -458,4 +410,8 @@ public class MainActivity extends AppCompatActivity
     public void onConnectionSuspended(int i) {
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 }

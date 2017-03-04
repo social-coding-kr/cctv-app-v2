@@ -1,5 +1,6 @@
 package com.socialcoding.cctv;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -22,7 +23,6 @@ import com.socialcoding.models.EyeOfSeoulPermissions;
 import java.io.File;
 
 import static android.app.Activity.RESULT_OK;
-import static com.socialcoding.cctv.MainActivity.naumBarunGothic;
 
 /**
  * Created by darkgs on 2016-03-26.
@@ -100,13 +100,6 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
         TextView addressText = (TextView) getActivity()
                 .findViewById(R.id.bottom_bar_report_address_text_view);
         addressText.setText(MainActivity.address);
-
-        for(TextView tv : textViews) {
-            tv.setTypeface(naumBarunGothic);
-        }
-        for(Button b : buttons) {
-            b.setTypeface(naumBarunGothic);
-        }
     }
 
     private void initComponents() {

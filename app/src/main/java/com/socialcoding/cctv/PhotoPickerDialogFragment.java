@@ -28,17 +28,6 @@ public class PhotoPickerDialogFragment extends Fragment implements View.OnClickL
         return inflater.inflate(R.layout.fragmnet_photo_picker_dialog, container, false);
     }
 
-    private void initFonts() {
-        Typeface naumBarunGothic = MainActivity.naumBarunGothic;
-
-        for(TextView textView : textViews) {
-            textView.setTypeface(naumBarunGothic);
-        }
-        for(Button button : buttons) {
-            button.setTypeface(naumBarunGothic);
-        }
-    }
-
     private void initButtons() {
         for(Button button : buttons) {
             button.setOnClickListener(this);
@@ -65,7 +54,6 @@ public class PhotoPickerDialogFragment extends Fragment implements View.OnClickL
         buttons = btns;
         imageViews = ivs;
 
-        initFonts();
         initButtons();
     }
 

@@ -127,8 +127,6 @@ class PlaceAutoCompleteAdapter
 
         TextView textView1 = (TextView) row.findViewById(R.id.search_list_main_text);
         TextView textView2 = (TextView) row.findViewById(R.id.search_list_sub_text);
-        textView1.setTypeface(MainActivity.naumBarunGothic);
-        textView2.setTypeface(MainActivity.naumBarunGothic);
         textView1.setText(item.getPrimaryText(STYLE_BOLD));
         textView2.setText(item.getSecondaryText(STYLE_BOLD));
 
