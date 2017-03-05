@@ -1,7 +1,7 @@
 package com.socialcoding.http;
 
-import com.socialcoding.inteface.IRESTServerHandler;
 import com.socialcoding.inteface.IRESTAsyncServiceHandler;
+import com.socialcoding.inteface.IRESTServerHandler;
 import com.socialcoding.inteface.IServerResource;
 import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
@@ -9,12 +9,11 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
-
-import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.File;
 import java.io.IOException;

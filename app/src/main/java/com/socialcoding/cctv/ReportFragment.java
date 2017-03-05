@@ -1,6 +1,5 @@
 package com.socialcoding.cctv;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.socialcoding.handler.Handler;
 import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
@@ -209,14 +207,12 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
         switch(v.getId()) {
             case R.id.cctv_image:
                 imageUsage = "cctv";
-                mainActivity.showSubFragment(mainActivity.photoPickerDialogFragment
-                        , EyeOfSeoulParams.ReportTag);
+                mainActivity.showFragment(mainActivity.photoPickerDialogFragment, EyeOfSeoulParams.ReportTag);
                 break;
 
             case R.id.info_image:
                 imageUsage = "info";
-                mainActivity.showSubFragment(mainActivity.photoPickerDialogFragment
-                        , EyeOfSeoulParams.ReportTag);
+                mainActivity.showFragment(mainActivity.photoPickerDialogFragment, EyeOfSeoulParams.ReportTag);
                 break;
 
             case R.id.info_image_null:
@@ -245,7 +241,6 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
     }
 
     public void onMethodSelected(String selector) {
-        mainActivity.hideSubFragment(mainActivity.photoPickerDialogFragment);
         if("album".equals(selector)) {
             doTakeAlbumAction();
         } else if ("camera".equals(selector)) {

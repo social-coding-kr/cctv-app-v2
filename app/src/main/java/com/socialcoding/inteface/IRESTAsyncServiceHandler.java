@@ -2,7 +2,6 @@ package com.socialcoding.inteface;
 
 import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.CCTVLocationDetailData;
-import com.socialcoding.models.CCTVLocationResource;
 
 import java.util.List;
 

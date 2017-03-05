@@ -25,7 +25,7 @@
             android:layout_margin="10dp" />
 
         <ImageView
-            android:id="@+id/photo_picker_dialog_cancle_image_view"
+            android:id="@+id/view_image_cancle_fdpp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/cancel"
@@ -54,7 +54,7 @@
 
         <Button
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:id="@+id/photo_picker_dialog_camera_btn"
+            android:id="@+id/button_camera_fdpp"
             android:layout_height="30dp"
             android:layout_width="0dp"
             android:layout_weight="0.5"
@@ -70,7 +70,7 @@
 
         <Button
             style="@style/Widget.AppCompat.Button.Borderless"
-            android:id="@+id/photo_picker_dialog_album_btn"
+            android:id="@+id/button_album_fdpp"
             android:layout_height="30dp"
             android:layout_width="0dp"
             android:layout_weight="0.5"

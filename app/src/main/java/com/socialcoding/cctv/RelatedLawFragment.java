@@ -10,13 +10,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.socialcoding.models.Law;
-import com.socialcoding.utilities.Utilities;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Created by yoon on 2016. 10. 22..
  */

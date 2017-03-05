@@ -1,32 +1,19 @@
 package com.socialcoding.cctv;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
@@ -35,13 +22,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.socialcoding.dialogFragments.AgreementDialogFragment;
+import com.socialcoding.dialogFragments.PhotoPickerDialogFragment;
 import com.socialcoding.exception.SocialCodeException;
 import com.socialcoding.handler.Handler;
 import com.socialcoding.http.CCTVHttpHandlerDummy;
 import com.socialcoding.inteface.HttpHandler;
 import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
-import com.socialcoding.utilities.CustomTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity
@@ -129,9 +117,6 @@ public class MainActivity extends AppCompatActivity
                 (Button) findViewById(R.id.bottom_bar_google_map_continue_btn),
                 (Button) findViewById(R.id.bottom_bar_google_map_cancle_btn)
         };
-        FrameLayout[] frameLayouts = new FrameLayout[] {
-                (FrameLayout) findViewById(R.id.sub_fl)
-        };
         ImageView[] imageViews = new ImageView[] {
                 (ImageView) findViewById(R.id.menu_btn),
                 (ImageView) findViewById(R.id.back_btn)
@@ -139,9 +124,6 @@ public class MainActivity extends AppCompatActivity
 
         for(Button btn : btns) {
             btn.setOnClickListener(this);
-        }
-        for(FrameLayout frameLayout : frameLayouts) {
-            frameLayout.setOnClickListener(this);
         }
         for(ImageView imageView : imageViews) {
             imageView.setOnClickListener(this);
@@ -184,9 +166,6 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else if(current_page != R.id.nav_map) {
-            if (findViewById(R.id.sub_fl).getVisibility() == View.VISIBLE) {
-                hideSubFragment(agreementDialogFragment);
-            }
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         } else {
             if (quitToast == null || quitToast.getView().getWindowVisibility() != View.VISIBLE) {
@@ -247,7 +226,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.nav_camera:
                 if (findViewById(R.id.bottom_bar_google_map).getVisibility() == View.INVISIBLE) {
-                    showSubFragment(agreementDialogFragment, EyeOfSeoulParams.LocationAgreementDialogTag);
+                    showFragment(agreementDialogFragment, EyeOfSeoulParams.LocationAgreementDialogTag);
                 }
                 break;
 
@@ -265,6 +244,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void showFragment(Fragment fragment, String fragmentTag) {
+        if (fragment == agreementDialogFragment || fragment == photoPickerDialogFragment) {
+            ((DialogFragment) fragment).show(fragmentManager, "dialog");
+            return;
+        }
+
         setLayoutByCurrentPage();
         int in_animation, out_animation;
 
@@ -293,20 +277,6 @@ public class MainActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void showSubFragment(Fragment fragment, String fragmentTag) {
-        findViewById(R.id.sub_fl).setVisibility(View.VISIBLE);
-        try {
-            fragmentManager.beginTransaction().replace(R.id.sub_fl, fragment, fragmentTag).commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void hideSubFragment(Fragment fragment) {
-        findViewById(R.id.sub_fl).setVisibility(View.GONE);
-        fragmentManager.beginTransaction().detach(fragment).commit();
     }
 
     private void setLayoutByCurrentPage() {
@@ -348,13 +318,14 @@ public class MainActivity extends AppCompatActivity
 
     public void onAgreementClicked(boolean agreement) {
         if(agreement) {
+            findViewById(R.id.bottom_bar_google_map_loading_text_view).setVisibility(View.VISIBLE);
+            findViewById(R.id.bottom_bar_google_map_ask_layout).setVisibility(View.INVISIBLE);
             showFragment(googleMapFragment, EyeOfSeoulParams.GoogleMapTag);
             ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
                     .moveCurrentPosition();
         } else {
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
-        hideSubFragment(agreementDialogFragment);
     }
 
     @Override
@@ -388,10 +359,6 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.bottom_bar_google_map_cancle_btn:
                 onNavigationItemSelected(navigationView.getMenu().getItem(0));
-                break;
-
-            case R.id.sub_fl:
-                hideSubFragment(agreementDialogFragment);
                 break;
         }
     }

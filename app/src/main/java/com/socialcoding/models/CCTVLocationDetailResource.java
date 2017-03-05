@@ -1,7 +1,5 @@
 package com.socialcoding.models;
 
-import java.util.List;
-
 /**
  * Created by cloverhearts on 2016-12-06.
  */
