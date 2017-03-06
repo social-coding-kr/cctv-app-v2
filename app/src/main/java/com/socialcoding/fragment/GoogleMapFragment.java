@@ -1,4 +1,4 @@
-package com.socialcoding.cctv;
+package com.socialcoding.fragment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +18,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.*;
+import com.socialcoding.adapter.CctvInfoWindowAdapter;
+import com.socialcoding.cctv.MainActivity;
+import com.socialcoding.cctv.R;
 import com.socialcoding.http.CCTVHttpHandlerV1;
 import com.socialcoding.inteface.IRESTAsyncServiceHandler;
 import com.socialcoding.inteface.IServerResource;

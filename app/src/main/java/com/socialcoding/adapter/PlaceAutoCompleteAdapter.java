@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.socialcoding.cctv;
+package com.socialcoding.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -33,6 +33,7 @@ import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.socialcoding.cctv.R;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +49,7 @@ import static com.socialcoding.cctv.MainActivity.currentSearchingAddr;
  * The API client must be maintained in the encapsulating Activity, including all lifecycle and
  * connection states. The API client must be connected with the {@link Places#GEO_DATA_API} API.
  */
-class PlaceAutoCompleteAdapter
+public class PlaceAutoCompleteAdapter
         extends ArrayAdapter<AutocompletePrediction> implements Filterable {
 
     private static final String TAG = "PlaceAutocompleteAdapter";

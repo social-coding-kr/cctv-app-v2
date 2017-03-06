@@ -1,4 +1,4 @@
-package com.socialcoding.dialogFragments;
+package com.socialcoding.dialogFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import butterknife.*;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
-import com.socialcoding.cctv.ReportFragment;
+import com.socialcoding.fragment.ReportFragment;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.socialcoding.cctv;
+package com.socialcoding.adapter;
 
 import android.view.View;
 import android.widget.Button;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.socialcoding.cctv.MainActivity;
+import com.socialcoding.cctv.R;
+import com.socialcoding.fragment.GoogleMapFragment;
 
 import java.util.List;
 
@@ -14,11 +17,11 @@ import java.util.List;
  * Created by yoon on 2017. 1. 15..
  */
 
-class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     private MainActivity mainActivity;
 
-    CctvInfoWindowAdapter(MainActivity activity) {
+    public CctvInfoWindowAdapter(MainActivity activity) {
         this.mainActivity = activity;
     }
 

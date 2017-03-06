@@ -1,4 +1,4 @@
-package com.socialcoding.cctv;
+package com.socialcoding.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
+import com.socialcoding.cctv.MainActivity;
+import com.socialcoding.cctv.R;
 
 /**
  * Created by yoon on 2016. 10. 22..
