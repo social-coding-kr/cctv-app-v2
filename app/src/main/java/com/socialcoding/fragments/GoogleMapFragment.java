@@ -1,4 +1,4 @@
-package com.socialcoding.fragment;
+package com.socialcoding.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,21 +18,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.*;
-import com.socialcoding.adapter.CctvInfoWindowAdapter;
+import com.socialcoding.adapters.CctvInfoWindowAdapter;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.http.CCTVHttpHandlerV1;
-import com.socialcoding.http.GooglePlaceTextsearchHttpHandler;
-import com.socialcoding.inteface.IRESTAsyncServiceHandler;
-import com.socialcoding.inteface.IServerResource;
+import com.socialcoding.intefaces.IRESTAsyncServiceHandler;
+import com.socialcoding.intefaces.IServerResource;
 import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import com.socialcoding.models.Markers;
-import lombok.AllArgsConstructor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.List;
@@ -42,10 +36,8 @@ import java.util.Locale;
  * Created by darkgs on 2016-03-26.
  */
 public class GoogleMapFragment extends Fragment
-        implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraIdleListener {
-    final String baseUrl = "http://cctvs.nineqs.com";
-
+        implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnCameraIdleListener {
     private MainActivity mainActivity;
     private GoogleMap mMap;
     protected View view;
@@ -54,6 +46,7 @@ public class GoogleMapFragment extends Fragment
     private Bitmap blueMarkerIcon;
 
     private static Marker reportMarker;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +122,7 @@ public class GoogleMapFragment extends Fragment
     }
 
     private void getCctvs(float zoom, CameraPosition cameraPosition) {
+        final String baseUrl = "http://cctvs.nineqs.com";
         // Add initial makers.
         VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
         LatLngBounds latLngBounds = visibleRegion.latLngBounds;
@@ -195,8 +189,7 @@ public class GoogleMapFragment extends Fragment
             currLocation = new Location("dummy");
             currLocation.setLatitude(latitude);
             currLocation.setLongitude(longitude);
-            reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
-                    "경도 : " + Double.toString(longitude));
+            reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", 경도 : " + Double.toString(longitude));
             marker.showInfoWindow();
         }
     }
@@ -206,8 +199,7 @@ public class GoogleMapFragment extends Fragment
         Double latitude = marker.getPosition().latitude;
         Double longitude = marker.getPosition().longitude;
         if(reportMarker != null) {
-            reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
-                    "경도 : " + Double.toString(longitude));
+            reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", 경도 : " + Double.toString(longitude));
             reportMarker.setSnippet(getAddress());
             marker.showInfoWindow();
         }
@@ -225,17 +217,12 @@ public class GoogleMapFragment extends Fragment
                 if (currLocation != null) {
                     LatLng currLatLng = new LatLng(currLocation.getLatitude(), currLocation.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
-                    getActivity().findViewById(R.id.bottom_bar_google_map_loading_text_view)
-                            .setVisibility(View.INVISIBLE);
-                    getActivity().findViewById(R.id.bottom_bar_google_map_ask_layout)
-                            .setVisibility(View.VISIBLE);
                     if (reportMarker != null) {
                         reportMarker.remove();
                     }
                     reportMarker = mMap.addMarker(new MarkerOptions().position(currLatLng)
                             .draggable(true).visible(true)
-                            .title("위도 : " + currLocation.getLatitude() + ", " +
-                                    "경도 : " + currLocation.getLongitude())
+                            .title("위도 : " + currLocation.getLatitude() + ", 경도 : " + currLocation.getLongitude())
                             .snippet(getAddress()));
                 }
             }

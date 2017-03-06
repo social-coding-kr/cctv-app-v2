@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.socialcoding.adapter;
+package com.socialcoding.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;

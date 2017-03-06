@@ -15,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
@@ -23,17 +25,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.socialcoding.adapter.PlaceAutoCompleteAdapter;
-import com.socialcoding.dialogFragment.AgreementDialogFragment;
-import com.socialcoding.dialogFragment.PhotoPickerDialogFragment;
+import com.socialcoding.adapters.PlaceAutoCompleteAdapter;
+import com.socialcoding.dialogFragments.AgreementDialogFragment;
+import com.socialcoding.dialogFragments.PhotoPickerDialogFragment;
 import com.socialcoding.exception.SocialCodeException;
-import com.socialcoding.fragment.GoogleMapFragment;
-import com.socialcoding.fragment.RelatedLawFragment;
-import com.socialcoding.fragment.ReportFragment;
-import com.socialcoding.handler.Handler;
+import com.socialcoding.fragments.GoogleMapFragment;
+import com.socialcoding.fragments.RelatedLawFragment;
+import com.socialcoding.fragments.ReportFragment;
+import com.socialcoding.handlers.Handler;
 import com.socialcoding.http.CCTVHttpHandlerDummy;
 import com.socialcoding.http.GooglePlaceTextsearchHttpHandler;
-import com.socialcoding.inteface.HttpHandler;
+import com.socialcoding.intefaces.HttpHandler;
 import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -68,6 +70,10 @@ public class MainActivity extends AppCompatActivity
     private Toast quitToast;
 
     public static String address;
+
+    // BottomBar
+    @BindView(R.id.bottom_bar_google_map_loading_text_view) TextView locationLoadingTV;
+    @BindView(R.id.bottom_bar_google_map_ask_layout) LinearLayout locationAskingLL;
 
     private void buildGoogleApiClient() {
         if (client == null) {
@@ -140,6 +146,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         initButtons();
         initNaviDrawer();
@@ -328,6 +335,8 @@ public class MainActivity extends AppCompatActivity
             showFragment(googleMapFragment, EyeOfSeoulParams.GoogleMapTag);
             ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
                     .moveCurrentPosition();
+            locationLoadingTV.setVisibility(View.INVISIBLE);
+            locationAskingLL.setVisibility(View.VISIBLE);
         } else {
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }

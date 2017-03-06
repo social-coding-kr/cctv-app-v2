@@ -1,4 +1,4 @@
-package com.socialcoding.adapter;
+package com.socialcoding.adapters;
 
 import android.view.View;
 import android.widget.Button;
@@ -9,7 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
-import com.socialcoding.fragment.GoogleMapFragment;
+import com.socialcoding.fragments.GoogleMapFragment;
 
 import java.util.List;
 

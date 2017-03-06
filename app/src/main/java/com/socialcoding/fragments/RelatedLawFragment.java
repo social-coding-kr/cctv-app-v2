@@ -1,4 +1,4 @@
-package com.socialcoding.fragment;
+package com.socialcoding.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

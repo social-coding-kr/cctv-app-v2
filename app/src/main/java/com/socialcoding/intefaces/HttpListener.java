@@ -1,4 +1,4 @@
-package com.socialcoding.inteface;
+package com.socialcoding.intefaces;
 
 /**
  * Created by darkg on 2016-03-26.

@@ -1,4 +1,4 @@
-package com.socialcoding.inteface;
+package com.socialcoding.intefaces;
 
 import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.CCTVLocationDetailData;

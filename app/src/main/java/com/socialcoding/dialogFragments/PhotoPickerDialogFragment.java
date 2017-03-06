@@ -1,4 +1,4 @@
-package com.socialcoding.dialogFragment;
+package com.socialcoding.dialogFragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import butterknife.*;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
-import com.socialcoding.fragment.ReportFragment;
+import com.socialcoding.fragments.ReportFragment;
 
 import java.util.List;
 
@@ -51,5 +51,11 @@ public class PhotoPickerDialogFragment extends DialogFragment {
                 break;
         }
         dismiss();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

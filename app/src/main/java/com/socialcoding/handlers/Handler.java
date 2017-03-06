@@ -1,4 +1,4 @@
-package com.socialcoding.handler;
+package com.socialcoding.handlers;
 
 import com.socialcoding.http.CCTVHttpHandlerDummy;
 

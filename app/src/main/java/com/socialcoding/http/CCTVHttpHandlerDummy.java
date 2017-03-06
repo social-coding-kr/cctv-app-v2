@@ -1,10 +1,10 @@
 package com.socialcoding.http;
 
 import com.socialcoding.exception.SocialCodeException;
-import com.socialcoding.inteface.HttpHandler;
-import com.socialcoding.inteface.HttpListener;
-import com.socialcoding.inteface.HttpParams;
-import com.socialcoding.inteface.IRESTServerHandler;
+import com.socialcoding.intefaces.HttpHandler;
+import com.socialcoding.intefaces.HttpListener;
+import com.socialcoding.intefaces.HttpParams;
+import com.socialcoding.intefaces.IRESTServerHandler;
 import com.socialcoding.models.CCTVDetail;
 import com.socialcoding.models.CCTVLocationData;
 

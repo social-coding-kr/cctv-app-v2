@@ -1,4 +1,4 @@
-package com.socialcoding.dialogFragment;
+package com.socialcoding.dialogFragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;

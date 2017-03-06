@@ -1,4 +1,4 @@
-package com.socialcoding.fragment;
+package com.socialcoding.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,7 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
-import com.socialcoding.handler.Handler;
+import com.socialcoding.handlers.Handler;
 import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 

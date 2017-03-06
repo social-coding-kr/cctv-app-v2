@@ -1,4 +1,4 @@
-package com.socialcoding.inteface;
+package com.socialcoding.intefaces;
 
 import com.socialcoding.exception.SocialCodeException;
 

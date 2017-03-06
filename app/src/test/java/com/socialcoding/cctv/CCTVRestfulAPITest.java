@@ -1,8 +1,8 @@
 package com.socialcoding.cctv;
 
 import com.socialcoding.http.CCTVHttpHandlerV1;
-import com.socialcoding.inteface.IRESTAsyncServiceHandler;
-import com.socialcoding.inteface.IServerResource;
+import com.socialcoding.intefaces.IRESTAsyncServiceHandler;
+import com.socialcoding.intefaces.IServerResource;
 import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.CCTVLocationDetailData;
 import com.socialcoding.models.CCTVLocationDetailResource;

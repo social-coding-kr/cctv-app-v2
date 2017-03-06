@@ -1,4 +1,4 @@
-package com.socialcoding.handler;
+package com.socialcoding.handlers;
 
 import android.app.Activity;
 import android.support.v4.app.ActivityCompat;

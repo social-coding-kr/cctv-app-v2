@@ -1,8 +1,8 @@
 package com.socialcoding.http;
 
-import com.socialcoding.inteface.IRESTAsyncServiceHandler;
-import com.socialcoding.inteface.IRESTServerHandler;
-import com.socialcoding.inteface.IServerResource;
+import com.socialcoding.intefaces.IRESTAsyncServiceHandler;
+import com.socialcoding.intefaces.IRESTServerHandler;
+import com.socialcoding.intefaces.IServerResource;
 import com.socialcoding.models.CCTVLocationDetailResource;
 import com.socialcoding.models.CCTVLocationResource;
 import okhttp3.MediaType;
