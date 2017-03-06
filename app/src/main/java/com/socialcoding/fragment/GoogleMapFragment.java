@@ -22,11 +22,13 @@ import com.socialcoding.adapter.CctvInfoWindowAdapter;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.http.CCTVHttpHandlerV1;
+import com.socialcoding.http.GooglePlaceTextsearchHttpHandler;
 import com.socialcoding.inteface.IRESTAsyncServiceHandler;
 import com.socialcoding.inteface.IServerResource;
 import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import com.socialcoding.models.Markers;
+import lombok.AllArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -41,8 +43,7 @@ import java.util.Locale;
  */
 public class GoogleMapFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener,
-        GoogleMap.OnMapLoadedCallback, GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnCameraIdleListener {
+        GoogleMap.OnMarkerClickListener, GoogleMap.OnCameraIdleListener {
     final String baseUrl = "http://cctvs.nineqs.com";
 
     private MainActivity mainActivity;
@@ -89,42 +90,25 @@ public class GoogleMapFragment extends Fragment
             throw new RuntimeException("Invalid activity.");
         }
         mainActivity = (MainActivity) getActivity();
-
-        /* Only works in real phone
-        if(mMap == null) {
-            SupportMapFragment fragment = SupportMapFragment.newInstance();
-            FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.map, fragment);
-            fragmentTransaction.commit();
-            fragment.getMapAsync(this);
-        }
-        */
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMarkerDragListener(this);
-        mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        // Set zoom level
         mMap.moveCamera(CameraUpdateFactory.zoomTo(16));
 
-        // Add a marker in Seoul, Korea and move the camera
-        LatLng cityHallSeoul = new LatLng(37.5667151,126.9781312);
-        /*
-        mMap.addMarker(new MarkerOptions().position(cityHallSeoul)
-                .draggable(true).title("Marker in Seoul")); */
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(cityHallSeoul));
+        // Move the camera to Seoul, Korea
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(37.5667151,126.9781312)));
 
         if(ContextCompat.checkSelfPermission(getActivity(),
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
             mMap.setMyLocationEnabled(true);
         }
 
-        mMap.setOnMapLoadedCallback(this);
         mMap.setOnCameraIdleListener(this);
         mMap.setOnMarkerClickListener(this);
 
@@ -142,10 +126,6 @@ public class GoogleMapFragment extends Fragment
         }
         CameraPosition cameraPosition = mMap.getCameraPosition();
         getCctvs(cameraPosition.zoom, cameraPosition);
-    }
-
-    @Override
-    public void onMapLoaded() {
     }
 
     private void getCctvs(float zoom, CameraPosition cameraPosition) {
@@ -175,7 +155,6 @@ public class GoogleMapFragment extends Fragment
                                         }
                                         markers.add(m, cctv.getCctvId());
                                         if ("PRIVATE".equals(cctv.getSource())) {
-                                            //m.se;
                                         }
                                     }
 
@@ -197,6 +176,11 @@ public class GoogleMapFragment extends Fragment
         }
     }
 
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        marker.showInfoWindow();
+        return true;
+    }
 
     @Override
     public void onMarkerDragStart(Marker marker) {
@@ -213,7 +197,6 @@ public class GoogleMapFragment extends Fragment
             currLocation.setLongitude(longitude);
             reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", " +
                     "경도 : " + Double.toString(longitude));
-            // reportMarker.setSnippet(getAddress()); // Too slow...
             marker.showInfoWindow();
         }
     }
@@ -238,11 +221,9 @@ public class GoogleMapFragment extends Fragment
         if(ContextCompat.checkSelfPermission(getActivity(),
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
             if(MainActivity.client != null) {
-                currLocation = LocationServices.FusedLocationApi
-                        .getLastLocation(MainActivity.client);
+                currLocation = LocationServices.FusedLocationApi.getLastLocation(MainActivity.client);
                 if (currLocation != null) {
-                    LatLng currLatLng = new LatLng(currLocation.getLatitude(),
-                            currLocation.getLongitude());
+                    LatLng currLatLng = new LatLng(currLocation.getLatitude(), currLocation.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));
                     getActivity().findViewById(R.id.bottom_bar_google_map_loading_text_view)
                             .setVisibility(View.INVISIBLE);
@@ -268,7 +249,7 @@ public class GoogleMapFragment extends Fragment
         }
     }
 
-    public String getAddress() {
+    private String getAddress() {
         double lat = currLocation.getLatitude();
         double lng = currLocation.getLongitude();
         String addr = null;
@@ -284,54 +265,5 @@ public class GoogleMapFragment extends Fragment
         }
         MainActivity.address = addr;
         return addr;
-    }
-
-    public void onSearchButtonClick(String searchText) {
-        new Thread(new SearchHttpHandler(searchText)).start();
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        marker.showInfoWindow();
-        return true;
-    }
-
-
-    public class SearchHttpHandler implements Runnable {
-        String searchText;
-
-        SearchHttpHandler(String searchText) {
-            this.searchText = searchText;
-        }
-
-        public void run() {
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url("https://maps.googleapis.com/maps/api/place/textsearch/" +
-                            "json" +
-                            "?query=" + searchText +
-                            "&key=" + getResources().getString(R.string.webservice_key))
-                    .build();
-
-            try {
-                Response response = client.newCall(request).execute();
-                String result = response.body().string();
-                System.out.println(result);
-                JSONObject jsonObject = new JSONObject(result);
-                Double lat = (Double) jsonObject.getJSONArray("results").getJSONObject(0)
-                        .getJSONObject("geometry").getJSONObject("location").get("lat");
-                Double lng = (Double) jsonObject.getJSONArray("results").getJSONObject(0)
-                        .getJSONObject("geometry").getJSONObject("location").get("lng");
-                final LatLng latLng = new LatLng(lat, lng);
-
-                mainActivity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        ((GoogleMapFragment) mainActivity.googleMapFragment).moveCamera(latLng);
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

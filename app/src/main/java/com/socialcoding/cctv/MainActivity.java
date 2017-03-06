@@ -3,6 +3,7 @@ package com.socialcoding.cctv;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,7 @@ import com.socialcoding.fragment.RelatedLawFragment;
 import com.socialcoding.fragment.ReportFragment;
 import com.socialcoding.handler.Handler;
 import com.socialcoding.http.CCTVHttpHandlerDummy;
+import com.socialcoding.http.GooglePlaceTextsearchHttpHandler;
 import com.socialcoding.inteface.HttpHandler;
 import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     private static final LatLngBounds BOUNDS_KOREA = new LatLngBounds(
             new LatLng(37.4784514, 126.8818163), new LatLng(37.5562989, 126.9220863));
 
-    public static Fragment googleMapFragment;
+    public Fragment googleMapFragment;
     private Fragment agreementDialogFragment;
     public Fragment reportFragment;
     public Fragment photoPickerDialogFragment;
@@ -146,6 +148,7 @@ public class MainActivity extends AppCompatActivity
         initFragments();
 
         // Connect 상황을 모르는데 왜 여기서 하는지 이해는 잘 안되지만,,
+        final MainActivity mainActivity = this;
         if(placeAutocompleteAdapter == null) {
             searchAutoCompleteTextView =
                     (AutoCompleteTextView) findViewById(R.id.search_bar_AutoCompleteTextView);
@@ -156,9 +159,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     System.out.println("Searching started");
-                    ((GoogleMapFragment) googleMapFragment).onSearchButtonClick(
-                            currentSearchingAddr
-                    );
+                    new Thread(new GooglePlaceTextsearchHttpHandler(mainActivity, currentSearchingAddr)).start();
                 }
             });
         }
@@ -347,9 +348,10 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.search_btn:
                 try {
-                    ((GoogleMapFragment) googleMapFragment).onSearchButtonClick(
+                    new Thread(new GooglePlaceTextsearchHttpHandler(this,
                             ((EditText) findViewById(R.id.search_bar_AutoCompleteTextView))
-                            .getText().toString());
+                                    .getText()
+                                    .toString())).start();
                 } catch(Exception e) {
                     e.printStackTrace();
                 }
@@ -368,7 +370,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         System.out.println("google api onConnectionFailed");
     }
 
