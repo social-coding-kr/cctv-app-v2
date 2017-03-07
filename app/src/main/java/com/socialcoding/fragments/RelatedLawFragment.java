@@ -45,6 +45,6 @@ public class RelatedLawFragment extends Fragment {
         mWebSettings.setJavaScriptEnabled(true); // 자바스크립트 사용 허용
 
         //원하는 url 입력 -> 나중에 사용자가 입력하는걸로 받으면 되겠다
-        mWebView.loadUrl("file:///android_asset/tutorial_test.html");
+        mWebView.loadUrl("file:///android_asset/lawPage.html");
     }
 }

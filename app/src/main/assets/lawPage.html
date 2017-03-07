@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <link href="css/style.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js"></script>
+
+    <script>
+        function displayContent(index) {
+            var cnt = 0;
+            $('.law_content .law_detail').each(function(){
+                if($(this).css("display") != "none") {cnt++;}
+            });
+
+            if(cnt == 0) {
+                $('.law_content .law_detail:eq(' + index + ')').show();
+            }
+        }
+
+        function chkOk(index){
+            $('.law_content .law_detail:eq('+index+')').hide();
+        }
+    </script>
+</head>
+<body>
+<div class="main">
+    <div class="law_content">
+        <div class="law_title" onclick="displayContent(0);">
+            <div class="law_p">
+                <p>개인정보 보호법 제 25조</p>
+                <p>(영상정보처리기기의 설치∙운영 제한)</p>
+            </div>
+            <div class="law_img">
+                <img src="search.png">
+            </div>
+        </div>
+        <div class="law_detail">
+            <ol>
+                <li>누구든지 다음 각 호의 경우를 제외하고는 공개된 장소에 영상정보처리기기를 설치·운영하여서는 아니 된다.</li>
+                <ol class="roman">
+                    <li>법령에서 구체적으로 허용하고 있는 경우</li>
+                    <li>범죄의 예방 및 수사를 위하여 필요한 경우</li>
+                    <li>시설안전 및 화재 예방을 위하여 필요한 경우</li>
+                    <li>교통단속을 위하여 필요한 경우</li>
+                    <li>교통정보의 수집·분석 및 제공을 위하여 필요한 경우</li>
+                </ol>
+                <li>누구든지 불특정 다수가 이용하는 목욕실, 화장실, 발한실(發汗室), 탈의실 등 개인의 사생활을 현저히 침해할 우려가 있는 장소의 내부를 볼 수 있도록 영상정보처리기기를 설치·운영하여서는 아니 된다. 다만, 교도소, 정신보건 시설 등 법령에 근거하여 사람을 구금하거나 보호하는 시설로서 대통령령으로 정하는 시설에 대하여는 그러하지 아니하다.</li>
+                <li>제1항 각 호에 따라 영상정보처리기기를 설치·운영하려는 공공기관의 장과 제2항 단서에 따라 영상정보처리기기를 설치·운영하려는 자는 공청회·설명회의 개최 등 대통령령으로 정하는 절차를 거쳐 관계 전문가 및 이해관계인의 의견을 수렴하여야 한다.</>
+                <li>제1항 각 호에 따라 영상정보처리기기를 설치·운영하는 자(이하 "영상정보처리기기운영자"라 한다)는 정보주체가 쉽게 인식할 수 있도록 대통령령으로 정하는바에 따라 안내판 설치 등 필요한 조치를 하여야 한다. 다만, 대통령령으로 정하는 시설에 대하여는 그러하지 아니하다.</li>
+                <li>영상정보처리기기운영자는 영상정보처리기기의 설치 목적과 다른 목적으로 영상정보처리기기를 임의로 조작하거나 다른 곳을 비춰서는 아니 되며, 녹음기능은 사용할 수 없다.</li>
+                <li>영상정보처리기기운영자는 개인정보가 분실·도난·유출·위조·변조 또는 훼손되지 아니하도록 제29조에 따라 안전성 확보에 필요한 조치를 하여야 한다.  (개정 2015.7.24.)</li>
+                <li>영상정보처리기기운영자는 대통령령으로 정하는 바에 따라 영상정보처리기기 운영·관리 방침을 마련하여야 한다. 이 경우 제30조에 따른 개인정보 처리방침을 정하지 아니할 수 있다.</li>
+                <li>영상정보처리기기운영자는 영상정보처리기기의 설치·운영에 관한 사무를 위탁할 수 있다. 다만, 공공기관이 영상정보처리기기 설치·운영에 관한 사무를 위탁하는 경우에는 대통령령으로 정하는 절차 및 요건에 따라야 한다.</>
+
+            </ol>
+
+            <div class="okBtn" onclick="chkOk(0);">확인</div>
+        </div>
+    </div>
+    <div class="law_content">
+        <div class="law_title" onclick="displayContent(1);">
+            <div class="law_p">
+                <p style="margin-top:10px;">개인정보 보호법 제2조(벌칙)</p>
+            </div>
+            <div class="law_img">
+                <img src="search.png">
+            </div>
+        </div>
+        <div class="law_detail">
+            <ol style="list-style:none;">
+                <li>다음 각 호의 어느 하나에 해당하는 자는 3년 이하의 징역 또는 3천만원 이하의 벌금에 처한다.</li>
+                <ol  class="roman" style="margin-left: 10px;">
+                    <li>제25조제5항을 위반하여 영상정보처리기기의 설치 목적과 다른 목적으로 영상정보처리기기를 임의로 조작하거나 다른 곳을 비추는 자 또는 녹음기능을 사용한 자</li>
+                </ol>
+            </ol>
+
+            <div class="okBtn" onclick="chkOk(1);">확인</div>
+        </div>
+    </div>
+    <div class="law_content">
+        <div class="law_title" onclick="displayContent(2);">
+            <div class="law_p">
+                <p>개인정보 보호법 시행령 제25조</p>
+                <p>(영상정보처리기기 운영∙관리 방침)</p>
+            </div>
+            <div class="law_img">
+                <img src="search.png">
+            </div>
+        </div>
+        <div class="law_detail">
+            <ol>
+                <li>영상정보처리기기운영자는 법 제25조제7항에 따라 다음 각 호의 사항이 포함된 영상정보처리기기 운영ㆍ관리 방침을 마련하여야 한다.</li>
+                <ol class="roman">
+                    <li>영상정보처리기기의 설치 근거 및 설치 목적</li>
+                    <li>영상정보처리기기의 설치 대수, 설치 위치 및 촬영 범위</li>
+                    <li>관리책임자, 담당 부서 및 영상정보에 대한 접근 권한이 있는 사람</li>
+                    <li>영상정보의 촬영시간, 보관기간, 보관장소 및 처리방법</li>
+                    <li>영상정보처리기기운영자의 영상정보 확인 방법 및 장소</li>
+                    <li>정보주체의 영상정보 열람 등 요구에 대한 조치</li>
+                    <li>영상정보 보호를 위한 기술적ㆍ관리적 및 물리적 조치</li>
+                    <li>그 밖에 영상정보처리기기의 설치ㆍ운영 및 관리에 필요한 사항</li>
+                </ol>
+                <li>제1항에 따라 마련한 영상정보처리기기 운영ㆍ관리 방침의 공개에 관하여는 제31조제2항 및 제3항을 준용한다. 이 경우 "개인정보처리자"는 "영상정보처리기기운영자"로, "법 제30조제2항"은 "법 제25조제7항"으로, "개인정보 처리방침"은 "영상정보처리기기 관리ㆍ운영 방침"으로 본다.</li>
+            </ol>
+
+
+            <div class="okBtn" onclick="chkOk(2);">확인</div>
+        </div>
+    </div>
+    <div class="law_content">
+        <div class="law_title" onclick="displayContent(3);">
+            <div class="law_p">
+                <p>개인정보 보호법 시행령 제26조</p>
+                <p>(공공기관의 영상정보처리기기 설치∙운영 사무의 위탁)</p>
+            </div>
+            <div class="law_img">
+                <img src="search.png">
+            </div>
+        </div>
+        <div class="law_detail">
+            <ol>
+                <li>법 제25조제8항 단서에 따라 공공기관이 영상정보처리기기의 설치ㆍ운영에 관한 사무를 위탁하는 경우에는 다음 각 호의 내용이 포함된 문서로 하여야 한다.</li>
+                <ol class="roman">
+                    <li>위탁하는 사무의 목적 및 범위</li>
+                    <li>재위탁 제한에 관한 사항</li>
+                    <li>영상정보에 대한 접근 제한 등 안전성 확보 조치에 관한 사항</li>
+                    <li>영상정보의 관리 현황 점검에 관한 사항</li>
+                    <li>위탁받는 자가 준수하여야 할 의무를 위반한 경우의 손해배상 등 책임에 관한 사항</li>
+                </ol>
+                <li>제1항에 따라 사무를 위탁한 경우에는 제24조제1항부터 제3항까지의 규정에 따른 안내판 등에 위탁받는 자의 명칭 및 연락처를 포함시켜야 한다.</li>
+            </ol>
+
+            <div class="okBtn" onclick="chkOk(3);">확인</div>
+        </div>
+    </div>
+    <div class="law_content">
+        <div class="law_title" onclick="displayContent(4);">
+            <div class="law_p">
+                <p>개인정보 보호법 시행령 제 27조</p>
+                <p>(영상정처리기기 설치∙운영 지침)</p>
+            </div>
+            <div class="law_img">
+                <img src="search.png">
+            </div>
+        </div>
+        <div class="law_detail">
+            <ol style="list-style: none; margin-left: 0px;">
+                <li>행정자치부장관은 법 및 이 영에서 규정한 사항 외에 영상정보처리기기의 설치ㆍ운영에 관한 기준, 설치ㆍ운영 사무의 위탁 등에 관하여 법 제12조제1항에 따른 표준 개인정보 보호지침을 정하여 영상정보처리기기운영자에게 그 준수를 권장할 수 있다.  (개정 2013.3.23, 2014.11.19)</li>
+            </ol>
+
+            <div class="okBtn" onclick="chkOk(4);">확인</div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
