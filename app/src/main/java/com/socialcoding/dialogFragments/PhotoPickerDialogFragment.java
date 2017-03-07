@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import butterknife.*;
-import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.fragments.ReportFragment;
+import com.socialcoding.models.EyeOfSeoulParams;
 
 import java.util.List;
 
@@ -19,6 +19,7 @@ import java.util.List;
  */
 
 public class PhotoPickerDialogFragment extends DialogFragment {
+    private ReportFragment reportFragment;
     private Unbinder unbinder;
 
     @BindViews({R.id.button_album_fdpp, R.id.button_camera_fdpp})
@@ -32,23 +33,17 @@ public class PhotoPickerDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragmnet_photo_picker_dialog, container, false);
         unbinder = ButterKnife.bind(this, view);
+        reportFragment = (ReportFragment) getActivity()
+                .getSupportFragmentManager()
+                .findFragmentByTag(EyeOfSeoulParams.ReportTag);
 
         return view;
     }
 
     @OnClick({R.id.button_album_fdpp, R.id.button_camera_fdpp, R.id.view_image_cancle_fdpp})
     public void onPickingMethodClick(View v) {
-        switch (v.getId()) {
-            case R.id.view_image_cancle_fdpp:
-                break;
-
-            case R.id.button_album_fdpp:
-                ((ReportFragment) ((MainActivity) getActivity()).reportFragment).onMethodSelected("album");
-                break;
-
-            case R.id.button_camera_fdpp:
-                ((ReportFragment) ((MainActivity) getActivity()).reportFragment).onMethodSelected("camera");
-                break;
+        if (v.getId() == R.id.button_album_fdpp || v.getId() == R.id.button_camera_fdpp) {
+            reportFragment.onMethodSelected(v.getId() == R.id.button_album_fdpp ? "album" : "camera");
         }
         dismiss();
     }

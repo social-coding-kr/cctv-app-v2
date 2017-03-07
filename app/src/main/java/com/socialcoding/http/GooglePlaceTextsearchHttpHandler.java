@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.fragments.GoogleMapFragment;
+import com.socialcoding.models.EyeOfSeoulParams;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;
@@ -45,7 +46,8 @@ public class GooglePlaceTextsearchHttpHandler implements Runnable {
 
             mainActivity.runOnUiThread(new Runnable() {
                 public void run() {
-                    ((GoogleMapFragment) mainActivity.googleMapFragment).moveCamera(latLng);
+                    ((GoogleMapFragment) mainActivity.getSupportFragmentManager()
+                            .findFragmentByTag(EyeOfSeoulParams.GoogleMapTag)).moveCamera(latLng);
                 }
             });
         } catch (Exception e) {

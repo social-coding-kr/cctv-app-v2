@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
+import com.socialcoding.dialogFragments.PhotoPickerDialogFragment;
 import com.socialcoding.handlers.Handler;
 import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
@@ -209,12 +210,12 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
         switch(v.getId()) {
             case R.id.cctv_image:
                 imageUsage = "cctv";
-                mainActivity.showFragment(mainActivity.photoPickerDialogFragment, EyeOfSeoulParams.ReportTag);
+                mainActivity.showFragment(new PhotoPickerDialogFragment(), EyeOfSeoulParams.ReportTag);
                 break;
 
             case R.id.info_image:
                 imageUsage = "info";
-                mainActivity.showFragment(mainActivity.photoPickerDialogFragment, EyeOfSeoulParams.ReportTag);
+                mainActivity.showFragment(new PhotoPickerDialogFragment(), EyeOfSeoulParams.ReportTag);
                 break;
 
             case R.id.info_image_null:
