@@ -43,7 +43,7 @@ public class AgreementDialogFragment extends DialogFragment {
     public void onAgreementButtonsClick(View view) {
         boolean isAgreed = view.getId() == R.id.button_agree_fda;
         if(getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).onAgreementClicked(isAgreed);
+            ((MainActivity) getActivity()).onAgreementClick(isAgreed);
         }
         dismiss();
     }

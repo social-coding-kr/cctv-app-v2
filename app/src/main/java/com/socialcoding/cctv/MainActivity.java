@@ -16,7 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import butterknife.BindView;
+import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
@@ -40,18 +42,14 @@ import com.socialcoding.models.EyeOfSeoulParams;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
-        View.OnClickListener
-{
+        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
     public static GoogleApiClient client;
     private HttpHandler httpHandler = new CCTVHttpHandlerDummy("http://cctv.nineqs.com");
 
-    public NavigationView navigationView;
-    private DrawerLayout drawer;
-
-    private AutoCompleteTextView searchAutoCompleteTextView;
     private PlaceAutoCompleteAdapter placeAutocompleteAdapter;
     public static String currentSearchingAddr;
     private static final LatLngBounds BOUNDS_KOREA = new LatLngBounds(
@@ -71,9 +69,21 @@ public class MainActivity extends AppCompatActivity
 
     public static String address;
 
-    // BottomBar
+    // Text Search.
+    @BindView(R.id.search_bar_AutoCompleteTextView) AutoCompleteTextView searchAutoCompleteTextView;
+    @BindView(R.id.button_search) Button searchButton;
+
+    // Navigation Drawer.
+    @BindView(R.id.layout_drawer) DrawerLayout drawerLayout;
+    @BindView(R.id.view_navigation) public NavigationView navigationView;
+    @BindViews({R.id.menu_btn, R.id.back_btn}) List<ImageView> navigationDrawerButtons;
+
+    // Bottom Bar.
+    @BindView(R.id.bottom_bar_google_map) RelativeLayout googleMapBottomBar;
     @BindView(R.id.bottom_bar_google_map_loading_text_view) TextView locationLoadingTV;
     @BindView(R.id.bottom_bar_google_map_ask_layout) LinearLayout locationAskingLL;
+    @BindViews({R.id.bottom_bar_google_map_continue_btn, R.id.bottom_bar_google_map_cancle_btn})
+    List<Button> reportButtons;
 
     private void buildGoogleApiClient() {
         if (client == null) {
@@ -108,13 +118,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void initNaviDrawer() {
-        navigationView = (NavigationView) findViewById(R.id.nav_main);
-        navigationView.setNavigationItemSelectedListener(this);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED); // block swipe
-    }
-
     private void connectHttp() {
         try {
             httpHandler.connect("test_url", 1004);
@@ -123,24 +126,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void initButtons() {
-        Button[] btns = new Button[]{
-                (Button) findViewById(R.id.search_btn),
-                (Button) findViewById(R.id.bottom_bar_google_map_continue_btn),
-                (Button) findViewById(R.id.bottom_bar_google_map_cancle_btn)
-        };
-        ImageView[] imageViews = new ImageView[] {
-                (ImageView) findViewById(R.id.menu_btn),
-                (ImageView) findViewById(R.id.back_btn)
-        };
-
-        for(Button btn : btns) {
-            btn.setOnClickListener(this);
-        }
-        for(ImageView imageView : imageViews) {
-            imageView.setOnClickListener(this);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,8 +133,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        initButtons();
-        initNaviDrawer();
+        // Init navigation drawer.
+        navigationView.setNavigationItemSelectedListener(this);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED); // block swipe
+
         connectHttp();
         buildGoogleApiClient();
         initFragments();
@@ -157,8 +144,6 @@ public class MainActivity extends AppCompatActivity
         // Connect 상황을 모르는데 왜 여기서 하는지 이해는 잘 안되지만,,
         final MainActivity mainActivity = this;
         if(placeAutocompleteAdapter == null) {
-            searchAutoCompleteTextView =
-                    (AutoCompleteTextView) findViewById(R.id.search_bar_AutoCompleteTextView);
             placeAutocompleteAdapter = new PlaceAutoCompleteAdapter(this, client, BOUNDS_KOREA, null);
             searchAutoCompleteTextView.setAdapter(placeAutocompleteAdapter);
             searchAutoCompleteTextView.setThreshold(1);
@@ -174,9 +159,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else if(current_page != R.id.nav_map) {
             onNavigationItemSelected(navigationView.getMenu().getItem(0));
         } else {
@@ -237,7 +221,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.nav_camera:
-                if (findViewById(R.id.bottom_bar_google_map).getVisibility() == View.INVISIBLE) {
+                if (googleMapBottomBar.getVisibility() == View.INVISIBLE) {
                     showFragment(agreementDialogFragment, EyeOfSeoulParams.LocationAgreementDialogTag);
                 }
                 break;
@@ -250,8 +234,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -328,10 +311,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void onAgreementClicked(boolean agreement) {
+    public void onAgreementClick(boolean agreement) {
         if(agreement) {
-            findViewById(R.id.bottom_bar_google_map_loading_text_view).setVisibility(View.VISIBLE);
-            findViewById(R.id.bottom_bar_google_map_ask_layout).setVisibility(View.INVISIBLE);
+            locationLoadingTV.setVisibility(View.VISIBLE);
+            locationAskingLL.setVisibility(View.INVISIBLE);
             showFragment(googleMapFragment, EyeOfSeoulParams.GoogleMapTag);
             ((GoogleMapFragment) fragmentManager.findFragmentByTag(EyeOfSeoulParams.GoogleMapTag))
                     .moveCurrentPosition();
@@ -342,39 +325,38 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
+    @OnClick({R.id.back_btn, R.id.menu_btn})
+    void onNavigationButtonsClick(View v) {
+        switch (v.getId()) {
             case R.id.menu_btn:
-                drawer.openDrawer(navigationView);
-                findViewById(R.id.nav_header_image_view)
-                        .setBackgroundResource(R.drawable.eye_of_seoul_logo);
+                drawerLayout.openDrawer(navigationView);
+                findViewById(R.id.nav_header_image_view).setBackgroundResource(R.drawable.eye_of_seoul_logo);
                 break;
 
             case R.id.back_btn:
                 onNavigationItemSelected(navigationView.getMenu().getItem(0));
                 break;
+        }
+    }
 
-            case R.id.search_btn:
-                try {
-                    new Thread(new GooglePlaceTextsearchHttpHandler(this,
-                            ((EditText) findViewById(R.id.search_bar_AutoCompleteTextView))
-                                    .getText()
-                                    .toString())).start();
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
-                break;
+    @OnClick(R.id.button_search)
+    void onSearchButtonClick() {
+        try {
+            new Thread(new GooglePlaceTextsearchHttpHandler(this,
+                    searchAutoCompleteTextView.getText().toString())).start();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            case R.id.bottom_bar_google_map_continue_btn:
-                last_page = current_page;
-                current_page = R.layout.fragment_report;
-                showFragment(reportFragment, EyeOfSeoulParams.ReportTag);
-                break;
-
-            case R.id.bottom_bar_google_map_cancle_btn:
-                onNavigationItemSelected(navigationView.getMenu().getItem(0));
-                break;
+    @OnClick({R.id.bottom_bar_google_map_continue_btn, R.id.bottom_bar_google_map_cancle_btn})
+    void onBottomBarButtonsClick(View v) {
+        if (R.id.bottom_bar_google_map_continue_btn == v.getId()) {
+            last_page = current_page;
+            current_page = R.layout.fragment_report;
+            showFragment(reportFragment, EyeOfSeoulParams.ReportTag);
+        } else {
+            onNavigationItemSelected(navigationView.getMenu().getItem(0));
         }
     }
 
