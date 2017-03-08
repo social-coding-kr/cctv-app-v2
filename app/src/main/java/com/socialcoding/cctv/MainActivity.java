@@ -2,6 +2,7 @@ package com.socialcoding.cctv;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -42,7 +43,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
-    public static GoogleApiClient client;
+    public static GoogleApiClient googleApiClient;
 
     public static String currentSearchingAddr, address;
     private static final LatLngBounds BOUNDS_KOREA = new LatLngBounds(
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity
     private Toast quitToast;
 
     // Text Search.
+    private PlaceAutoCompleteAdapter placeAutoCompleteAdapter;
     @BindView(R.id.search_bar) View searchBar;
     @BindView(R.id.search_bar_AutoCompleteTextView) AutoCompleteTextView searchAutoCompleteTextView;
     @BindView(R.id.button_search) Button searchButton;
@@ -70,29 +72,6 @@ public class MainActivity extends AppCompatActivity
     @BindViews({R.id.bottom_bar_google_map_continue_btn, R.id.bottom_bar_google_map_cancle_btn})
     List<Button> reportButtons;
 
-    private void buildGoogleApiClient() {
-        if (client == null) {
-            client = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(AppIndex.API)
-                    .addApi(LocationServices.API)
-                    .addApi(Places.GEO_DATA_API)
-                    .build();
-        }
-    }
-
-    private void initFragments() {
-        // Before init google map, we have ask permission.
-        Handler.permissionHandler.handle(this,
-                EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING,
-                EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
-        // Init fragments.
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_fl, new GoogleMapFragment(), EyeOfSeoulParams.GoogleMapTag)
-                .addToBackStack("GoogleMapStack").commit();
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,25 +79,59 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        // Init navigation drawer.
-        navigationView.setNavigationItemSelectedListener(this);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED); // block swipe
-
-        buildGoogleApiClient();
-        initFragments();
-
-        // Connect 상황을 모르는데 왜 여기서 하는지 이해는 잘 안되지만,,
-        final MainActivity mainActivity = this;
-        PlaceAutoCompleteAdapter placeAutocompleteAdapter = new PlaceAutoCompleteAdapter(this, client, BOUNDS_KOREA, null);
-        searchAutoCompleteTextView.setAdapter(placeAutocompleteAdapter);
-        searchAutoCompleteTextView.setThreshold(1);
-        searchAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        (new AsyncTask<MainActivity, Void, MainActivity>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("Searching started");
-                new Thread(new GooglePlaceTextsearchHttpHandler(mainActivity, currentSearchingAddr)).start();
+            protected MainActivity doInBackground(MainActivity... params) {
+                buildGoogleApiClient();
+
+                // Init navigation drawer.
+                navigationView.setNavigationItemSelectedListener(MainActivity.this);
+
+                params[0].placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(
+                        MainActivity.this,
+                        googleApiClient,
+                        BOUNDS_KOREA,
+                        null);
+                searchAutoCompleteTextView.setThreshold(1);
+                searchAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        System.out.println("Searching started");
+                        new Thread(new GooglePlaceTextsearchHttpHandler(
+                                MainActivity.this,
+                                currentSearchingAddr)).start();
+                    }
+                });
+
+                // Init google map fragment.
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.main_fl, new GoogleMapFragment(), EyeOfSeoulParams.GoogleMapTag)
+                        .addToBackStack("GoogleMapStack").commit();
+                return params[0];
             }
-        });
+
+            @Override
+            protected void onPostExecute(MainActivity result) {
+                searchAutoCompleteTextView.setAdapter(placeAutoCompleteAdapter);
+
+                // Before init google map, we have ask permission.
+                Handler.permissionHandler.handle(MainActivity.this,
+                        EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING,
+                        EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
+            }
+        }).execute(this);
+    }
+
+    private void buildGoogleApiClient() {
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(AppIndex.API)
+                    .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+        }
     }
 
     @Override
@@ -141,18 +154,21 @@ public class MainActivity extends AppCompatActivity
     public void onStart() {
         super.onStart();
         // connect to api service
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Main Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.socialcoding.cctv/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+
+            Action viewAction = Action.newAction(
+                    Action.TYPE_VIEW, // TODO: choose an action type.
+                    "Main Page", // TODO: Define a title for the content shown.
+                    // TODO: If you have web page content that matches this app activity's content,
+                    // make sure this auto-generated web page URL is correct.
+                    // Otherwise, set the URL to null.
+                    Uri.parse("http://host/path"),
+                    // TODO: Make sure this auto-generated app deep link URI is correct.
+                    Uri.parse("android-app://com.socialcoding.cctv/http/host/path")
+            );
+            AppIndex.AppIndexApi.start(googleApiClient, viewAction);
+        }
     }
 
     @Override
@@ -169,12 +185,12 @@ public class MainActivity extends AppCompatActivity
                 // TODO: Make sure this auto-generated app deep link URI is correct.
                 Uri.parse("android-app://com.socialcoding.cctv/http/host/path")
         );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
+        AppIndex.AppIndexApi.end(googleApiClient, viewAction);
+        googleApiClient.disconnect();
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         lastPage = currentPage;
         currentPage = item.getItemId();

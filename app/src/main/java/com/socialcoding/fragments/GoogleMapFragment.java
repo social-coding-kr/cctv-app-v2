@@ -212,8 +212,8 @@ public class GoogleMapFragment extends Fragment
     public boolean moveCurrentPosition() {
         if(ContextCompat.checkSelfPermission(getActivity(),
                 EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING) == EyeOfSeoulPermissions.GRANTED) {
-            if(MainActivity.client != null) {
-                currLocation = LocationServices.FusedLocationApi.getLastLocation(MainActivity.client);
+            if(MainActivity.googleApiClient != null) {
+                currLocation = LocationServices.FusedLocationApi.getLastLocation(MainActivity.googleApiClient);
                 if (currLocation != null) {
                     LatLng currLatLng = new LatLng(currLocation.getLatitude(), currLocation.getLongitude());
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(currLatLng));

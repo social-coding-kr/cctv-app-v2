@@ -46,8 +46,8 @@ import static com.socialcoding.cctv.MainActivity.currentSearchingAddr;
  * adapter. (See {@link AutocompletePrediction#freeze()}.)
  * <p>
  * Note that this adapter requires a valid {@link com.google.android.gms.common.api.GoogleApiClient}.
- * The API client must be maintained in the encapsulating Activity, including all lifecycle and
- * connection states. The API client must be connected with the {@link Places#GEO_DATA_API} API.
+ * The API googleApiClient must be maintained in the encapsulating Activity, including all lifecycle and
+ * connection states. The API googleApiClient must be connected with the {@link Places#GEO_DATA_API} API.
  */
 public class PlaceAutoCompleteAdapter
         extends ArrayAdapter<AutocompletePrediction> implements Filterable {
@@ -193,7 +193,7 @@ public class PlaceAutoCompleteAdapter
      * Results are returned as frozen AutocompletePrediction objects, ready to be cached.
      * objects to store the Place ID and description that the API returns.
      * Returns an empty list if no results were found.
-     * Returns null if the API client is not available or the query did not complete
+     * Returns null if the API googleApiClient is not available or the query did not complete
      * successfully.
      * This method MUST be called off the main UI thread, as it will block until data is returned
      * from the API, which may include a network request.
@@ -235,7 +235,7 @@ public class PlaceAutoCompleteAdapter
             // Freeze the results immutable representation that can be stored safely.
             return DataBufferUtils.freezeAndClose(autocompletePredictions);
         }
-        System.out.println(TAG + "Google API client is not connected for autocomplete query.");
+        System.out.println(TAG + "Google API googleApiClient is not connected for autocomplete query.");
         return null;
     }
 

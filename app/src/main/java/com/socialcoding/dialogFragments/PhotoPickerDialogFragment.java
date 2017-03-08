@@ -41,7 +41,7 @@ public class PhotoPickerDialogFragment extends DialogFragment {
     }
 
     @OnClick({R.id.button_album_fdpp, R.id.button_camera_fdpp, R.id.view_image_cancle_fdpp})
-    public void onPickingMethodClick(View v) {
+    void onPickingMethodClick(View v) {
         if (v.getId() == R.id.button_album_fdpp || v.getId() == R.id.button_camera_fdpp) {
             reportFragment.onMethodSelected(v.getId() == R.id.button_album_fdpp ? "album" : "camera");
         }
