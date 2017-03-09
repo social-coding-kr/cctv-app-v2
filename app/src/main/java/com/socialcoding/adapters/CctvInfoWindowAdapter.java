@@ -47,6 +47,11 @@ public class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
             // Set position.
             tvLat.setText("Latitude:" + latLng.latitude);
             tvLng.setText("Longitude:" + latLng.longitude);
+
+            // cctv id 붙이기
+//            TextView cctvIdView = (TextView) v.findViewById(R.id.cctv_id_value_text_view);
+//            cctvIdView.setText(cctvIds.get(numOfCctvs));
+
         } else if (numOfCctvs > 1) {
             v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_cctvs_layout, null);
             LinearLayout buttonsLayout = (LinearLayout) v.findViewById(R.id.empty_linear_layout);
@@ -56,6 +61,9 @@ public class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
                 btn.setId(cctvIds.get(i));
                 btn.setText("CCTV " + btn.getId());
                 buttonsLayout.addView(btn);
+                // cctv id 붙이기
+//                TextView cctvIdView = (TextView) v.findViewById(R.id.cctv_id_value_text_view);
+//                cctvIdView.setText(cctvIds.get(i));
             }
 
         } else {

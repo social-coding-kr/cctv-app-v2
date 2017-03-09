@@ -84,24 +84,11 @@ public class MainActivity extends AppCompatActivity
             protected MainActivity doInBackground(MainActivity... params) {
                 buildGoogleApiClient();
 
-                // Init navigation drawer.
-                navigationView.setNavigationItemSelectedListener(MainActivity.this);
-
                 params[0].placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(
                         MainActivity.this,
                         googleApiClient,
                         BOUNDS_KOREA,
                         null);
-                searchAutoCompleteTextView.setThreshold(1);
-                searchAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        System.out.println("Searching started");
-                        new Thread(new GooglePlaceTextsearchHttpHandler(
-                                MainActivity.this,
-                                currentSearchingAddr)).start();
-                    }
-                });
 
                 // Init google map fragment.
                 getSupportFragmentManager().beginTransaction()
@@ -112,7 +99,20 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             protected void onPostExecute(MainActivity result) {
+                // Init navigation drawer.
+                navigationView.setNavigationItemSelectedListener(MainActivity.this);
+
                 searchAutoCompleteTextView.setAdapter(placeAutoCompleteAdapter);
+                searchAutoCompleteTextView.setThreshold(1);
+                searchAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        System.out.println("Searching started");
+                        new Thread(new GooglePlaceTextsearchHttpHandler(
+                                MainActivity.this,
+                                currentSearchingAddr)).start();
+                    }
+                });
 
                 // Before init google map, we have ask permission.
                 Handler.permissionHandler.handle(MainActivity.this,

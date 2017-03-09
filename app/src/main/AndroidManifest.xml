@@ -58,6 +58,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/maps_key" />
+
+        <!--For fabric-->
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="e301ce2874859e83c2fde0472db2cd15ccffec64" />
