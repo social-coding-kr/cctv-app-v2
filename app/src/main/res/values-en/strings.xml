@@ -5,6 +5,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="app_name">Eye Of Seoul</string>
+
+    <!--facebook login-->
+    <string name="login_skip">Skip login</string>
+
     <!--google map fragment strings-->
     <string name="search_btn_text">Search</string>
     <string name="search_default_text">place</string>

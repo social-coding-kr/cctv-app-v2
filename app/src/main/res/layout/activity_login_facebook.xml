@@ -28,7 +28,8 @@
         android:paddingBottom="16.5dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/button_login_facebook"
-        android:textColor="@color/colorEyeOfSeoul" />
+        android:textColor="@color/colorEyeOfSeoul"
+        android:textSize="16sp" />
 
     <Button
         android:id="@+id/button_login_skip"
@@ -40,7 +41,7 @@
         android:layout_marginEnd="17dp"
         android:layout_gravity="center_horizontal"
         android:background="@drawable/button_login_skip"
-        android:text="페북 로그인 스킵"
+        android:text="@string/login_skip"
         android:textSize="16sp"
         android:textColor="@color/colorWhite" />
 

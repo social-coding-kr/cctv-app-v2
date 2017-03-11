@@ -6,6 +6,9 @@
 
     <string name="app_name">서울의 눈-안드</string>
 
+    <!--facebook login-->
+    <string name="login_skip">페이스북 로그인 건너뛰기</string>
+
     <!--google map fragment strings-->
     <string name="search_default_text">장소, 주소, 전화번호</string>
     <string name="search_btn_text">검색</string>
