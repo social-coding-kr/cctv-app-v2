@@ -1,14 +1,23 @@
 package com.socialcoding.handlers;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+
+import com.socialcoding.cctv.R;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 
 /**
  * Created by yoon on 2016. 10. 26..
  */
-public class PermissionHandler extends Activity {
+public class PermissionHandler {
     private Activity activity;
     private String permission;
     private int permissionsRequest;
@@ -22,7 +31,6 @@ public class PermissionHandler extends Activity {
         } else {
             if(needExplanation()) {
                 explain();
-                askPermission();
             } else {
                 askPermission();
             }
@@ -39,11 +47,11 @@ public class PermissionHandler extends Activity {
         } else {
             if(needExplanation()) {
                 explain();
-                askPermission();
             } else {
                 askPermission();
             }
         }
+
         return EyeOfSeoulPermissions.DENIED;
     }
 
@@ -57,6 +65,30 @@ public class PermissionHandler extends Activity {
 
     public void explain() {
         // Toast or dialog.
+
+        new AlertDialog.Builder(activity)
+                .setMessage(R.string.permission_reason_explaination)
+                .setCancelable(false)
+                .setNegativeButton(R.string.permission_btn_close, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                }).setPositiveButton(R.string.permission_btn_setting, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        try {
+                            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                    .setData(Uri.parse("package:" + activity.getPackageName()));
+                            activity.startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            e.printStackTrace();
+                            Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_APPLICATIONS_SETTINGS);
+                            activity.startActivity(intent);
+                        }
+                    }
+                }).show();
+
     }
 
     public void askPermission() {
