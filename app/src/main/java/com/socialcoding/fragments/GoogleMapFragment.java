@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,7 +24,6 @@ import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.http.CCTVHttpHandlerV1;
 import com.socialcoding.intefaces.IRESTAsyncServiceHandler;
-import com.socialcoding.intefaces.IServerResource;
 import com.socialcoding.models.CCTVLocationData;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import com.socialcoding.models.Markers;
@@ -37,14 +37,16 @@ import java.util.Locale;
  */
 public class GoogleMapFragment extends Fragment
         implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener,
-        GoogleMap.OnCameraIdleListener {
+        GoogleMap.OnCameraIdleListener, IRESTAsyncServiceHandler.ICCTVLocationResponse {
     private MainActivity mainActivity;
+    private ProgressBar progressBar;
     private GoogleMap mMap;
     protected View view;
     private Location currLocation;
     public static Markers markers;
     private Bitmap blueMarkerIcon;
 
+    private static int count;
     private static Marker reportMarker;
 
 
@@ -83,6 +85,7 @@ public class GoogleMapFragment extends Fragment
             throw new RuntimeException("Invalid activity.");
         }
         mainActivity = (MainActivity) getActivity();
+        progressBar = mainActivity.progressBar;
     }
 
     @Override
@@ -112,13 +115,32 @@ public class GoogleMapFragment extends Fragment
 
     @Override
     public void onCameraIdle() {
-        if (markers != null) {
-            for (Marker m : markers) {
-                //m.remove();
-            }
+        count++;
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        CameraPosition cameraPosition = mMap.getCameraPosition();
-        getCctvs(cameraPosition.zoom, cameraPosition);
+
+        if (count-- == 1) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setProgress(0);
+            new Thread() {
+                public void run() {
+                    for (int i = 0; i < 1000; i++) {
+                        progressBar.incrementProgressBy(2);
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }.start();
+
+            CameraPosition cameraPosition = mMap.getCameraPosition();
+            getCctvs(cameraPosition.zoom, cameraPosition);
+        }
     }
 
     private void getCctvs(float zoom, CameraPosition cameraPosition) {
@@ -133,33 +155,7 @@ public class GoogleMapFragment extends Fragment
 
         try {
             if (zoom > 14) {
-                IServerResource serverResource = new CCTVHttpHandlerV1(baseUrl);
-                serverResource.getCCTVLocationsAsync(east, north, south, west,
-                        new IRESTAsyncServiceHandler.ICCTVLocationResponse() {
-                            @Override
-                            public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
-                                for (CCTVLocationData cctv : cctvLocationDatas) {
-                                    if(!markers.contains(cctv.getCctvId())){
-                                        Marker m = markers.getMarkerByLatLng(new LatLng(cctv.getLatitude(), cctv.getLongitude()));
-                                        if (m == null) {
-                                            m = mMap.addMarker(new MarkerOptions().position(
-                                                    new LatLng(cctv.getLatitude(), cctv.getLongitude())));
-                                            m.setDraggable(true);
-                                            m.setIcon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon));
-                                        }
-                                        markers.add(m, cctv.getCctvId());
-                                        if ("PRIVATE".equals(cctv.getSource())) {
-                                        }
-                                    }
-
-                                }
-                            }
-
-                            @Override
-                            public void onError() {
-                                System.out.println("ERROR] Async getCCTVLocation Test");
-                            }
-                        });
+                new CCTVHttpHandlerV1(baseUrl).getCCTVLocationsAsync(east, north, south, west, this);
             }/* else {
                 Marker numOfMarkers = mMap.addMarker(new MarkerOptions().position(
                         new LatLng((south + north) / 2, (east + west) / 2)));
@@ -168,6 +164,35 @@ public class GoogleMapFragment extends Fragment
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
+        for (CCTVLocationData cctv : cctvLocationDatas) {
+            if(!markers.contains(cctv.getCctvId())){
+                Marker m = markers.getMarkerByLatLng(new LatLng(cctv.getLatitude(), cctv.getLongitude()));
+                if (m == null) {
+                    m = mMap.addMarker(new MarkerOptions().position(
+                            new LatLng(cctv.getLatitude(), cctv.getLongitude())));
+                    m.setDraggable(true);
+                    m.setIcon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon));
+                }
+                markers.add(m, cctv.getCctvId());
+                if ("PRIVATE".equals(cctv.getSource())) {
+                }
+
+                progressBar.incrementProgressBy(
+                        (progressBar.getMax() - progressBar.getProgress()) / cctvLocationDatas.size());
+            }
+        }
+        progressBar.setProgress(progressBar.getMax());
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onError() {
+        System.out.println("ERROR] Async getCCTVLocation Test");
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

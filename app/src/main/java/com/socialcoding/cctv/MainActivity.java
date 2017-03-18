@@ -53,6 +53,9 @@ public class MainActivity extends AppCompatActivity
 
     private Toast quitToast;
 
+    // Progress Bar.
+    @BindView(R.id.bar_progress) public ProgressBar progressBar;
+
     // Text Search.
     private PlaceAutoCompleteAdapter placeAutoCompleteAdapter;
     @BindView(R.id.search_bar) View searchBar;
