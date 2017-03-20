@@ -10,8 +10,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.fragments.GoogleMapFragment;
-
-import com.socialcoding.models.CCTVLocationDetailData;
+import com.socialcoding.models.CctvLocationDetail;
 import java.util.List;
 import lombok.Data;
 import lombok.NonNull;
@@ -27,7 +26,7 @@ public class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
   private MainActivity mainActivity;
 
   private Marker clicked;
-  private CCTVLocationDetailData cctvDetailInformation;
+  private CctvLocationDetail cctvDetailInformation;
 
 
   @Override

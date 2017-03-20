@@ -14,9 +14,8 @@ import com.facebook.FacebookException;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
 import java.util.Arrays;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * Created by yoon on 2017. 2. 18..

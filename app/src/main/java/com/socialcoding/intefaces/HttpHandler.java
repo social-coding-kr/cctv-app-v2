@@ -6,7 +6,6 @@ import com.socialcoding.exception.SocialCodeException;
  * Created by darkg on 2016-03-26.
  */
 public interface HttpHandler {
-
     enum HTTP_TYPE {
         GET,
         POST

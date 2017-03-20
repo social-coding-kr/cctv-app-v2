@@ -14,7 +14,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -34,11 +42,10 @@ import com.socialcoding.fragments.RelatedLawFragment;
 import com.socialcoding.fragments.ReportFragment;
 import com.socialcoding.handlers.Handler;
 import com.socialcoding.http.GooglePlaceTextsearchHttpHandler;
-import com.socialcoding.models.EyeOfSeoulParams;
-import com.socialcoding.models.EyeOfSeoulPermissions;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
-
+import com.socialcoding.vars.EyeOfSeoulParams;
+import com.socialcoding.vars.EyeOfSeoulPermissions;
 import java.util.List;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, GoogleApiClient.OnConnectionFailedListener,

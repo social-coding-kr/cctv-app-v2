@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.fragments.GoogleMapFragment;
-import com.socialcoding.models.EyeOfSeoulParams;
+import com.socialcoding.vars.EyeOfSeoulParams;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import okhttp3.OkHttpClient;

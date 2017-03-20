@@ -1,5 +1,7 @@
 package com.socialcoding.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -18,12 +20,9 @@ import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.dialogFragments.PhotoPickerDialogFragment;
 import com.socialcoding.handlers.Handler;
-import com.socialcoding.models.EyeOfSeoulParams;
-import com.socialcoding.models.EyeOfSeoulPermissions;
-
+import com.socialcoding.vars.EyeOfSeoulParams;
+import com.socialcoding.vars.EyeOfSeoulPermissions;
 import java.io.File;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by darkgs on 2016-03-26.

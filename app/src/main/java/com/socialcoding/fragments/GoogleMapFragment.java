@@ -18,17 +18,23 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.*;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.VisibleRegion;
 import com.socialcoding.adapters.CctvInfoWindowAdapter;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.http.CCTVHttpHandlerV1;
-import com.socialcoding.intefaces.IRESTAsyncServiceHandler;
-import com.socialcoding.models.CCTVLocationData;
-import com.socialcoding.models.CCTVLocationDetailData;
-import com.socialcoding.models.EyeOfSeoulPermissions;
+import com.socialcoding.intefaces.IRESTAsyncServiceHandler.ICctvDetailResponse;
+import com.socialcoding.intefaces.IRESTAsyncServiceHandler.ICctvLocationsResponse;
+import com.socialcoding.models.CctvLocation;
+import com.socialcoding.models.CctvLocationDetail;
 import com.socialcoding.models.Markers;
-
+import com.socialcoding.vars.EyeOfSeoulPermissions;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -158,15 +164,15 @@ public class GoogleMapFragment extends Fragment
 
     try {
       if (zoom > 14) {
-        new CCTVHttpHandlerV1(baseUrl).getCCTVLocationsAsync(
+        new CCTVHttpHandlerV1(baseUrl).getCctvLocationsAsync(
             east,
             north,
             south,
             west,
-            new IRESTAsyncServiceHandler.ICCTVLocationResponse() {
+            new ICctvLocationsResponse() {
               @Override
-              public void onSuccess(List<CCTVLocationData> cctvLocationDatas) {
-                for (CCTVLocationData cctv : cctvLocationDatas) {
+              public void onSuccess(List<CctvLocation> cctvLocations) {
+                for (CctvLocation cctv : cctvLocations) {
                   if(!markers.contains(cctv.getCctvId())) {
                     Marker m = markers.getMarkerByLatLng(new LatLng(cctv.getLatitude(), cctv.getLongitude()));
                     if (m == null) {
@@ -181,7 +187,7 @@ public class GoogleMapFragment extends Fragment
                     }
 
                     progressBar.incrementProgressBy((progressBar.getMax() -
-                            progressBar.getProgress()) / cctvLocationDatas.size());
+                            progressBar.getProgress()) / cctvLocations.size());
                   }
                 }
                 progressBar.setProgress(progressBar.getMax());
@@ -209,11 +215,11 @@ public class GoogleMapFragment extends Fragment
   public boolean onMarkerClick(Marker marker) {
     cctvInfoWindowAdapter.setClicked(marker);
     try {
-      new CCTVHttpHandlerV1(baseUrl).getCCTVDetailAsync(
+      new CCTVHttpHandlerV1(baseUrl).getCctvDetailAsync(
           markers.getCctvIdsByMarker(marker).get(0),
-          new IRESTAsyncServiceHandler.ICCTVDetailResponse() {
+          new ICctvDetailResponse() {
             @Override
-            public void onSuccess(CCTVLocationDetailData cctvDetailInformation) {
+            public void onSuccess(CctvLocationDetail cctvDetailInformation) {
               cctvInfoWindowAdapter.setCctvDetailInformation(cctvDetailInformation);
               cctvInfoWindowAdapter.getClicked().showInfoWindow();
             }

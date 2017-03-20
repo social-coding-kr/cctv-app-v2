@@ -16,6 +16,8 @@
 
 package com.socialcoding.adapters;
 
+import static com.socialcoding.cctv.MainActivity.currentSearchingAddr;
+
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
@@ -23,7 +25,11 @@ import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.TextView;
+import android.widget.Toast;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.Status;
@@ -34,11 +40,8 @@ import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.socialcoding.cctv.R;
-
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
-
-import static com.socialcoding.cctv.MainActivity.currentSearchingAddr;
 
 /**
  * Adapter that handles Autocomplete requests from the Places Geo Data API.

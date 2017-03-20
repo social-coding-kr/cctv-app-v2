@@ -3,7 +3,7 @@ package com.socialcoding.models;
 /**
  * Created by cloverhearts on 2016-12-06.
  */
-public class CCTVLocationDetailData {
+public class CctvLocationDetail {
   final transient String PUBLIC_CCTV_TYPE = "PUBLIC";
   final transient String PRIVATE_CCTV_TYPE = "PRIVATE";
 
@@ -19,7 +19,7 @@ public class CCTVLocationDetailData {
   private String form;
   private String installedAt;
 
-  public CCTVLocationDetailData(long cctvId,
+  public CctvLocationDetail(long cctvId,
                                 String purpose,
                                 boolean isPublic,
                                 String address,

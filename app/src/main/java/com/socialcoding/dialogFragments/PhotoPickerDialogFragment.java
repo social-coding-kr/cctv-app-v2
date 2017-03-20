@@ -7,11 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import butterknife.*;
+import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import com.socialcoding.cctv.R;
 import com.socialcoding.fragments.ReportFragment;
-import com.socialcoding.models.EyeOfSeoulParams;
-
+import com.socialcoding.vars.EyeOfSeoulParams;
 import java.util.List;
 
 /**

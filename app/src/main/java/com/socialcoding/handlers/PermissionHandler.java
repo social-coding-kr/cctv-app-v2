@@ -10,7 +10,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import com.socialcoding.cctv.R;
-import com.socialcoding.models.EyeOfSeoulPermissions;
+import com.socialcoding.vars.EyeOfSeoulPermissions;
 
 /**
  * Created by yoon on 2016. 10. 26..

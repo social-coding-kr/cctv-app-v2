@@ -12,7 +12,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
-
 import java.util.List;
 
 /**

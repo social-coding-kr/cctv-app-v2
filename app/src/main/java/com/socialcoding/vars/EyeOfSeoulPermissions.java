@@ -1,4 +1,4 @@
-package com.socialcoding.models;
+package com.socialcoding.vars;
 
 import android.Manifest;
 import android.content.pm.PackageManager;

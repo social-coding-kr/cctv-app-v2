@@ -1,4 +1,4 @@
-package com.socialcoding.models;
+package com.socialcoding.vars;
 
 /**
  * Created by yoon on 2016. 10. 26..
