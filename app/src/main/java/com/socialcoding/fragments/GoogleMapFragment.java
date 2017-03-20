@@ -25,6 +25,7 @@ import com.socialcoding.cctv.R;
 import com.socialcoding.http.CCTVHttpHandlerV1;
 import com.socialcoding.intefaces.IRESTAsyncServiceHandler;
 import com.socialcoding.models.CCTVLocationData;
+import com.socialcoding.models.CCTVLocationDetailData;
 import com.socialcoding.models.EyeOfSeoulPermissions;
 import com.socialcoding.models.Markers;
 
@@ -38,6 +39,8 @@ import java.util.Locale;
 public class GoogleMapFragment extends Fragment
     implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener, GoogleMap.OnMarkerClickListener,
     GoogleMap.OnCameraIdleListener {
+  private final String baseUrl = "http://cctvs.nineqs.com";
+
   private MainActivity mainActivity;
   private ProgressBar progressBar;
   private GoogleMap mMap;
@@ -49,6 +52,7 @@ public class GoogleMapFragment extends Fragment
   private static int count;
   private static Marker reportMarker;
 
+  private CctvInfoWindowAdapter cctvInfoWindowAdapter;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -110,7 +114,7 @@ public class GoogleMapFragment extends Fragment
 
     markers = new Markers();
 
-    mMap.setInfoWindowAdapter(new CctvInfoWindowAdapter(mainActivity));
+    mMap.setInfoWindowAdapter(cctvInfoWindowAdapter = new CctvInfoWindowAdapter(mainActivity));
   }
 
   @Override
@@ -144,7 +148,6 @@ public class GoogleMapFragment extends Fragment
   }
 
   private void getCctvs(float zoom, CameraPosition cameraPosition) {
-    final String baseUrl = "http://cctvs.nineqs.com";
     // Add initial makers.
     VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
     LatLngBounds latLngBounds = visibleRegion.latLngBounds;
@@ -204,7 +207,26 @@ public class GoogleMapFragment extends Fragment
 
   @Override
   public boolean onMarkerClick(Marker marker) {
-    marker.showInfoWindow();
+    cctvInfoWindowAdapter.setClicked(marker);
+    try {
+      new CCTVHttpHandlerV1(baseUrl).getCCTVDetailAsync(
+          markers.getCctvIdsByMarker(marker).get(0),
+          new IRESTAsyncServiceHandler.ICCTVDetailResponse() {
+            @Override
+            public void onSuccess(CCTVLocationDetailData cctvDetailInformation) {
+              cctvInfoWindowAdapter.setCctvDetailInformation(cctvDetailInformation);
+              cctvInfoWindowAdapter.getClicked().showInfoWindow();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+          }
+      );
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
     return true;
   }
 
