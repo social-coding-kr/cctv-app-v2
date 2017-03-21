@@ -1,8 +1,14 @@
 package com.socialcoding.adapters;
 
+import android.graphics.Typeface;
+import android.support.design.widget.TabLayout;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -11,6 +17,10 @@ import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.fragments.GoogleMapFragment;
 import com.socialcoding.models.CctvLocationDetail;
+
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Field;
 import java.util.List;
 import lombok.Data;
 import lombok.NonNull;
@@ -36,44 +46,50 @@ public class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
   @Override
   public View getInfoContents(Marker marker) {
-    View v;
-    marker = clicked;
+    View v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_detail_layout, null);
+    TableLayout txtLayout = (TableLayout) v.findViewById(R.id.info_detail_item);
 
-    List<Integer> cctvIds = GoogleMapFragment.markers.getCctvIdsByMarker(marker);
-    int numOfCctvs = cctvIds.size();
+    for (Field field : cctvDetailInformation.getClass().getDeclaredFields()){
+      field.setAccessible(true);
+      Object value = null;
+      try {
+        value = field.get(cctvDetailInformation);
+        if(value != null) {
+          System.out.println(field.getName()+","+value);
 
-    if (numOfCctvs == 0 || numOfCctvs == 1) {
-      // Getting view from the layout file info_window_layout
-      v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_detail_layout, null);
-      // Getting the position from the marker.
-      LatLng latLng = marker.getPosition();
-      // Getting references to the TextViews.
-      TextView tvLat = (TextView) v.findViewById(R.id.tv_lat);
-      TextView tvLng = (TextView) v.findViewById(R.id.tv_lng);
-      // Set position.
-      tvLat.setText("Latitude:" + latLng.latitude);
-      tvLng.setText("Longitude:" + latLng.longitude);
+          TableRow tr = new TableRow(mainActivity);
+          TextView txtKey = new TextView(mainActivity);
+          TextView txtValue = new TextView(mainActivity);
 
-      // cctv id 붙이기
-//            TextView cctvIdView = (TextView) v.findViewById(R.id.cctv_id_value_text_view);
-//            cctvIdView.setText(cctvIds.get(numOfCctvs));
+          txtKey.setText(field.getName());
+          txtValue.setText(value.toString());
+          txtKey.setTextSize(11);
+          txtKey.setTypeface(Typeface.DEFAULT_BOLD);
+          txtValue.setTextSize(10);
+          txtValue.setTypeface(Typeface.SANS_SERIF);
+          txtValue.setGravity(Gravity.LEFT);
+          txtValue.setPadding(40, 0, 0, 0);
 
-    } else if (numOfCctvs > 1) {
-      v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_cctvs_layout, null);
-      LinearLayout buttonsLayout = (LinearLayout) v.findViewById(R.id.empty_linear_layout);
+          TableLayout.LayoutParams tableRowParams=
+                  new TableLayout.LayoutParams
+                          (TableLayout.LayoutParams.FILL_PARENT,TableLayout.LayoutParams.WRAP_CONTENT);
 
-      for (int i = 0; i < numOfCctvs; i++) {
-        Button btn = new Button(mainActivity);
-        btn.setId(cctvIds.get(i));
-        btn.setText("CCTV " + btn.getId());
-        buttonsLayout.addView(btn);
-        // cctv id 붙이기
-//                TextView cctvIdView = (TextView) v.findViewById(R.id.cctv_id_value_text_view);
-//                cctvIdView.setText(cctvIds.get(i));
+          int leftMargin = 0;
+          int topMargin = 2;
+          int rightMargin = 0;
+          int bottomMargin = 2;
+
+          tableRowParams.setMargins(leftMargin, topMargin, rightMargin, bottomMargin);
+
+          tr.setLayoutParams(tableRowParams);
+          tr.addView(txtKey);
+          tr.addView(txtValue);
+
+          txtLayout.addView(tr);
+        }
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
       }
-
-    } else {
-      throw new RuntimeException("해당 마커에 할당된 cctv의 수가" + Integer.toString(numOfCctvs) + "개 입니다");
     }
 
     return v;
