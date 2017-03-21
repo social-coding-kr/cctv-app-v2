@@ -29,8 +29,10 @@ import com.socialcoding.adapters.CctvInfoWindowAdapter;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
 import com.socialcoding.http.CCTVHttpHandlerV1;
+import com.socialcoding.intefaces.IRESTAsyncServiceHandler.ICctvClustersResponse;
 import com.socialcoding.intefaces.IRESTAsyncServiceHandler.ICctvDetailResponse;
 import com.socialcoding.intefaces.IRESTAsyncServiceHandler.ICctvLocationsResponse;
+import com.socialcoding.models.CctvCluster;
 import com.socialcoding.models.CctvLocation;
 import com.socialcoding.models.CctvLocationDetail;
 import com.socialcoding.models.Markers;
@@ -38,6 +40,7 @@ import com.socialcoding.vars.EyeOfSeoulPermissions;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by darkgs on 2016-03-26.
@@ -48,17 +51,19 @@ public class GoogleMapFragment extends Fragment
   private final String baseUrl = "http://cctvs.nineqs.com";
 
   private MainActivity mainActivity;
-  private ProgressBar progressBar;
   private GoogleMap mMap;
-  protected View view;
-  private Location currLocation;
-  public static Markers markers;
+
+  private static Markers markers;
+  private static Markers clusters;
+  private static Marker reportMarker;
   private Bitmap blueMarkerIcon;
 
-  private static int count;
-  private static Marker reportMarker;
-
   private CctvInfoWindowAdapter cctvInfoWindowAdapter;
+
+  protected View view;
+  private ProgressBar progressBar;
+
+  private Location currLocation;
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -125,16 +130,22 @@ public class GoogleMapFragment extends Fragment
 
   @Override
   public void onCameraIdle() {
-    count++;
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    progressBar.setVisibility(View.VISIBLE);
+    progressBar.setProgress(0);
+    CameraPosition cameraPosition = mMap.getCameraPosition();
+    getCctvs(cameraPosition.zoom, cameraPosition);
+  }
 
-    if (count-- == 1) {
-      progressBar.setVisibility(View.VISIBLE);
-      progressBar.setProgress(0);
+  private void getCctvs(float zoom, CameraPosition cameraPosition) {
+    // Add initial makers.
+    VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
+    LatLngBounds latLngBounds = visibleRegion.latLngBounds;
+    LatLng northeast = latLngBounds.northeast;
+    LatLng southwest = latLngBounds.southwest;
+    double east = northeast.longitude, north = northeast.latitude;
+    double south = southwest.latitude, west = southwest.longitude;
+
+    try {
       new Thread() {
         public void run() {
           for (int i = 0; i < 1000; i++) {
@@ -148,22 +159,9 @@ public class GoogleMapFragment extends Fragment
         }
       }.start();
 
-      CameraPosition cameraPosition = mMap.getCameraPosition();
-      getCctvs(cameraPosition.zoom, cameraPosition);
-    }
-  }
-
-  private void getCctvs(float zoom, CameraPosition cameraPosition) {
-    // Add initial makers.
-    VisibleRegion visibleRegion = mMap.getProjection().getVisibleRegion();
-    LatLngBounds latLngBounds = visibleRegion.latLngBounds;
-    LatLng northeast = latLngBounds.northeast;
-    LatLng southwest = latLngBounds.southwest;
-    double east = northeast.longitude, north = northeast.latitude;
-    double south = southwest.latitude, west = southwest.longitude;
-
-    try {
       if (zoom > 14) {
+        // TODO (clsan) : remove all clustering markers
+
         new CCTVHttpHandlerV1(baseUrl).getCctvLocationsAsync(
             east,
             north,
@@ -181,31 +179,50 @@ public class GoogleMapFragment extends Fragment
                       m.setDraggable(true);
                       m.setIcon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon));
                     }
-
                     markers.add(cctv.getCctvId(), m);
-                    if ("PRIVATE".equals(cctv.getSource())) {
-                    }
-
-                    progressBar.incrementProgressBy((progressBar.getMax() -
-                            progressBar.getProgress()) / cctvLocations.size());
                   }
                 }
+                progressBar.setVisibility(View.INVISIBLE);
+              }
+
+              @Override
+              public void onError() {
+                Toast.makeText(
+                    mainActivity.getApplicationContext(),
+                    "서버 장애 상황입니다",
+                    Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.INVISIBLE);
+              }
+            }
+        );
+      } else {
+        // TODO(clsan) : remove all cctv markers
+
+        new CCTVHttpHandlerV1(baseUrl).getCctvClustersAsync(
+            east,
+            north,
+            south,
+            west,
+            new ICctvClustersResponse() {
+              @Override
+              public void onSuccess(List<CctvCluster> cctvClusters) {
+                // TODO(clsan) : add clustering markers
+
                 progressBar.setProgress(progressBar.getMax());
                 progressBar.setVisibility(View.INVISIBLE);
               }
 
               @Override
               public void onError() {
-                System.out.println("ERROR] Async getCCTVLocation Test");
+                Toast.makeText(
+                    mainActivity.getApplicationContext(),
+                    "서버 장애 상황입니다",
+                    Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.INVISIBLE);
               }
-            });
+            }
+        );
       }
-//      else {
-//        Marker numOfMarkers = mMap.addMarker(new MarkerOptions().position(
-//            new LatLng((south + north) / 2, (east + west) / 2)));
-//        markers.add(numOfMarkers, -1);
-//      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -215,6 +232,10 @@ public class GoogleMapFragment extends Fragment
   public boolean onMarkerClick(Marker marker) {
     cctvInfoWindowAdapter.setClicked(marker);
     try {
+      if (markers.getCctvIdsByMarker(marker) == null ) {
+        // marker.showInfoWindow(); // Info window for cluster
+        return false;
+      }
       new CCTVHttpHandlerV1(baseUrl).getCctvDetailAsync(
           markers.getCctvIdsByMarker(marker).get(0),
           new ICctvDetailResponse() {
@@ -238,31 +259,18 @@ public class GoogleMapFragment extends Fragment
 
   @Override
   public void onMarkerDragStart(Marker marker) {
-    Toast.makeText(mainActivity.getApplicationContext(), markers.getCctvIdsByMarker(marker).toString(), Toast.LENGTH_SHORT).show();
+    Toast.makeText(
+        mainActivity.getApplicationContext(),
+        markers.getCctvIdsByMarker(marker).toString(),
+        Toast.LENGTH_SHORT).show();
   }
 
   @Override
   public void onMarkerDrag(Marker marker) {
-    Double latitude = marker.getPosition().latitude;
-    Double longitude = marker.getPosition().longitude;
-    if(reportMarker != null) {
-      currLocation = new Location("dummy");
-      currLocation.setLatitude(latitude);
-      currLocation.setLongitude(longitude);
-      reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", 경도 : " + Double.toString(longitude));
-      marker.showInfoWindow();
-    }
   }
 
   @Override
   public void onMarkerDragEnd(Marker marker) {
-    Double latitude = marker.getPosition().latitude;
-    Double longitude = marker.getPosition().longitude;
-    if(reportMarker != null) {
-      reportMarker.setTitle("위도 : " + Double.toString(latitude) + ", 경도 : " + Double.toString(longitude));
-      reportMarker.setSnippet(getAddress());
-      marker.showInfoWindow();
-    }
   }
 
   public void moveCamera(LatLng latLng) {
