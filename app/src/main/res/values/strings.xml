@@ -35,7 +35,7 @@
         위치 정보 사용에 동의하시겠습니까?
     </string>
     <string name="permission_reason_explaination">
-        CCTV 위치 파악을 위해서는 현 위치정보를 필요로 합니다.\n
+        현 위치 근처의 CCTV 위치 파악을 위해서는 현 위치정보를 필요로 합니다.\n
         [설정]>[권한]에서 해당 권한을 활성화 해주세요.
     </string>
     <string name="permission_btn_setting">설정</string>
