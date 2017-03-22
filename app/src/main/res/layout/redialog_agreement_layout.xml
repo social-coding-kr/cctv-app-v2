@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="240dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="@drawable/rounded_background">
+
+    <TextView
+        android:id="@+id/agreement_dialog_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="9dp"
+        android:textAlignment="center"
+        android:textSize="19sp"
+        android:textColor="@android:color/black"
+        android:text="@string/agreement_header" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/darker_gray"
+        android:contentDescription="@string/default_string" />
+
+    <TextView
+        android:id="@+id/agreement_dialog_setting_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:paddingRight="10dp"
+        android:paddingEnd="10dp"
+        android:textSize="13sp"
+        android:text="@string/permission_reason_explaination" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:weightSum="1">
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/button_setting"
+            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/rounded_background_eye_of_seoul_color"
+            android:textSize="17.5sp"
+            android:text="@string/permission_btn_setting" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/button_close"
+            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/rounded_background_with_black_border"
+            android:textSize="17.5sp"
+            android:text="@string/permission_btn_close" />
+
+    </LinearLayout>
+
+</LinearLayout>
