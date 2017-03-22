@@ -175,24 +175,26 @@ public class GoogleMapFragment extends Fragment
             new ICctvLocationsResponse() {
               @Override
               public void onSuccess(List<CctvLocation> cctvLocations) {
-                Markers adding = new Markers();
-                for (CctvLocation cctv : cctvLocations) {
-                  LatLng latLng = new LatLng(cctv.getLatitude(), cctv.getLongitude());
-                  Marker m = adding.getMarkerByLatLng(latLng);
-                  if (m == null) {
-                    m = mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon))
-                        .draggable(true));
+                if (cctvLocations != null) {
+                  Markers adding = new Markers();
+                  for (CctvLocation cctv : cctvLocations) {
+                    LatLng latLng = new LatLng(cctv.getLatitude(), cctv.getLongitude());
+                    Marker m = adding.getMarkerByLatLng(latLng);
+                    if (m == null) {
+                      m = mMap.addMarker(new MarkerOptions()
+                          .position(latLng)
+                          .icon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon))
+                          .draggable(true));
+                    }
+                    adding.add(cctv.getCctvId(), m);
                   }
-                  adding.add(cctv.getCctvId(), m);
-                }
 
-                for (Map.Entry<Integer, Marker> e : markers.getIdMarkerHashMap().entrySet()) {
-                  e.getValue().remove();
-                }
+                  for (Map.Entry<Integer, Marker> e : markers.getIdMarkerHashMap().entrySet()) {
+                    e.getValue().remove();
+                  }
 
-                markers = adding;
+                  markers = adding;
+                }
                 progressBar.setVisibility(View.INVISIBLE);
               }
 
@@ -221,22 +223,24 @@ public class GoogleMapFragment extends Fragment
             new ICctvClustersResponse() {
               @Override
               public void onSuccess(List<CctvCluster> cctvClusters) {
-                for (CctvCluster cctvCluster : cctvClusters) {
-                  LatLng latLng = new LatLng(
-                      cctvCluster.getLocation().getLatitude(),
-                      cctvCluster.getLocation().getLongitude());
+                if (cctvClusters != null) {
+                  for (CctvCluster cctvCluster : cctvClusters) {
+                    LatLng latLng = new LatLng(
+                        cctvCluster.getLocation().getLatitude(),
+                        cctvCluster.getLocation().getLongitude());
 
-                  Marker m = clusters.getMarkerByLatLng(latLng);
-                  if (m == null) {
-                    m = mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(String.format(
-                            "%s, %s개",
-                            cctvCluster.getClusterName(),
-                            cctvCluster.getCount()))
-                        .draggable(true));
+                    Marker m = clusters.getMarkerByLatLng(latLng);
+                    if (m == null) {
+                      m = mMap.addMarker(new MarkerOptions()
+                          .position(latLng)
+                          .title(String.format(
+                              "%s, %s개",
+                              cctvCluster.getClusterName(),
+                              cctvCluster.getCount()))
+                          .draggable(true));
+                    }
+                    clusters.add(cctvCluster.getClusterId().hashCode(), m);
                   }
-                  clusters.add(cctvCluster.getClusterId().hashCode(), m);
                 }
                 progressBar.setProgress(progressBar.getMax());
                 progressBar.setVisibility(View.INVISIBLE);
