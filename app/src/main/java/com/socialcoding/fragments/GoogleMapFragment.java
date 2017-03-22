@@ -1,17 +1,28 @@
 package com.socialcoding.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,6 +52,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
 /**
  * Created by darkgs on 2016-03-26.
@@ -231,12 +243,13 @@ public class GoogleMapFragment extends Fragment
 
                     Marker m = clusters.getMarkerByLatLng(latLng);
                     if (m == null) {
+                      RelativeLayout rl = clusterLayout(cctvCluster.getCount(),
+                          cctvCluster.getClusterName());
+
                       m = mMap.addMarker(new MarkerOptions()
                           .position(latLng)
-                          .title(String.format(
-                              "%s, %s개",
-                              cctvCluster.getClusterName(),
-                              cctvCluster.getCount()))
+                          .icon(BitmapDescriptorFactory
+                              .fromBitmap(createDrawableFromView(mainActivity, rl)))
                           .draggable(true));
                     }
                     clusters.add(cctvCluster.getClusterId().hashCode(), m);
@@ -262,12 +275,60 @@ public class GoogleMapFragment extends Fragment
     }
   }
 
+  private RelativeLayout clusterLayout(int count, String clusterName) {
+    RelativeLayout rl = new RelativeLayout(mainActivity);
+
+    ImageView iv = new ImageView(mainActivity);
+
+    TextView tv = new TextView(mainActivity);
+    if (clusterName.length() != 2 && clusterName.endsWith("구")) {
+      clusterName = clusterName.substring(0, clusterName.length() - 1);
+    }
+    tv.setText(clusterName);
+    tv.setTypeface(Typeface.createFromAsset(mainActivity.getAssets(), "fonts/NanumBarunGothic_Regular.ttf"));
+
+    rl.addView(tv);
+    rl.addView(iv);
+
+    RelativeLayout.LayoutParams rlParams = (RelativeLayout.LayoutParams) tv.getLayoutParams();
+    rlParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+    tv.setLayoutParams(rlParams);
+
+    if (count > 1000) {
+      iv.setBackgroundResource(R.drawable.red_marker);
+    } else if (count > 700) {
+      iv.setBackgroundResource(R.drawable.orange_marker);
+    } else {
+      iv.setBackgroundResource(R.drawable.yellow_marker);
+    }
+
+    rl.bringChildToFront(tv);
+
+    return rl;
+  }
+
+  // Reference : http://gun0912.tistory.com/57
+  private Bitmap createDrawableFromView(Context context, View view) {
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    view.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+    view.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+    view.buildDrawingCache();
+    Bitmap bitmap = Bitmap.createBitmap(view.getMeasuredWidth(), view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
+    Canvas canvas = new Canvas(bitmap);
+    view.draw(canvas);
+
+    return bitmap;
+  }
+
   @Override
   public boolean onMarkerClick(Marker marker) {
     cctvInfoWindowAdapter.setClicked(marker);
     try {
+      // Cluster marker clicked
       if (clusters.getIdMarkerHashMap().size() > 0) {
-        marker.showInfoWindow(); // Info window for cluster
         return false;
       }
 
