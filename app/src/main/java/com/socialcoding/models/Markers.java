@@ -4,7 +4,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
@@ -42,13 +41,6 @@ public class Markers {
     latLngMarkerHashMap.put(marker.getPosition(), marker);
     //Log.d("marker add", "Added : " + cctvId);
     return true;
-  }
-
-  public void remove(Map.Entry<LatLng, Marker> e) {
-    for (int cctvId : getCctvIdsByMarker(e.getValue())) {
-      idMarkerHashMap.remove(cctvId);
-    }
-    latLngMarkerHashMap.remove(e.getKey());
   }
 
   public boolean contains(int cctvId){

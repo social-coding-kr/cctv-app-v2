@@ -1,27 +1,17 @@
 package com.socialcoding.adapters;
 
 import android.graphics.Typeface;
-import android.support.design.widget.TabLayout;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.socialcoding.cctv.MainActivity;
 import com.socialcoding.cctv.R;
-import com.socialcoding.fragments.GoogleMapFragment;
 import com.socialcoding.models.CctvLocationDetail;
-
-import org.w3c.dom.Text;
-
 import java.lang.reflect.Field;
-import java.util.List;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +36,13 @@ public class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
   @Override
   public View getInfoContents(Marker marker) {
+    if (cctvDetailInformation == null) {
+      TextView tv = new TextView(mainActivity);
+      tv.setText(marker.getTitle());
+      tv.setTypeface(Typeface.SANS_SERIF);
+      return tv;
+    }
+
     View v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_detail_layout, null);
     TableLayout txtLayout = (TableLayout) v.findViewById(R.id.info_detail_item);
 

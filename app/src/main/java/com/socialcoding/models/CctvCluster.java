@@ -11,7 +11,7 @@ import lombok.Data;
 public class CctvCluster {
   @AllArgsConstructor(suppressConstructorProperties = true)
   @Data
-  private class Location {
+  public class Location {
     private Double latitude;
     private Double longitude;
   }

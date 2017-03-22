@@ -124,6 +124,7 @@ public class GoogleMapFragment extends Fragment
     mMap.setOnMarkerClickListener(this);
 
     markers = new Markers();
+    clusters = new Markers();
 
     mMap.setInfoWindowAdapter(cctvInfoWindowAdapter = new CctvInfoWindowAdapter(mainActivity));
   }
@@ -160,7 +161,11 @@ public class GoogleMapFragment extends Fragment
       }.start();
 
       if (zoom > 14) {
-        // TODO (clsan) : remove all clustering markers
+        // Remove all clustering markers
+        for (Map.Entry<Integer, Marker> e : clusters.getIdMarkerHashMap().entrySet()) {
+          e.getValue().remove();
+        }
+        clusters = new Markers();
 
         new CCTVHttpHandlerV1(baseUrl).getCctvLocationsAsync(
             east,
@@ -170,18 +175,24 @@ public class GoogleMapFragment extends Fragment
             new ICctvLocationsResponse() {
               @Override
               public void onSuccess(List<CctvLocation> cctvLocations) {
+                Markers adding = new Markers();
                 for (CctvLocation cctv : cctvLocations) {
-                  if(!markers.contains(cctv.getCctvId())) {
-                    Marker m = markers.getMarkerByLatLng(new LatLng(cctv.getLatitude(), cctv.getLongitude()));
-                    if (m == null) {
-                      m = mMap.addMarker(new MarkerOptions().position(
-                          new LatLng(cctv.getLatitude(), cctv.getLongitude())));
-                      m.setDraggable(true);
-                      m.setIcon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon));
-                    }
-                    markers.add(cctv.getCctvId(), m);
+                  LatLng latLng = new LatLng(cctv.getLatitude(), cctv.getLongitude());
+                  Marker m = adding.getMarkerByLatLng(latLng);
+                  if (m == null) {
+                    m = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromBitmap(blueMarkerIcon))
+                        .draggable(true));
                   }
+                  adding.add(cctv.getCctvId(), m);
                 }
+
+                for (Map.Entry<Integer, Marker> e : markers.getIdMarkerHashMap().entrySet()) {
+                  e.getValue().remove();
+                }
+
+                markers = adding;
                 progressBar.setVisibility(View.INVISIBLE);
               }
 
@@ -196,7 +207,11 @@ public class GoogleMapFragment extends Fragment
             }
         );
       } else {
-        // TODO(clsan) : remove all cctv markers
+        // Remove all cctv markers
+        for (Map.Entry<Integer, Marker> e : markers.getIdMarkerHashMap().entrySet()) {
+          e.getValue().remove();
+        }
+        markers = new Markers();
 
         new CCTVHttpHandlerV1(baseUrl).getCctvClustersAsync(
             east,
@@ -206,8 +221,23 @@ public class GoogleMapFragment extends Fragment
             new ICctvClustersResponse() {
               @Override
               public void onSuccess(List<CctvCluster> cctvClusters) {
-                // TODO(clsan) : add clustering markers
+                for (CctvCluster cctvCluster : cctvClusters) {
+                  LatLng latLng = new LatLng(
+                      cctvCluster.getLocation().getLatitude(),
+                      cctvCluster.getLocation().getLongitude());
 
+                  Marker m = clusters.getMarkerByLatLng(latLng);
+                  if (m == null) {
+                    m = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(String.format(
+                            "%s, %s개",
+                            cctvCluster.getClusterName(),
+                            cctvCluster.getCount()))
+                        .draggable(true));
+                  }
+                  clusters.add(cctvCluster.getClusterId().hashCode(), m);
+                }
                 progressBar.setProgress(progressBar.getMax());
                 progressBar.setVisibility(View.INVISIBLE);
               }
@@ -232,10 +262,11 @@ public class GoogleMapFragment extends Fragment
   public boolean onMarkerClick(Marker marker) {
     cctvInfoWindowAdapter.setClicked(marker);
     try {
-      if (markers.getCctvIdsByMarker(marker) == null ) {
-        // marker.showInfoWindow(); // Info window for cluster
+      if (clusters.getIdMarkerHashMap().size() > 0) {
+        marker.showInfoWindow(); // Info window for cluster
         return false;
       }
+
       new CCTVHttpHandlerV1(baseUrl).getCctvDetailAsync(
           markers.getCctvIdsByMarker(marker).get(0),
           new ICctvDetailResponse() {
