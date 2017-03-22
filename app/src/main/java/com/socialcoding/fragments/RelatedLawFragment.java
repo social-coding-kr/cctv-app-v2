@@ -1,5 +1,6 @@
 package com.socialcoding.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -32,6 +33,7 @@ public class RelatedLawFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_related_law, container, false);
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -41,7 +43,7 @@ public class RelatedLawFragment extends Fragment {
         mainActivity = (MainActivity) getActivity();
 
         mSpinner = (ProgressBar) mainActivity.findViewById(R.id.web_progress);
-        mSpinner.setVisibility(view.GONE); // 우선 화면에서 숨기
+        mSpinner.setVisibility(View.GONE); // 우선 화면에서 숨기
 
         TextView titleTextView = (TextView) mainActivity.findViewById(R.id.title_text_view);
         titleTextView.setText(getResources().getString(R.string.related_law_string));

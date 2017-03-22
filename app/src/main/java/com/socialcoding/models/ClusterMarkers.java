@@ -12,16 +12,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ClusterMarkers {
-  HashMap<String, Marker> idMarkerHashMap = new HashMap<>();
+  HashMap<String, CctvCluster> idClusterHashMap = new HashMap<>();
+  HashMap<Marker, String> markerIdHashMap = new HashMap<>();
   HashMap<LatLng, Marker> latLngMarkerHashMap = new HashMap<>();
+
+
+  public boolean add(String clusterId, CctvCluster cctvCluster, Marker marker) {
+    idClusterHashMap.put(clusterId, cctvCluster);
+    markerIdHashMap.put(marker, clusterId);
+    latLngMarkerHashMap.put(marker.getPosition(), marker);
+    return true;
+  }
 
   public Marker getMarkerByLatLng(LatLng latLng) {
     return latLngMarkerHashMap.get(latLng);
-  }
-
-  public boolean add(String clusterId, Marker marker) {
-    idMarkerHashMap.put(clusterId, marker);
-    latLngMarkerHashMap.put(marker.getPosition(), marker);
-    return true;
   }
 }

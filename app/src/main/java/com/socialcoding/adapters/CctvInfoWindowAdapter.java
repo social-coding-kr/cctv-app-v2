@@ -37,10 +37,7 @@ public class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
   @Override
   public View getInfoContents(Marker marker) {
     if (cctvDetailInformation == null) {
-      TextView tv = new TextView(mainActivity);
-      tv.setText(marker.getTitle());
-      tv.setTypeface(Typeface.SANS_SERIF);
-      return tv;
+      return null;
     }
 
     View v = mainActivity.getLayoutInflater().inflate(R.layout.info_window_detail_layout, null);
@@ -88,6 +85,9 @@ public class CctvInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         e.printStackTrace();
       }
     }
+
+    clicked = null;
+    cctvDetailInformation = null;
 
     return v;
   }

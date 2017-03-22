@@ -171,7 +171,7 @@ public class GoogleMapFragment extends Fragment
 
       if (zoom > 14) {
         // Remove all clustering markers
-        for (Map.Entry<String, Marker> e : clusters.getIdMarkerHashMap().entrySet()) {
+        for (Map.Entry<LatLng, Marker> e : clusters.getLatLngMarkerHashMap().entrySet()) {
           e.getValue().remove();
         }
         clusters = new ClusterMarkers();
@@ -241,15 +241,16 @@ public class GoogleMapFragment extends Fragment
                     Marker m = clusters.getMarkerByLatLng(latLng);
                     if (m == null) {
                       RelativeLayout rl = clusterLayout(cctvCluster.getCount(),
-                          cctvCluster.getClusterName());
+                          cctvCluster.getClusterName(), "name");
 
                       m = mMap.addMarker(new MarkerOptions()
                           .position(latLng)
                           .icon(BitmapDescriptorFactory
                               .fromBitmap(createDrawableFromView(mainActivity, rl)))
+                          .title("name")
                           .draggable(true));
                     }
-                    clusters.add(cctvCluster.getClusterId(), m);
+                    clusters.add(cctvCluster.getClusterId(), cctvCluster, m);
                   }
                 }
                 progressBar.setProgress(progressBar.getMax());
@@ -272,7 +273,7 @@ public class GoogleMapFragment extends Fragment
     }
   }
 
-  private RelativeLayout clusterLayout(int count, String clusterName) {
+  private RelativeLayout clusterLayout(int count, String clusterName, String title) {
     RelativeLayout rl = new RelativeLayout(mainActivity);
 
     ImageView iv = new ImageView(mainActivity);
@@ -281,7 +282,11 @@ public class GoogleMapFragment extends Fragment
     if (clusterName.length() != 2 && clusterName.endsWith("구")) {
       clusterName = clusterName.substring(0, clusterName.length() - 1);
     }
-    tv.setText(clusterName);
+    if ("name".equals(title)) {
+      tv.setText(clusterName);
+    } else {
+      tv.setText(String.valueOf(count));
+    }
     tv.setTypeface(Typeface.createFromAsset(mainActivity.getAssets(), "fonts/NanumBarunGothic_Regular.ttf"));
 
     rl.addView(tv);
@@ -322,13 +327,29 @@ public class GoogleMapFragment extends Fragment
 
   @Override
   public boolean onMarkerClick(Marker marker) {
-    cctvInfoWindowAdapter.setClicked(marker);
     try {
       // Cluster marker clicked
-      if (clusters.getIdMarkerHashMap().size() > 0) {
-        return false;
+      if (markers.getIdMarkerHashMap().size() == 0) {
+        String clusterId = clusters.getMarkerIdHashMap().get(marker);
+        CctvCluster cctvCluster = clusters.getIdClusterHashMap().get(clusterId);
+
+        if ("name".equals(marker.getTitle())) {
+          marker.setTitle("count");
+        } else {
+          marker.setTitle("name");
+        }
+
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(
+                mainActivity,
+                clusterLayout(
+                    cctvCluster.getCount(),
+                    cctvCluster.getClusterName(),
+                    marker.getTitle()))));
+
+        return true;
       }
 
+      cctvInfoWindowAdapter.setClicked(marker);
       new CCTVHttpHandlerV1(baseUrl).getCctvDetailAsync(
           markers.getCctvIdsByMarker(marker).get(0),
           new ICctvDetailResponse() {
