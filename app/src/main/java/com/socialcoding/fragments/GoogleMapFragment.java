@@ -13,13 +13,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,13 +43,13 @@ import com.socialcoding.intefaces.IRESTAsyncServiceHandler.ICctvLocationsRespons
 import com.socialcoding.models.CctvCluster;
 import com.socialcoding.models.CctvLocation;
 import com.socialcoding.models.CctvLocationDetail;
+import com.socialcoding.models.ClusterMarkers;
 import com.socialcoding.models.Markers;
 import com.socialcoding.vars.EyeOfSeoulPermissions;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
 /**
  * Created by darkgs on 2016-03-26.
@@ -66,7 +63,7 @@ public class GoogleMapFragment extends Fragment
   private GoogleMap mMap;
 
   private static Markers markers;
-  private static Markers clusters;
+  private static ClusterMarkers clusters;
   private static Marker reportMarker;
   private Bitmap blueMarkerIcon;
 
@@ -136,7 +133,7 @@ public class GoogleMapFragment extends Fragment
     mMap.setOnMarkerClickListener(this);
 
     markers = new Markers();
-    clusters = new Markers();
+    clusters = new ClusterMarkers();
 
     mMap.setInfoWindowAdapter(cctvInfoWindowAdapter = new CctvInfoWindowAdapter(mainActivity));
   }
@@ -174,10 +171,10 @@ public class GoogleMapFragment extends Fragment
 
       if (zoom > 14) {
         // Remove all clustering markers
-        for (Map.Entry<Integer, Marker> e : clusters.getIdMarkerHashMap().entrySet()) {
+        for (Map.Entry<String, Marker> e : clusters.getIdMarkerHashMap().entrySet()) {
           e.getValue().remove();
         }
-        clusters = new Markers();
+        clusters = new ClusterMarkers();
 
         new CCTVHttpHandlerV1(baseUrl).getCctvLocationsAsync(
             east,
@@ -252,7 +249,7 @@ public class GoogleMapFragment extends Fragment
                               .fromBitmap(createDrawableFromView(mainActivity, rl)))
                           .draggable(true));
                     }
-                    clusters.add(cctvCluster.getClusterId().hashCode(), m);
+                    clusters.add(cctvCluster.getClusterId(), m);
                   }
                 }
                 progressBar.setProgress(progressBar.getMax());

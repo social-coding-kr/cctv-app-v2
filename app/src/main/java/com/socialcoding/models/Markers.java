@@ -7,19 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by disxc on 2017-01-08.
  */
 @Data
+@NoArgsConstructor
 public class Markers {
-  HashMap<Integer, Marker> idMarkerHashMap;
-  HashMap<LatLng, Marker> latLngMarkerHashMap;
-
-  public Markers(){
-    idMarkerHashMap = new HashMap<>();
-    latLngMarkerHashMap = new HashMap<>();
-  }
+  HashMap<Integer, Marker> idMarkerHashMap = new HashMap<>();
+  HashMap<LatLng, Marker> latLngMarkerHashMap = new HashMap<>();
 
   public List<Integer> getCctvIdsByMarker(Marker marker) {
     List<Integer> ids = new ArrayList<>();
@@ -42,9 +39,4 @@ public class Markers {
     //Log.d("marker add", "Added : " + cctvId);
     return true;
   }
-
-  public boolean contains(int cctvId){
-    return idMarkerHashMap.containsKey(cctvId);
-  }
-
 }
