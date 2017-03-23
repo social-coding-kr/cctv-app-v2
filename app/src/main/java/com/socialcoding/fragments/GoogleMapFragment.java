@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import lombok.Getter;
 
 /**
  * Created by darkgs on 2016-03-26.
@@ -60,7 +61,8 @@ public class GoogleMapFragment extends Fragment
   private final String baseUrl = "http://cctvs.nineqs.com";
 
   private MainActivity mainActivity;
-  private GoogleMap mMap;
+  @Getter
+  public GoogleMap mMap;
 
   private static Markers markers;
   private static ClusterMarkers clusters;
@@ -140,6 +142,7 @@ public class GoogleMapFragment extends Fragment
 
   @Override
   public void onCameraIdle() {
+    System.out.println("comeback3");
     progressBar.setVisibility(View.VISIBLE);
     progressBar.setProgress(0);
     CameraPosition cameraPosition = mMap.getCameraPosition();

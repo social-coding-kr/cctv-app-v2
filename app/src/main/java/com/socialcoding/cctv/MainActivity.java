@@ -1,11 +1,14 @@
 package com.socialcoding.cctv;
 
+import android.Manifest.permission;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -41,6 +44,7 @@ import com.socialcoding.fragments.GoogleMapFragment;
 import com.socialcoding.fragments.RelatedLawFragment;
 import com.socialcoding.fragments.ReportFragment;
 import com.socialcoding.handlers.Handler;
+import com.socialcoding.handlers.PermissionHandler;
 import com.socialcoding.http.GooglePlaceTextsearchHttpHandler;
 import com.socialcoding.vars.EyeOfSeoulParams;
 import com.socialcoding.vars.EyeOfSeoulPermissions;
@@ -50,6 +54,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener,
     GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+
   public static GoogleApiClient googleApiClient;
 
   public static String currentSearchingAddr, address;
@@ -61,24 +66,35 @@ public class MainActivity extends AppCompatActivity
   private Toast quitToast;
 
   // Progress Bar.
-  @BindView(R.id.bar_progress) public ProgressBar progressBar;
+  @BindView(R.id.bar_progress)
+  public ProgressBar progressBar;
 
   // Text Search.
   private PlaceAutoCompleteAdapter placeAutoCompleteAdapter;
-  @BindView(R.id.search_bar) View searchBar;
-  @BindView(R.id.search_bar_AutoCompleteTextView) AutoCompleteTextView searchAutoCompleteTextView;
-  @BindView(R.id.button_search) Button searchButton;
+  @BindView(R.id.search_bar)
+  View searchBar;
+  @BindView(R.id.search_bar_AutoCompleteTextView)
+  AutoCompleteTextView searchAutoCompleteTextView;
+  @BindView(R.id.button_search)
+  Button searchButton;
 
   // Navigation Drawer.
-  @BindView(R.id.layout_drawer) DrawerLayout drawerLayout;
-  @BindView(R.id.view_navigation) public NavigationView navigationView;
-  @BindView(R.id.title_text_view) TextView titleTextView;
-  @BindViews({R.id.menu_btn, R.id.back_btn}) List<ImageView> navigationDrawerButtons;
+  @BindView(R.id.layout_drawer)
+  DrawerLayout drawerLayout;
+  @BindView(R.id.view_navigation)
+  public NavigationView navigationView;
+  @BindView(R.id.title_text_view)
+  TextView titleTextView;
+  @BindViews({R.id.menu_btn, R.id.back_btn})
+  List<ImageView> navigationDrawerButtons;
 
   // Bottom Bar.
-  @BindView(R.id.bottom_bar_google_map) RelativeLayout googleMapBottomBar;
-  @BindView(R.id.bottom_bar_google_map_loading_text_view) TextView locationLoadingTV;
-  @BindView(R.id.bottom_bar_google_map_ask_layout) LinearLayout locationAskingLL;
+  @BindView(R.id.bottom_bar_google_map)
+  RelativeLayout googleMapBottomBar;
+  @BindView(R.id.bottom_bar_google_map_loading_text_view)
+  TextView locationLoadingTV;
+  @BindView(R.id.bottom_bar_google_map_ask_layout)
+  LinearLayout locationAskingLL;
   @BindViews({R.id.bottom_bar_google_map_continue_btn, R.id.bottom_bar_google_map_cancle_btn})
   List<Button> reportButtons;
 
@@ -148,7 +164,7 @@ public class MainActivity extends AppCompatActivity
   public void onBackPressed() {
     if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
       drawerLayout.closeDrawer(GravityCompat.START);
-    } else if(currentPage != R.id.nav_map) {
+    } else if (currentPage != R.id.nav_map) {
       onNavigationItemSelected(navigationView.getMenu().getItem(0));
     } else {
       if (quitToast == null || quitToast.getView().getWindowVisibility() != View.VISIBLE) {
@@ -197,6 +213,24 @@ public class MainActivity extends AppCompatActivity
     );
     AppIndex.AppIndexApi.end(googleApiClient, viewAction);
     googleApiClient.disconnect();
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+
+    if (ActivityCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED
+        && ActivityCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED) {
+      return;
+    }
+
+    GoogleMapFragment googleMapFragment = (GoogleMapFragment) getSupportFragmentManager()
+        .findFragmentByTag(EyeOfSeoulParams.GoogleMapTag);
+    if (googleMapFragment != null) {
+        googleMapFragment.getMMap().setMyLocationEnabled(true);
+    }
   }
 
   @Override
