@@ -1,6 +1,7 @@
 package com.socialcoding.cctv;
 
 import android.Manifest.permission;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -17,6 +18,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -44,7 +48,6 @@ import com.socialcoding.fragments.GoogleMapFragment;
 import com.socialcoding.fragments.RelatedLawFragment;
 import com.socialcoding.fragments.ReportFragment;
 import com.socialcoding.handlers.Handler;
-import com.socialcoding.handlers.PermissionHandler;
 import com.socialcoding.http.GooglePlaceTextsearchHttpHandler;
 import com.socialcoding.vars.EyeOfSeoulParams;
 import com.socialcoding.vars.EyeOfSeoulPermissions;
@@ -98,6 +101,8 @@ public class MainActivity extends AppCompatActivity
   @BindViews({R.id.bottom_bar_google_map_continue_btn, R.id.bottom_bar_google_map_cancle_btn})
   List<Button> reportButtons;
 
+  public WebView relatedLawView;
+
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +128,7 @@ public class MainActivity extends AppCompatActivity
         return params[0];
       }
 
+      @SuppressLint("SetJavaScriptEnabled")
       @Override
       protected void onPostExecute(MainActivity result) {
         // Init navigation drawer.
@@ -144,6 +150,13 @@ public class MainActivity extends AppCompatActivity
         Handler.permissionHandler.handle(MainActivity.this,
             EyeOfSeoulPermissions.LOCATION_PERMISSION_STRING,
             EyeOfSeoulPermissions.PERMISSIONS_REQUEST_LOCATION);
+
+        // Init related law webview.
+        relatedLawView = new WebView(result);
+        relatedLawView.setWebViewClient(new WebViewClient()); // 클릭 시 새창 안뜨게
+        WebSettings mWebSettings = relatedLawView.getSettings(); // 세부 세팅 등록
+        mWebSettings.setJavaScriptEnabled(true); // 자바스크립트 사용 허용
+        relatedLawView.loadUrl("file:///android_asset/lawPage.html");
       }
     }).execute(this);
   }
@@ -228,7 +241,7 @@ public class MainActivity extends AppCompatActivity
 
     GoogleMapFragment googleMapFragment = (GoogleMapFragment) getSupportFragmentManager()
         .findFragmentByTag(EyeOfSeoulParams.GoogleMapTag);
-    if (googleMapFragment != null) {
+    if (googleMapFragment != null && googleMapFragment.getMMap() != null) {
         googleMapFragment.getMMap().setMyLocationEnabled(true);
     }
   }

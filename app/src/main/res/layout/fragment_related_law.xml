@@ -9,16 +9,6 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/webview"
-        android:elevation="0dp"/>
-
-
     <ProgressBar
         android:id="@+id/web_progress"
         style="?android:attr/progressBarStyleLarge"
@@ -28,6 +18,5 @@
         android:visibility="gone"
         android:indeterminateDrawable="@drawable/progress"
         android:elevation="10dp"/>
-
 
 </RelativeLayout>
