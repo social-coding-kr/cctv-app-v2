@@ -43,7 +43,6 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.socialcoding.adapters.PlaceAutoCompleteAdapter;
-import com.socialcoding.dialogFragments.AgreementDialogFragment;
 import com.socialcoding.fragments.GoogleMapFragment;
 import com.socialcoding.fragments.RelatedLawFragment;
 import com.socialcoding.fragments.ReportFragment;
@@ -132,6 +131,7 @@ public class MainActivity extends AppCompatActivity
       @Override
       protected void onPostExecute(MainActivity result) {
         // Init navigation drawer.
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         navigationView.setNavigationItemSelectedListener(MainActivity.this);
 
         searchAutoCompleteTextView.setAdapter(placeAutoCompleteAdapter);
@@ -258,18 +258,18 @@ public class MainActivity extends AppCompatActivity
             EyeOfSeoulParams.GoogleMapTag);
         break;
 
-      case R.id.nav_camera:
-        if (googleMapBottomBar.getVisibility() == View.INVISIBLE) {
-          showFragment(new AgreementDialogFragment(), EyeOfSeoulParams.LocationAgreementDialogTag);
-        }
-        break;
+//      case R.id.nav_camera:
+//        if (googleMapBottomBar.getVisibility() == View.INVISIBLE) {
+//          showFragment(new AgreementDialogFragment(), EyeOfSeoulParams.LocationAgreementDialogTag);
+//        }
+//        break;
 
       case R.id.nav_related_law:
         showFragment(new RelatedLawFragment(), EyeOfSeoulParams.RelatedLawTag);
         break;
 
-      case R.id.nav_debug_http:
-        break;
+//      case R.id.nav_debug_http:
+//        break;
     }
 
     drawerLayout.closeDrawer(GravityCompat.START);
@@ -281,7 +281,7 @@ public class MainActivity extends AppCompatActivity
     navigationDrawerButtons.get(1).setVisibility(isGoogleMapVisible ? View.INVISIBLE : View.VISIBLE);
     titleTextView.setVisibility(isGoogleMapVisible ? View.INVISIBLE : View.VISIBLE);
     searchBar.setVisibility(isGoogleMapVisible ? View.VISIBLE : View.INVISIBLE);
-    googleMapBottomBar.setVisibility((currentPage == R.id.nav_camera) ? View.VISIBLE : View.INVISIBLE);
+    // googleMapBottomBar.setVisibility((currentPage == R.id.nav_camera) ? View.VISIBLE : View.INVISIBLE);
   }
 
   public void showFragment(Fragment fragment, String fragmentTag) {
@@ -290,7 +290,7 @@ public class MainActivity extends AppCompatActivity
       return;
     }
 
-    setLayoutByCurrentPage(currentPage == R.id.nav_map || currentPage == R.id.nav_camera);
+    setLayoutByCurrentPage(currentPage == R.id.nav_map /*|| currentPage == R.id.nav_camera*/);
     int in_animation, out_animation;
 
     switch (lastPage) {

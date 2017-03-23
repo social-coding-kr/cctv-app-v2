@@ -1,6 +1,5 @@
 package com.socialcoding.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -20,11 +18,6 @@ import com.socialcoding.cctv.R;
  * Created by yoon on 2016. 10. 22..
  */
 public class RelatedLawFragment extends Fragment {
-
-  private MainActivity mainActivity;
-
-  private WebView mWebView; // 웹뷰
-  private WebSettings mWebSettings; // 웹뷰 세팅
   private ProgressBar mSpinner; // 로딩
 
   @Nullable
@@ -33,14 +26,13 @@ public class RelatedLawFragment extends Fragment {
     return inflater.inflate(R.layout.fragment_related_law, container, false);
   }
 
-  @SuppressLint("SetJavaScriptEnabled")
   @Override
   public void onViewCreated(View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     if (!(getActivity() instanceof MainActivity)) {
       throw new RuntimeException("Invalid activity.");
     }
-    mainActivity = (MainActivity) getActivity();
+    MainActivity mainActivity = (MainActivity) getActivity();
 
     mSpinner = (ProgressBar) mainActivity.findViewById(R.id.web_progress);
     mSpinner.setVisibility(View.GONE); // 우선 화면에서 숨기
@@ -48,7 +40,7 @@ public class RelatedLawFragment extends Fragment {
     TextView titleTextView = (TextView) mainActivity.findViewById(R.id.title_text_view);
     titleTextView.setText(getResources().getString(R.string.related_law_string));
 
-    mWebView = mainActivity.relatedLawView; // 미리 준비해놓은 뷰 불러들이기
+    WebView mWebView = mainActivity.relatedLawView; // 미리 준비해놓은 뷰 불러들이기
 
     mWebView.setWebChromeClient(new WebChromeClient(){
       public void onProgressChanged(WebView view, int newProgress){

@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="none">
-        <item
-            android:id="@+id/nav_map"
-            android:icon="@drawable/map"
-            android:title="@string/map_string" />
-        <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/placeholder"
-            android:title="@string/report_string" />
-        <item
-            android:id="@+id/nav_related_law"
-            android:icon="@drawable/justice_scale"
-            android:title="@string/related_law_string" />
-    </group>
+  <group android:checkableBehavior="none">
+    <item
+      android:id="@+id/nav_map"
+      android:icon="@drawable/map"
+      android:title="@string/map_string" />
+    <!--
+    <item
+      android:id="@+id/nav_camera"
+      android:icon="@drawable/placeholder"
+      android:title="@string/report_string" />
+    -->
+    <item
+      android:id="@+id/nav_related_law"
+      android:icon="@drawable/justice_scale"
+      android:title="@string/related_law_string" />
+  </group>
 
-    <item android:title="@string/developer_string">
-        <menu>
-            <item
-                android:id="@+id/nav_debug_http"
-                android:icon="@drawable/adjust"
-                android:title="@string/http_string" />
-        </menu>
-    </item>
-
+  <!--
+  <item android:title="@string/developer_string">
+    <menu>
+      <item
+        android:id="@+id/nav_debug_http"
+        android:icon="@drawable/adjust"
+        android:title="@string/http_string" />
+    </menu>
+  </item>
+  -->
 </menu>
