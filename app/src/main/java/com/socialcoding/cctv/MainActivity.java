@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity
       @Override
       protected MainActivity doInBackground(MainActivity... params) {
         buildGoogleApiClient();
+        googleApiClient.connect();
 
         params[0].placeAutoCompleteAdapter = new PlaceAutoCompleteAdapter(
             MainActivity.this,
