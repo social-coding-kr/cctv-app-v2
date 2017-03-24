@@ -9,8 +9,6 @@
     <string name="app_name">서울의 눈-안드</string>
 
     <!--facebook login-->
-    <string name="facebook_app_id">695279140633114</string>
-    <string name="fb_login_protocol_scheme">fb695279140633114</string>
     <string name="login_skip">페이스북 로그인 건너뛰기</string>
 
     <!--google map fragment strings-->
@@ -38,8 +36,8 @@
         현 위치 근처의 CCTV 위치 파악을 위해서는 현 위치정보를 필요로 합니다.\n
         [설정]>[권한]에서 해당 권한을 활성화 해주세요.
     </string>
-    <string name="permission_btn_setting">설정</string>
-    <string name="permission_btn_close">닫기</string>
+    <string name="permission_btn_setting">설 정</string>
+    <string name="permission_btn_close">닫 기</string>
     <string name="agreement_btn_y">동 의</string>
     <string name="agreement_btn_n">취 소</string>
     <string name="report_btn_y">등 록</string>

@@ -30,6 +30,12 @@
     <string name="agreement_ask_string">
         위치 정보 사용에 동의하시겠습니까?
     </string>
+    <string name="permission_reason_explaination">
+        현 위치 근처의 CCTV 위치 파악을 위해서는 현 위치정보를 필요로 합니다.\n
+        [설정]>[권한]에서 해당 권한을 활성화 해주세요.
+    </string>
+    <string name="permission_btn_setting">Setting</string>
+    <string name="permission_btn_close">Close</string>
     <string name="agreement_btn_y">동 의</string>
     <string name="agreement_btn_n">취 소</string>
     <string name="report_btn_y">등 록</string>
