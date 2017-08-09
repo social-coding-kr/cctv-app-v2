@@ -6,7 +6,7 @@
 
 
     <!--default translation-->
-    <string name="app_name">서울의 눈-안드</string>
+    <string name="app_name">서울의 눈</string>
 
     <!--facebook login-->
     <string name="login_skip">페이스북 로그인 건너뛰기</string>
