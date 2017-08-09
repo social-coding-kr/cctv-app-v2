@@ -35,7 +35,6 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
 
@@ -62,7 +61,7 @@
         <!--For fabric-->
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="e301ce2874859e83c2fde0472db2cd15ccffec64" />
+            android:value="7e495e47af7a7b5fcd4b619f7f6fdf2a5a7e70a3" />
     </application>
 
 </manifest>

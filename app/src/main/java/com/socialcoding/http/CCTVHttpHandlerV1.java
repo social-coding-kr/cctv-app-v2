@@ -9,10 +9,6 @@ import com.socialcoding.intefaces.IServerResource;
 import com.socialcoding.models.CctvCluster;
 import com.socialcoding.resources.CctvLocationDetailResource;
 import com.socialcoding.resources.CctvLocationsResource;
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -22,6 +18,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by darkg on 2016-03-26.
@@ -60,7 +61,11 @@ public class CCTVHttpHandlerV1 implements IServerResource {
     call.enqueue(new Callback<CctvLocationsResource>() {
       @Override
       public void onResponse(Call<CctvLocationsResource> call, Response<CctvLocationsResource> response) {
-        callback.onSuccess(response.body().getCctvs());
+        if (response.isSuccessful()) {
+          callback.onSuccess(response.body().getCctvs());
+        } else {
+          // TODO(clsan) : Error 핸들링
+        }
       }
 
       @Override
